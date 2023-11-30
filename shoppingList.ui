@@ -17,7 +17,9 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(152, 218, 255);</string>
+   <string notr="true">background-color: rgb(152, 218, 255);
+font-family: Poppins;
+</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -112,12 +114,10 @@
                 <font>
                  <family>Poppins</family>
                  <pointsize>20</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
-                <string>IM.AI SHOPPING CART</string>
+                <string>IM.AI Shopping Cart</string>
                </property>
               </widget>
              </item>
@@ -156,7 +156,7 @@
                <property name="font">
                 <font>
                  <family>Poppins</family>
-                 <pointsize>16</pointsize>
+                 <pointsize>12</pointsize>
                 </font>
                </property>
                <property name="text">
@@ -199,8 +199,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>876</width>
-               <height>516</height>
+               <width>962</width>
+               <height>464</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -221,11 +221,18 @@
                      <height>100</height>
                     </size>
                    </property>
+                   <property name="styleSheet">
+                    <string notr="true">#productImage{
+	background-color:#D3D3D3;
+	border:none;
+	border-radius:20px;
+}</string>
+                   </property>
                    <property name="text">
                     <string/>
                    </property>
                    <property name="pixmap">
-                    <pixmap>../../milo.png</pixmap>
+                    <pixmap>milo.png</pixmap>
                    </property>
                    <property name="scaledContents">
                     <bool>true</bool>
@@ -297,6 +304,10 @@
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="styleSheet">
+                    <string notr="true">background-color: #FEFCFC;
+border: none;</string>
+                   </property>
                    <property name="frameShape">
                     <enum>QFrame::StyledPanel</enum>
                    </property>
@@ -323,6 +334,15 @@
                  </item>
                  <item>
                   <widget class="QPushButton" name="removeCart">
+                   <property name="styleSheet">
+                    <string notr="true">#removeCart{
+	background-color:#3B97ED;
+	border-radius:10px;
+	color: #fff;
+	padding:5px; 
+	height: 20px;
+}</string>
+                   </property>
                    <property name="text">
                     <string>REMOVE</string>
                    </property>
@@ -348,11 +368,18 @@
                      <height>100</height>
                     </size>
                    </property>
+                   <property name="styleSheet">
+                    <string notr="true">#productImage_4{
+	background-color:#D3D3D3;
+	border:none;
+	border-radius:20px;
+}</string>
+                   </property>
                    <property name="text">
                     <string/>
                    </property>
                    <property name="pixmap">
-                    <pixmap>../../milo.png</pixmap>
+                    <pixmap>milo.png</pixmap>
                    </property>
                    <property name="scaledContents">
                     <bool>true</bool>
@@ -424,6 +451,10 @@
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="styleSheet">
+                    <string notr="true">background-color: #FEFCFC;
+border: none;</string>
+                   </property>
                    <property name="frameShape">
                     <enum>QFrame::StyledPanel</enum>
                    </property>
@@ -450,6 +481,15 @@
                  </item>
                  <item>
                   <widget class="QPushButton" name="removeCart_4">
+                   <property name="styleSheet">
+                    <string notr="true">#removeCart_4{
+	background-color:#3B97ED;
+	border-radius:10px;
+	color: #fff;
+	padding:5px; 
+	height: 20px;
+}</string>
+                   </property>
                    <property name="text">
                     <string>REMOVE</string>
                    </property>
@@ -475,11 +515,18 @@
                      <height>100</height>
                     </size>
                    </property>
+                   <property name="styleSheet">
+                    <string notr="true">#productImage_3{
+	background-color:#D3D3D3;
+	border:none;
+	border-radius:20px;
+}</string>
+                   </property>
                    <property name="text">
                     <string/>
                    </property>
                    <property name="pixmap">
-                    <pixmap>../../milo.png</pixmap>
+                    <pixmap>milo.png</pixmap>
                    </property>
                    <property name="scaledContents">
                     <bool>true</bool>
@@ -551,6 +598,10 @@
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="styleSheet">
+                    <string notr="true">background-color: #FEFCFC;
+border: none;</string>
+                   </property>
                    <property name="frameShape">
                     <enum>QFrame::StyledPanel</enum>
                    </property>
@@ -577,6 +628,15 @@
                  </item>
                  <item>
                   <widget class="QPushButton" name="removeCart_3">
+                   <property name="styleSheet">
+                    <string notr="true">#removeCart_3{
+	background-color:#3B97ED;
+	border-radius:10px;
+	color: #fff;
+	padding:5px; 
+	height: 20px;
+}</string>
+                   </property>
                    <property name="text">
                     <string>REMOVE</string>
                    </property>
@@ -602,11 +662,18 @@
                      <height>100</height>
                     </size>
                    </property>
+                   <property name="styleSheet">
+                    <string notr="true">#productImage_2{
+	background-color:#D3D3D3;
+	border:none;
+	border-radius:20px;
+}</string>
+                   </property>
                    <property name="text">
                     <string/>
                    </property>
                    <property name="pixmap">
-                    <pixmap>../../milo.png</pixmap>
+                    <pixmap>milo.png</pixmap>
                    </property>
                    <property name="scaledContents">
                     <bool>true</bool>
@@ -678,6 +745,10 @@
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="styleSheet">
+                    <string notr="true">background-color: #FEFCFC;
+border: none;</string>
+                   </property>
                    <property name="frameShape">
                     <enum>QFrame::StyledPanel</enum>
                    </property>
@@ -704,6 +775,15 @@
                  </item>
                  <item>
                   <widget class="QPushButton" name="removeCart_2">
+                   <property name="styleSheet">
+                    <string notr="true">#removeCart_2{
+	background-color:#3B97ED;
+	border-radius:10px;
+	color: #fff;
+	padding:5px; 
+	height: 20px;
+}</string>
+                   </property>
                    <property name="text">
                     <string>REMOVE</string>
                    </property>
@@ -743,7 +823,7 @@
                 <string/>
                </property>
                <property name="pixmap">
-                <pixmap>../../tyBarc.png</pixmap>
+                <pixmap>tyBarc.png</pixmap>
                </property>
                <property name="scaledContents">
                 <bool>true</bool>
@@ -812,11 +892,18 @@
            <height>60</height>
           </size>
          </property>
+         <property name="styleSheet">
+          <string notr="true">#label_24{
+	background-color:#D3D3D3;
+	border:none;
+	border-radius:20px;
+}</string>
+         </property>
          <property name="text">
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>../../milo.png</pixmap>
+          <pixmap>milo.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -830,7 +917,7 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0" colspan="2">
+       <item row="2" column="0" colspan="2" alignment="Qt::AlignHCenter">
         <widget class="QFrame" name="frame_16">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
@@ -838,136 +925,106 @@
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
          </property>
-         <layout class="QFormLayout" name="formLayout_2">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_27">
-            <property name="maximumSize">
-             <size>
-              <width>40</width>
-              <height>40</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap>../../milo.png</pixmap>
-            </property>
-            <property name="scaledContents">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QPushButton" name="pushButton_11">
-            <property name="maximumSize">
-             <size>
-              <width>200</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Shopping List</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_28">
-            <property name="maximumSize">
-             <size>
-              <width>40</width>
-              <height>40</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap>../../milo.png</pixmap>
-            </property>
-            <property name="scaledContents">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="pushButton_12">
-            <property name="maximumSize">
-             <size>
-              <width>200</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Shopping History</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_29">
-            <property name="maximumSize">
-             <size>
-              <width>40</width>
-              <height>40</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap>../../milo.png</pixmap>
-            </property>
-            <property name="scaledContents">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QPushButton" name="pushButton_13">
-            <property name="maximumSize">
-             <size>
-              <width>200</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Rewards &amp; Vouchers</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_30">
-            <property name="maximumSize">
-             <size>
-              <width>40</width>
-              <height>40</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap>../../milo.png</pixmap>
-            </property>
-            <property name="scaledContents">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QPushButton" name="pushButton_14">
-            <property name="maximumSize">
-             <size>
-              <width>200</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Help &amp; Feedback</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <widget class="QLabel" name="label_27">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>10</y>
+            <width>16</width>
+            <height>16</height>
+           </rect>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>40</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap>milo.png</pixmap>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_28">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>70</y>
+            <width>16</width>
+            <height>16</height>
+           </rect>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>40</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap>milo.png</pixmap>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_29">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>130</y>
+            <width>16</width>
+            <height>16</height>
+           </rect>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>40</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap>milo.png</pixmap>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_30">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>190</y>
+            <width>16</width>
+            <height>16</height>
+           </rect>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>40</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap>milo.png</pixmap>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
+          </property>
+         </widget>
         </widget>
        </item>
        <item row="0" column="1">

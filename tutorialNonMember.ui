@@ -20,60 +20,56 @@
    <widget class="QGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
-      <x>410</x>
+      <x>140</x>
       <y>50</y>
-      <width>381</width>
+      <width>901</width>
       <height>411</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 255);</string>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="graphicsView_2">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>150</y>
-      <width>261</width>
-      <height>311</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 255);</string>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="graphicsView_3">
-    <property name="geometry">
-     <rect>
-      <x>800</x>
-      <y>150</y>
-      <width>261</width>
-      <height>311</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 255);</string>
+     <string notr="true">#graphicsView{
+	background-color:#D3D3D3;
+	border:none;
+	border-radius:20px;
+}</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>480</y>
-      <width>81</width>
-      <height>71</height>
+      <x>520</x>
+      <y>500</y>
+      <width>151</width>
+      <height>51</height>
      </rect>
     </property>
     <property name="palette">
      <palette>
       <active>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>255</green>
+          <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
        <colorrole role="Button">
         <brush brushstyle="SolidPattern">
          <color alpha="255">
           <red>59</red>
           <green>151</green>
           <blue>237</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="Text">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>255</green>
+          <blue>255</blue>
          </color>
         </brush>
        </colorrole>
@@ -101,17 +97,44 @@
           <red>59</red>
           <green>151</green>
           <blue>237</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="PlaceholderText">
+        <brush brushstyle="NoBrush">
+         <color alpha="128">
+          <red>255</red>
+          <green>255</green>
+          <blue>255</blue>
          </color>
         </brush>
        </colorrole>
       </active>
       <inactive>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>255</green>
+          <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
        <colorrole role="Button">
         <brush brushstyle="SolidPattern">
          <color alpha="255">
           <red>59</red>
           <green>151</green>
           <blue>237</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="Text">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>255</green>
+          <blue>255</blue>
          </color>
         </brush>
        </colorrole>
@@ -142,8 +165,26 @@
          </color>
         </brush>
        </colorrole>
+       <colorrole role="PlaceholderText">
+        <brush brushstyle="NoBrush">
+         <color alpha="128">
+          <red>255</red>
+          <green>255</green>
+          <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
       </inactive>
       <disabled>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>255</green>
+          <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
        <colorrole role="Button">
         <brush brushstyle="SolidPattern">
          <color alpha="255">
@@ -153,12 +194,21 @@
          </color>
         </brush>
        </colorrole>
+       <colorrole role="Text">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>255</green>
+          <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
        <colorrole role="ButtonText">
         <brush brushstyle="SolidPattern">
          <color alpha="255">
-          <red>120</red>
-          <green>120</green>
-          <blue>120</blue>
+          <red>255</red>
+          <green>255</green>
+          <blue>255</blue>
          </color>
         </brush>
        </colorrole>
@@ -177,6 +227,15 @@
           <red>59</red>
           <green>151</green>
           <blue>237</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="PlaceholderText">
+        <brush brushstyle="NoBrush">
+         <color alpha="128">
+          <red>255</red>
+          <green>255</green>
+          <blue>255</blue>
          </color>
         </brush>
        </colorrole>
@@ -186,14 +245,20 @@
     <property name="font">
      <font>
       <family>Poppins</family>
-      <pointsize>25</pointsize>
+      <pointsize>20</pointsize>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(59, 151, 237);</string>
+     <string notr="true">#pushButton{
+	background-color:#3B97ED;
+	border-radius:20px;
+	color: #fff;
+	padding:5px; 
+	height: 40px;
+}</string>
     </property>
     <property name="text">
-     <string>OK</string>
+     <string>Next</string>
     </property>
    </widget>
   </widget>
