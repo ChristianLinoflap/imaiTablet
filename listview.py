@@ -399,6 +399,7 @@ class Ui_MainWindow(object):
         total_quantity = sum(int(card.findChild(QtWidgets.QLabel, "quantity_label").text().split(" ")[1]) for card in self.card_frames)
         total_price = sum(float(card.findChild(QtWidgets.QLabel, "price_label").text().split("₱")[1]) * int(card.findChild(QtWidgets.QLabel, "quantity_label").text().split(" ")[1]) for card in self.card_frames)
         self.update_total_labels(total_quantity, total_price)
+        
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -423,7 +424,7 @@ if __name__ == "__main__":
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     DRIVER_NAME = 'SQL Server'
-    SERVER_NAME = 'LAPTOP-771CLPE3\SQLEXPRESS'  # Replace this with your server name
+    SERVER_NAME = 'LF-DEV-0001\SQLEXPRESS'  # Replace this with your server name
     DATABASE_NAME = 'cart'  # Replace this with your database name
     connection_string = f"DRIVER={{{DRIVER_NAME}}};SERVER={SERVER_NAME};DATABASE={DATABASE_NAME};Trusted_Connection=yes;"
     conn = odbc.connect(connection_string)

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1199</width>
-    <height>700</height>
+    <height>534</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,115 +19,11 @@
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QFrame" name="navigationFrame">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>1200</width>
-      <height>100</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">#navigationFrame{
-	background-color:#0000AF;
-}</string>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <widget class="QLabel" name="nameOutput">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>30</y>
-       <width>181</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">#nameOutput{
-	font-weight:bold;
-	font-size:24px;
-	color:#fff;
-}</string>
-     </property>
-     <property name="text">
-      <string>Juan Dela Cruz</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="roleOutput">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>50</y>
-       <width>61</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">#roleOutput{
-	font-size:16px;
-	font-family:Montserrat;
-	color:#fff;
-}</string>
-     </property>
-     <property name="text">
-      <string>Member</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="helpPushButton">
-     <property name="geometry">
-      <rect>
-       <x>1060</x>
-       <y>30</y>
-       <width>101</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">#helpPushButton{
-	background-color:none;
-	border:none;
-	color:#fff;
-	font-size:16px;
-}</string>
-     </property>
-     <property name="text">
-      <string>Help</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QPushButton" name="backPushButton">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>620</y>
-      <width>90</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">#backPushButton{
-	background-color:#0000AF;
-	border-radius:15px;
-	font-size:16px;
-	font-family:Montserrat;
-	color:#fff;
-}</string>
-    </property>
-    <property name="text">
-     <string>Back</string>
-    </property>
-   </widget>
    <widget class="QFrame" name="helpViewFrame">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>120</y>
+      <y>20</y>
       <width>1151</width>
       <height>491</height>
      </rect>

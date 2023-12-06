@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1200</width>
+    <height>350</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#centralwidget{
+	background-color:#00C0FF;
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="backPushButton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>280</y>
+      <width>81</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">#backPushButton{
+	background-color:#0000AF;
+	border-radius:15px;
+	font-size:16px;
+	font-family:Montserrat;
+	color:#fff;
+}</string>
+    </property>
+    <property name="text">
+     <string>Done</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="searchLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>351</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">#searchLineEdit{
+	border-radius:15px;
+	padding:10px;
+	font-size:16px;
+}</string>
+    </property>
+    <property name="placeholderText">
+     <string>Search Product...</string>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="searchTable">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>80</y>
+      <width>681</width>
+      <height>191</height>
+     </rect>
+    </property>
+    <column>
+     <property name="text">
+      <string>Product Name</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Details</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Price</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Location</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QFrame" name="advertisementFrame">
+    <property name="geometry">
+     <rect>
+      <x>720</x>
+      <y>20</y>
+      <width>461</width>
+      <height>311</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">#advertisementFrame{
+	background-color:#FEFCFC;
+}</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

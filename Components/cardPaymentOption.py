@@ -18,6 +18,13 @@ class Ui_MainWindowCardPaymentOption(object):
         self.ui.setupUiFeedback(self.window)
         self.window.show()
 
+    def HelpOption(self):
+        from help import Ui_MainWindowHelp
+        self.help_window = QtWidgets.QMainWindow()
+        self.ui_help = Ui_MainWindowHelp()
+        self.ui_help.setupUiHelp(self.help_window, MainWindow)  # Pass MainWindow as the previous window
+        self.help_window.show()
+
     # Function to Set Up cardPaymentOption.py
     def setupUiCardPaymentOption(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -62,6 +69,7 @@ class Ui_MainWindowCardPaymentOption(object):
 "    font-size:16px;\n"
 "}")
         self.helpPushButton.setObjectName("helpPushButton")
+        self.helpPushButton.clicked.connect(self.HelpOption)
         self.productTable = QtWidgets.QTableWidget(self.centralwidget)
         self.productTable.setGeometry(QtCore.QRect(10, 110, 691, 481))
         self.productTable.setObjectName("productTable")

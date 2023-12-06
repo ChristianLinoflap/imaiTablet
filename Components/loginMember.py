@@ -1,6 +1,7 @@
 # Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtCore import QObject, pyqtSignal
 import pyodbc
 
 # DataBase Management 
@@ -166,28 +167,29 @@ class Ui_MainWindowLogInMember(object):
         self.cursor = self.conn.cursor()
 
         self.loginPushButton.clicked.connect(self.authenticate_user)
+        self.MainWindow = MainWindow
 
     # User Authentication Function
     def authenticate_user(self):
         entered_username = self.emailLineEdit.text()
         entered_password = self.passwordLineEdit.text()
 
-        if not entered_username or not entered_password:
-            self.show_input_required_alert()
-            return
+        if entered_username and entered_password:
+            result = self.db_manager.authenticate_user(self.cursor, entered_username, entered_password)
 
-        result = self.db_manager.authenticate_user(self.cursor, entered_username, entered_password)
-        
-        if result:
-            print("Login successful!")
-            self.TutorialMember()
-            
+            if result:
+                print("Login successful!")
+                self.MainWindow.close()  
+                self.TutorialMember()
+            else:
+                print("Invalid username or password.")
+                self.show_invalid_login_alert()
         else:
-            print("Invalid username or password.")
-            self.show_invalid_login_alert()
+            self.show_input_required_alert()
 
     # Closes the Database Connection
     def closeEvent(self, event):
+        super().closeEvent(event)
         self.cursor.close()
         self.conn.close()
 

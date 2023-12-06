@@ -5,10 +5,12 @@ class Ui_MainWindowFeedbackQuestions(object):
     # Function to Set Up feedbackQuestions.py
     def setupUiFeedbackQuestions(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1199, 700)
+        MainWindow.resize(1200, 700)
         MainWindow.setStyleSheet("#centralwidget{\n"
 "    background-color:#00C0FF;\n"
 "}")
+        # Remove Navigation Tools in Main Window
+        MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.navigationFrame = QtWidgets.QFrame(self.centralwidget)
