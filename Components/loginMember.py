@@ -1,22 +1,37 @@
 # Import Python Files
+from dotenv import load_dotenv
+import os
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtCore import QObject, pyqtSignal
 import pyodbc
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Access the variables
+db_server_name = os.getenv('DB_SERVER_NAME')
+db_name = os.getenv('DB_NAME')
+db_username = os.getenv('DB_USERNAME')
+db_password = os.getenv('DB_PASSWORD')
 
 # DataBase Management 
 class DatabaseManager:
-    def __init__(self, server_name, database_name):
+    # Database Initializations
+    def __init__(self, server_name, database_name, username, password):
         self.server_name = server_name
         self.database_name = database_name
+        self.username = username
+        self.password = password
 
+    # Database Connection
     def connect(self):
-        driver_name = 'SQL Server'
-        connection_string = f"DRIVER={{{driver_name}}};SERVER={self.server_name};DATABASE={self.database_name};Trusted_Connection=yes;"
+        driver_name = 'ODBC Driver 17 for SQL Server'
+        connection_string = f"DRIVER={{{driver_name}}};SERVER={self.server_name};DATABASE={self.database_name};UID={self.username};PWD={self.password}"
         return pyodbc.connect(connection_string)
 
+    # Database User Authentication
     def authenticate_user(self, cursor, username, password):
-        query = "SELECT * FROM users.Login WHERE user_name = ? AND password = ?"
+        query = "SELECT * FROM dbo.UserClient WHERE Email = ? AND Password = ?"
         cursor.execute(query, username, password)
         return cursor.fetchone()
 
@@ -29,7 +44,7 @@ class Ui_MainWindowLogInMember(object):
         self.ui.setupUiTutorialMember(self.window)
         self.window.show()  
 
-    # Function to Call tutorialMember.py
+    # Function to Call loginOption.py
     def LogInOption (self):
         from loginOption import Ui_MainWindowLogInOption
         self.window = QtWidgets.QMainWindow()
@@ -162,7 +177,12 @@ class Ui_MainWindowLogInMember(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         # Database connection setup
-        self.db_manager = DatabaseManager(server_name='LF-DEV-0001\SQLEXPRESS', database_name='cart')
+        self.db_manager = DatabaseManager(
+            server_name=db_server_name,
+            database_name=db_name,
+            username=db_username,
+            password=db_password
+        )
         self.conn = self.db_manager.connect()
         self.cursor = self.conn.cursor()
 
@@ -226,7 +246,6 @@ class Ui_MainWindowLogInMember(object):
         self.qrLabel.setText(_translate("MainWindow", "Log in with QR Code"))
         self.scanLabel.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">Scan this with the Supermarket </span></p></body></html>"))
         self.scanLabel_2.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">mobile app to log in instantly.</span></p></body></html>"))
-
 
 if __name__ == "__main__":
     import sys

@@ -398,11 +398,11 @@
     </property>
     <property name="styleSheet">
      <string notr="true">#scanBarcodePushButton{
-	background-color:#0000AF;
-	border-radius:15px;
+	background-color:#F4C430;
+	border-radius:5px;
 	font-size:16px;
 	font-family:Montserrat;
-	color:#fff;
+	color:#000;
 }</string>
     </property>
     <property name="text">

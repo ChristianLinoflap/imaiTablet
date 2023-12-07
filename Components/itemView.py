@@ -6,49 +6,55 @@ from PyQt5.QtWidgets import QMessageBox
 import pyodbc
 import threading
 import time
+from PyQt5.QtCore import QUrl
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+import pygame
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Access the variables
+db_server_name = os.getenv('DB_SERVER_NAME')
+db_name = os.getenv('DB_NAME')
+db_username = os.getenv('DB_USERNAME')
+db_password = os.getenv('DB_PASSWORD')
 
 # DataBase Management 
 class DatabaseManager:
-    def __init__(self, server_name, database_name):
+    def __init__(self, server_name, database_name, username, password):
         self.server_name = server_name
         self.database_name = database_name
-
+        self.username = username
+        self.password = password
+        
+    # Database Connection
     def connect(self):
-        driver_name = 'SQL Server'
-        connection_string = f"DRIVER={{{driver_name}}};SERVER={self.server_name};DATABASE={self.database_name};Trusted_Connection=yes;"
+        driver_name = 'ODBC Driver 17 for SQL Server'
+        connection_string = f"DRIVER={{{driver_name}}};SERVER={self.server_name};DATABASE={self.database_name};UID={self.username};PWD={self.password}"
         return pyodbc.connect(connection_string)
     
     def get_product_details_by_barcode(self, cursor, barcode):
-        query = "SELECT * FROM cart.dbo.Product WHERE Barcode = ?"
-        cursor.execute(query, barcode)
-        return cursor.fetchone()
+        try:
+                query = "SELECT * FROM dbo.Product WHERE BarCode = ?"
+                cursor.execute(query, barcode)
+                return cursor.fetchone()
+        except Exception as e:
+                print(f"Error: {e}")
+                return None
     
 class Ui_MainWindowItemView(object):
     # Initializations
     def __init__(self):
-        self.db_manager = DatabaseManager(server_name='LF-DEV-0001\SQLEXPRESS', database_name='cart')
-        self.conn = self.db_manager.connect()
-        self.cursor = self.conn.cursor()
         self.scanning_in_progress = False
         self.scanning_thread = None
         self.last_scan_time = 0
-        self.scanned_data = []
         self.search_window_open = False
         self.shopping_list_window_open = False
         self.help_window_open = False
-        self.logged_in_user_firstname = ""
-        self.logged_in_user_lastname = ""
-
-     # Function to update user information after authentication
-    def set_logged_in_user_info(self, firstname, lastname):
-        self.logged_in_user_firstname = firstname
-        self.logged_in_user_lastname = lastname
-        self.update_name_output_label()
-
-    # Function to update the nameOutput label with the logged-in user's name
-    def update_name_output_label(self):
-        full_name = f"{self.logged_in_user_firstname} {self.logged_in_user_lastname}"
-        self.nameOutput.setText(full_name)
+        pygame.mixer.init()
+        self.scan_sound = pygame.mixer.Sound("Assets\\bgSound.mp3")
 
     # Function to Call help.py
     def SearchProductOption(self):
@@ -263,16 +269,16 @@ class Ui_MainWindowItemView(object):
 "}")
         self.totalLabel.setObjectName("totalLabel")
         self.productsOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.productsOutput.setGeometry(QtCore.QRect(10, 55, 51, 16))
+        self.productsOutput.setGeometry(QtCore.QRect(10, 55, 61, 16))
         self.productsOutput.setObjectName("productsOutput")
         self.grossOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.grossOutput.setGeometry(QtCore.QRect(160, 55, 61, 16))
+        self.grossOutput.setGeometry(QtCore.QRect(160, 55, 81, 16))
         self.grossOutput.setObjectName("grossOutput")
         self.itemsOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.itemsOutput.setGeometry(QtCore.QRect(280, 55, 47, 13))
+        self.itemsOutput.setGeometry(QtCore.QRect(280, 55, 61, 13))
         self.itemsOutput.setObjectName("itemsOutput")
         self.totalOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.totalOutput.setGeometry(QtCore.QRect(425, 55, 47, 13))
+        self.totalOutput.setGeometry(QtCore.QRect(425, 55, 61, 13))
         self.totalOutput.setObjectName("totalOutput")
         self.advertisementFrame = QtWidgets.QFrame(self.centralwidget)
         self.advertisementFrame.setGeometry(QtCore.QRect(730, 120, 451, 471))
@@ -298,16 +304,26 @@ class Ui_MainWindowItemView(object):
         self.scanBarcodePushButton = QtWidgets.QPushButton(self.centralwidget)
         self.scanBarcodePushButton.setGeometry(QtCore.QRect(530, 600, 175, 91))
         self.scanBarcodePushButton.setStyleSheet("#scanBarcodePushButton{\n"
-"    background-color:#0000AF;\n"
-"    border-radius:15px;\n"
+"    background-color:#F4C430;\n"
+"    border-radius:5px;\n"
 "    font-size:16px;\n"
 "    font-family:Montserrat;\n"
-"    color:#fff;\n"
+"    color:#000;\n"
 "}")
         self.scanBarcodePushButton.setObjectName("scanBarcodePushButton")
         # Connect the scanBarcodeButton to the scanBarcode function
         self.scanBarcodePushButton.clicked.connect(self.scanBarcode)
         MainWindow.setCentralWidget(self.centralwidget)
+
+        # Database connection setup
+        self.db_manager = DatabaseManager(
+            server_name=db_server_name,
+            database_name=db_name,
+            username=db_username,
+            password=db_password
+        )
+        self.conn = self.db_manager.connect()
+        self.cursor = self.conn.cursor()
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -368,9 +384,9 @@ class Ui_MainWindowItemView(object):
 
         if product_details:
                 # Extract relevant information from product_details
-                product_name = product_details[2]  
-                product_weight = product_details[3]  
-                product_price = product_details[4]
+                product_name = product_details[1]  # Update index based on the actual position of 'Name' column
+                product_weight = product_details[9]  # Update index based on the actual position of 'ProductWeight' column
+                product_price = 0  # Adjust based on your actual data structure, since the provided column names don't include a price
 
                 # Add the product details to the productTable
                 rowPosition = self.productTable.rowCount()
@@ -388,16 +404,18 @@ class Ui_MainWindowItemView(object):
                 self.productTable.setItem(rowPosition, 2, item_price)   # Price column
 
                 self.scanned_data.append({
-                        'barcode': barcode_data,
-                        'product_name': product_name,
-                        'product_weight': product_weight,
-                        'product_price': product_price
+                'barcode': barcode_data,
+                'product_name': product_name,
+                'product_weight': product_weight,
+                'product_price': product_price
                 })
 
+                self.scan_sound.play()
                 self.updateSummaryLabels()
                 print(f"Product with barcode {barcode_data} found in the database.")
         else:
                 print(f"Product with barcode {barcode_data} not found in the database.")
+
 
     def updateSummaryLabels(self):
         # Get the number of unique products
@@ -444,7 +462,6 @@ class Ui_MainWindowItemView(object):
         self.totalOutput.setText(_translate("MainWindow", "¥ 0.00"))
         self.checkOutPushButton.setText(_translate("MainWindow", "Proceed to Payment"))
         self.scanBarcodePushButton.setText(_translate("MainWindow", "Open Barcode Scanner"))
-
 
 if __name__ == "__main__":
     import sys

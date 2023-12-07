@@ -65,7 +65,6 @@ class Ui_MainWindowTutorialMember(object):
         self.backPushButton.setText(_translate("MainWindow", "Skip"))
         self.loginPushButton.setText(_translate("MainWindow", "Next"))
 
-
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)

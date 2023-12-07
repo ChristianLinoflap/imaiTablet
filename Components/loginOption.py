@@ -80,7 +80,6 @@ class Ui_MainWindowLogInOption(object):
         self.memberLabel.setText(_translate("MainWindow", "Yes, I am a member"))
         self.nonMemberLabel.setText(_translate("MainWindow", "No, I am not a member"))
 
-
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)

@@ -2,6 +2,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindowCardPaymentOption(object):
+    # Initializations
+    def __init__(self):
+        self.help_window_open = False
+
     # Function to Call paymentOption.py
     def PaymentOption (self):
         from paymentOption import Ui_MainWindowPaymentOption
@@ -18,12 +22,21 @@ class Ui_MainWindowCardPaymentOption(object):
         self.ui.setupUiFeedback(self.window)
         self.window.show()
 
+    # Function to Call help.py
     def HelpOption(self):
-        from help import Ui_MainWindowHelp
-        self.help_window = QtWidgets.QMainWindow()
-        self.ui_help = Ui_MainWindowHelp()
-        self.ui_help.setupUiHelp(self.help_window, MainWindow)  # Pass MainWindow as the previous window
-        self.help_window.show()
+        if not self.help_window_open:
+            from help import Ui_MainWindowHelp
+            self.window_help = QtWidgets.QMainWindow()
+            self.ui_help = Ui_MainWindowHelp()
+            self.ui_help.setupUiHelp(self.window_help)
+            self.window_help.show()
+            # Set the flag to indicate that the window is open
+            self.help_window_open = True
+        else:
+            # Close the window if it's open
+            self.window_help.close()
+            # Set the flag to indicate that the window is closed
+            self.help_window_open = False
 
     # Function to Set Up cardPaymentOption.py
     def setupUiCardPaymentOption(self, MainWindow):

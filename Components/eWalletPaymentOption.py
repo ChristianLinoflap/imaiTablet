@@ -2,6 +2,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindowEWalletPaymentOption(object):
+    # Initializations
+    def __init__(self):
+        self.help_window_open = False
+        
      # Function to Call paymentOption.py
     def PaymentOption (self):
         from paymentOption import Ui_MainWindowPaymentOption
@@ -17,6 +21,22 @@ class Ui_MainWindowEWalletPaymentOption(object):
         self.ui = Ui_MainWindowFeedback()
         self.ui.setupUiFeedback(self.window)
         self.window.show()
+
+    # Function to Call help.py
+    def HelpOption(self):
+        if not self.help_window_open:
+            from help import Ui_MainWindowHelp
+            self.window_help = QtWidgets.QMainWindow()
+            self.ui_help = Ui_MainWindowHelp()
+            self.ui_help.setupUiHelp(self.window_help)
+            self.window_help.show()
+            # Set the flag to indicate that the window is open
+            self.help_window_open = True
+        else:
+            # Close the window if it's open
+            self.window_help.close()
+            # Set the flag to indicate that the window is closed
+            self.help_window_open = False
 
     # Function to Set Up eWalletPaymentOption.py 
     def setupUiEWalletPaymentOption(self, MainWindow):
@@ -62,6 +82,7 @@ class Ui_MainWindowEWalletPaymentOption(object):
 "    font-size:16px;\n"
 "}")
         self.helpPushButton.setObjectName("helpPushButton")
+        self.helpPushButton.clicked.connect(self.HelpOption)
         self.productTable = QtWidgets.QTableWidget(self.centralwidget)
         self.productTable.setGeometry(QtCore.QRect(10, 110, 691, 481))
         self.productTable.setObjectName("productTable")

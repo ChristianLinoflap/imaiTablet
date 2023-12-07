@@ -2,13 +2,25 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindowPaymentOption(object):
+    # Initializations
+    def __init__(self):
+        self.help_window_open = False
+
     # Function to Call help.py
-    def HelpOption (self):
-        from help import Ui_MainWindowHelp
-        self.window = QtWidgets.QMainWindow()
-        self.ui = Ui_MainWindowHelp()
-        self.ui.setupUiHelp(self.window)
-        self.window.show()
+    def HelpOption(self):
+        if not self.help_window_open:
+            from help import Ui_MainWindowHelp
+            self.window_help = QtWidgets.QMainWindow()
+            self.ui_help = Ui_MainWindowHelp()
+            self.ui_help.setupUiHelp(self.window_help)
+            self.window_help.show()
+            # Set the flag to indicate that the window is open
+            self.help_window_open = True
+        else:
+            # Close the window if it's open
+            self.window_help.close()
+            # Set the flag to indicate that the window is closed
+            self.help_window_open = False
 
     # Function to Call ItemView.py
     def ItemView(self):
@@ -88,7 +100,6 @@ class Ui_MainWindowPaymentOption(object):
         self.helpPushButton.setObjectName("helpPushButton")
         # To call the function HelpOption to open the page and close the main window
         self.helpPushButton.clicked.connect(self.HelpOption)
-        self.helpPushButton.clicked.connect(MainWindow.close)
         self.checkOutPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.checkOutPushButton.setGeometry(QtCore.QRect(20, 620, 90, 51))
         self.checkOutPushButton.setStyleSheet("#checkOutPushButton{\n"
