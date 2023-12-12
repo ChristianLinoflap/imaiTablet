@@ -1,18 +1,10 @@
 # Import Python Files
-from dotenv import load_dotenv
-import os
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 import pyodbc
-
-# Load environment variables from .env file
-load_dotenv()
-
-# Access the variables
-db_server_name = os.getenv('DB_SERVER_NAME')
-db_name = os.getenv('DB_NAME')
-db_username = os.getenv('DB_USERNAME')
-db_password = os.getenv('DB_PASSWORD')
+from config import db_server_name, db_name, db_username, db_password
+import logging 
+from datetime import datetime, timedelta
 
 # DataBase Management 
 class DatabaseManager:
@@ -27,13 +19,37 @@ class DatabaseManager:
     def connect(self):
         driver_name = 'ODBC Driver 17 for SQL Server'
         connection_string = f"DRIVER={{{driver_name}}};SERVER={self.server_name};DATABASE={self.database_name};UID={self.username};PWD={self.password}"
-        return pyodbc.connect(connection_string)
+        
+        try:
+            with pyodbc.connect(connection_string, timeout=5) as conn: 
+                return conn
+        except pyodbc.OperationalError as e:
+            logging.error(f"Error connecting to the database: {e}")
+            raise
 
     # Database User Authentication
     def authenticate_user(self, cursor, username, password):
-        query = "SELECT * FROM dbo.UserClient WHERE Email = ? AND Password = ?"
+        query = "SELECT * FROM [dbo].[UserClient] WHERE Email = ? AND Password = ?"
         cursor.execute(query, username, password)
         return cursor.fetchone()
+    
+    # Insert new transaction
+    def insert_transaction(self, user_client_id, reference_number):
+        japan_time = datetime.utcnow() + timedelta(hours=9)  # Convert UTC to Japan time
+        query = "INSERT INTO [dbo].[Transaction] (UserClientId, CreatedAt, UpdatedAt, TransactionStatus, ReferenceNumber) VALUES (?, ?, ?, 'On-going', ?);"
+        with self.connect() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(query, user_client_id, japan_time, japan_time, reference_number)
+                conn.commit()
+
+    # Update transaction details
+    def update_transaction(self, user_client_id, reference_number):
+        japan_time = datetime.utcnow() + timedelta(hours=9)  # Convert UTC to Japan time
+        query = "UPDATE [dbo].[Transaction] SET UpdatedAt = ? WHERE UserClientId = ? AND ReferenceNumber = ?;"
+        with self.connect() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(query, japan_time, user_client_id, reference_number)
+                conn.commit()
 
 class Ui_MainWindowLogInMember(object):
     # Function to Call tutorialMember.py
@@ -198,14 +214,37 @@ class Ui_MainWindowLogInMember(object):
             result = self.db_manager.authenticate_user(self.cursor, entered_username, entered_password)
 
             if result:
+                user_client_id = result.UserClientId  # Assuming the UserClientId is present in the result
+                reference_number = self.generate_reference_number()
+
+                # Insert new transaction
+                self.db_manager.insert_transaction(user_client_id, reference_number)
+                print("Reference Number:", reference_number)
+
+                # Update transaction details
+                self.db_manager.update_transaction(user_client_id, reference_number)
+
                 print("Login successful!")
-                self.MainWindow.close()  
+                self.MainWindow.close()
                 self.TutorialMember()
             else:
                 print("Invalid username or password.")
                 self.show_invalid_login_alert()
         else:
             self.show_input_required_alert()
+
+    def generate_reference_number(self):
+        # Generate a unique reference number based on year, month, and a series of numbers
+        year_month = QtCore.QDateTime.currentDateTime().toString("yyyyMM")
+        query = f"SELECT MAX(CONVERT(INT, SUBSTRING(ReferenceNumber, 9, 6))) FROM [dbo].[Transaction] WHERE ReferenceNumber LIKE '{year_month}%';"
+        with self.db_manager.connect() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(query)
+                max_sequence = cursor.fetchone()[0]
+                sequence_number = 1 if max_sequence is None else max_sequence + 1
+
+        reference_number = f"{year_month}{sequence_number:06d}"
+        return reference_number
 
     # Closes the Database Connection
     def closeEvent(self, event):

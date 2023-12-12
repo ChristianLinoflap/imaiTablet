@@ -1,25 +1,15 @@
 # Import Python Files
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
 import cv2
 from pyzbar.pyzbar import decode
 from PyQt5.QtWidgets import QMessageBox
 import pyodbc
 import threading
 import time
-from PyQt5.QtCore import QUrl
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+# from PyQt5.QtCore import QUrl
+# from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 import pygame
-from dotenv import load_dotenv
-import os
-
-# Load environment variables from .env file
-load_dotenv()
-
-# Access the variables
-db_server_name = os.getenv('DB_SERVER_NAME')
-db_name = os.getenv('DB_NAME')
-db_username = os.getenv('DB_USERNAME')
-db_password = os.getenv('DB_PASSWORD')
+from config import db_server_name, db_name, db_username, db_password
 
 # DataBase Management 
 class DatabaseManager:
@@ -33,16 +23,27 @@ class DatabaseManager:
     def connect(self):
         driver_name = 'ODBC Driver 17 for SQL Server'
         connection_string = f"DRIVER={{{driver_name}}};SERVER={self.server_name};DATABASE={self.database_name};UID={self.username};PWD={self.password}"
-        return pyodbc.connect(connection_string)
+        
+        try:
+            conn = pyodbc.connect(connection_string, timeout=5)  
+            return conn
+        except pyodbc.OperationalError as e:
+            print(f"Error connecting to the database: {e}")
+            raise
     
     def get_product_details_by_barcode(self, cursor, barcode):
         try:
-                query = "SELECT * FROM dbo.Product WHERE BarCode = ?"
-                cursor.execute(query, barcode)
-                return cursor.fetchone()
+            query = """
+                SELECT P.*, B.Price
+                FROM dbo.Product AS P
+                INNER JOIN dbo.BranchProductsId AS B ON P.ProductId = B.ProductId
+                WHERE P.BarCode = ?
+            """
+            cursor.execute(query, barcode)
+            return cursor.fetchone()
         except Exception as e:
-                print(f"Error: {e}")
-                return None
+            print(f"Error: {e}")
+            return None
     
 class Ui_MainWindowItemView(object):
     # Initializations
@@ -330,30 +331,17 @@ class Ui_MainWindowItemView(object):
 
     def scanBarcode(self):
         if not hasattr(self, 'cap') or not self.cap.isOpened():
-                # Change the text of scanBarcodePushButton to "Close Scanner"
                 self.scanBarcodePushButton.setText("Close Barcode Scanner")
-                # Show a message to the user
                 QMessageBox.information(None, "Scan Barcode", "Please position the barcode in front of the camera. Click again the button to close the scanner.")
-                # Open the camera
                 self.cap = cv2.VideoCapture(0)
-                # Set scanning flag to True to indicate scanning is in progress
                 self.scanning_in_progress = True
-
-                # Start the scanning process in a separate thread
                 self.scanning_thread = threading.Thread(target=self.scanBarcodeThread)
                 self.scanning_thread.start()
         else:
-                # Close the camera
                 self.cap.release()
                 cv2.destroyAllWindows()
-
-                # Change the text of scanBarcodePushButton to "Close Scanner"
                 self.scanBarcodePushButton.setText("Open Barcode Scanner")
-
-                # Show a message that scanning is done
                 QMessageBox.information(None, "Scanning Done", "Barcode scanning is complete.")
-                
-                # Toggle camera state for the next button click
                 self.cap_opened = not getattr(self, 'cap_opened', False)
 
     def scanBarcodeThread(self):
@@ -370,12 +358,10 @@ class Ui_MainWindowItemView(object):
 
                 # Check if enough time has passed since the last scan
                 current_time = time.time()
-                if current_time - self.last_scan_time > 1.5:
+                if current_time - self.last_scan_time > 1:
                     self.last_scan_time = current_time
                     self.processScannedBarcode(barcode_data)
                 
-
-        # Close the camera
         self.cap.release()
         cv2.destroyAllWindows()
     
@@ -384,9 +370,9 @@ class Ui_MainWindowItemView(object):
 
         if product_details:
                 # Extract relevant information from product_details
-                product_name = product_details[1]  # Update index based on the actual position of 'Name' column
-                product_weight = product_details[9]  # Update index based on the actual position of 'ProductWeight' column
-                product_price = 0  # Adjust based on your actual data structure, since the provided column names don't include a price
+                product_name = product_details[1]  
+                product_weight = product_details[7]  
+                product_price = product_details[-1] 
 
                 # Add the product details to the productTable
                 rowPosition = self.productTable.rowCount()
@@ -402,13 +388,6 @@ class Ui_MainWindowItemView(object):
                 self.productTable.setItem(rowPosition, 0, item_name)  # Products column
                 self.productTable.setItem(rowPosition, 1, item_weight)  # Details column
                 self.productTable.setItem(rowPosition, 2, item_price)   # Price column
-
-                self.scanned_data.append({
-                'barcode': barcode_data,
-                'product_name': product_name,
-                'product_weight': product_weight,
-                'product_price': product_price
-                })
 
                 self.scan_sound.play()
                 self.updateSummaryLabels()
