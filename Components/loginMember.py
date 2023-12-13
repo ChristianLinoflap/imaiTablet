@@ -29,7 +29,7 @@ class DatabaseManager:
 
     # Database User Authentication
     def authenticate_user(self, cursor, username, password):
-        query = "SELECT * FROM [dbo].[UserClient] WHERE Email = ? AND Password = ?"
+        query = "SELECT UserClientId, FirstName, LastName FROM [dbo].[UserClient] WHERE Email = ? AND Password = ?"
         cursor.execute(query, username, password)
         return cursor.fetchone()
     
@@ -214,7 +214,13 @@ class Ui_MainWindowLogInMember(object):
             result = self.db_manager.authenticate_user(self.cursor, entered_username, entered_password)
 
             if result:
-                user_client_id = result.UserClientId  # Assuming the UserClientId is present in the result
+                user_client_id, first_name, last_name = result
+
+                # Store first name and last name for later use
+                import config
+                config.user_info['first_name'] = first_name
+                config.user_info['last_name'] = last_name
+                
                 reference_number = self.generate_reference_number()
 
                 # Insert new transaction

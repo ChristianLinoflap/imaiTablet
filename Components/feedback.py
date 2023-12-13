@@ -1,5 +1,6 @@
 # Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
+import config
 
 class Ui_MainWindowFeedback(object):
     # Function to Call feedbackQuestions.py
@@ -30,13 +31,18 @@ class Ui_MainWindowFeedback(object):
         self.navigationFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.navigationFrame.setObjectName("navigationFrame")
         self.nameOutput = QtWidgets.QLabel(self.navigationFrame)
-        self.nameOutput.setGeometry(QtCore.QRect(20, 30, 181, 21))
+        self.nameOutput.setGeometry(QtCore.QRect(20, 30, 400, 21))
         self.nameOutput.setStyleSheet("#nameOutput{\n"
 "    font-weight:bold;\n"
 "    font-size:24px;\n"
 "    color:#fff;\n"
 "}")
         self.nameOutput.setObjectName("nameOutput")
+        first_name = config.user_info.get('first_name', '')
+        last_name = config.user_info.get('last_name', '')
+        # Set the text in the nameOutput label
+        self.nameOutput.setText(f"Welcome, {first_name} {last_name}")
+        print(f"Debug - First Name: {first_name}, Last Name: {last_name}")
         self.roleOutput = QtWidgets.QLabel(self.navigationFrame)
         self.roleOutput.setGeometry(QtCore.QRect(20, 50, 61, 16))
         self.roleOutput.setStyleSheet("#roleOutput{\n"
@@ -105,7 +111,6 @@ class Ui_MainWindowFeedback(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.nameOutput.setText(_translate("MainWindow", "Juan Dela Cruz"))
         self.roleOutput.setText(_translate("MainWindow", "Member"))
         self.finishPushButton.setText(_translate("MainWindow", "Finish Shopping"))
         self.feedBackPushButton.setText(_translate("MainWindow", "Give Feedback"))

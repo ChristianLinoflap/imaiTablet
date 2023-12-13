@@ -1,18 +1,22 @@
-# Import Python Files
+# Standard Python Library Imports
+import threading
+import time
+
+# Third Party Library Imports
 from PyQt5 import QtCore, QtWidgets
 import cv2
 from pyzbar.pyzbar import decode
 from PyQt5.QtWidgets import QMessageBox
 import pyodbc
-import threading
-import time
-# from PyQt5.QtCore import QUrl
-# from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 import pygame
+
+# Module Imports
 from config import db_server_name, db_name, db_username, db_password
+import config 
 
 # DataBase Management 
 class DatabaseManager:
+    # Database Initializations
     def __init__(self, server_name, database_name, username, password):
         self.server_name = server_name
         self.database_name = database_name
@@ -154,13 +158,18 @@ class Ui_MainWindowItemView(object):
         self.navigationFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.navigationFrame.setObjectName("navigationFrame")
         self.nameOutput = QtWidgets.QLabel(self.navigationFrame)
-        self.nameOutput.setGeometry(QtCore.QRect(20, 30, 181, 21))
+        self.nameOutput.setGeometry(QtCore.QRect(20, 30, 400, 21))
         self.nameOutput.setStyleSheet("#nameOutput{\n"
 "    font-weight:bold;\n"
 "    font-size:24px;\n"
 "    color:#fff;\n"
 "}")
         self.nameOutput.setObjectName("nameOutput")
+        first_name = config.user_info.get('first_name', '')
+        last_name = config.user_info.get('last_name', '')
+        # Set the text in the nameOutput label
+        self.nameOutput.setText(f"Welcome, {first_name} {last_name}")
+        print(f"Debug - First Name: {first_name}, Last Name: {last_name}")
         self.roleOutput = QtWidgets.QLabel(self.navigationFrame)
         self.roleOutput.setGeometry(QtCore.QRect(20, 50, 61, 16))
         self.roleOutput.setStyleSheet("#roleOutput{\n"
@@ -418,7 +427,6 @@ class Ui_MainWindowItemView(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.nameOutput.setText(_translate("MainWindow", "Juan Dela Cruz"))
         self.roleOutput.setText(_translate("MainWindow", "Member"))
         self.helpPushButton.setText(_translate("MainWindow", "Help"))
         self.shoppingListButton.setText(_translate("MainWindow", "Shopping List"))
