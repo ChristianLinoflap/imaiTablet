@@ -2,6 +2,9 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import pyodbc
 
+# Module Import 
+from config import Config, translations
+
 class DatabaseManager:
     def __init__(self, server_name, database_name):
         self.server_name = server_name
@@ -34,7 +37,7 @@ class Ui_MainWindowSearchProduct(object):
     def setupUiSearchProduct(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1200, 350)
-        MainWindow.move(360, 266)
+        MainWindow.move(720, 150)
         MainWindow.setStyleSheet("#centralwidget{\n"
 "    background-color:#0000AF;\n"
 "}")
@@ -116,21 +119,27 @@ class Ui_MainWindowSearchProduct(object):
             self.searchTable.setItem(row, 2, QtWidgets.QTableWidgetItem(f"{product_price}"))   # Price column
 
     def close_database_connection(self):
-        # Close the database connection when the main window is closed
-        pass  # You can add code here to close the database connection
+        pass  
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.searchLineEdit.setPlaceholderText(_translate("MainWindow", "Search Product..."))
+
+        # Use the stored language from Config
+        language = Config.current_language
+        translation_dict = translations.get(language, translations['English'])
+
+        # Translate texts using the stored language
+        self.searchLineEdit.setPlaceholderText(_translate("MainWindow", translation_dict['Search_Line_Edit']))
+        self.searchTable.setSortingEnabled(False)
         item = self.searchTable.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Product Name"))
+        item.setText(_translate("MainWindow", translation_dict['Product_Label']))
         item = self.searchTable.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Details"))
+        item.setText(_translate("MainWindow", translation_dict['Detail_Label']))
         item = self.searchTable.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Price"))
+        item.setText(_translate("MainWindow", translation_dict['Price_Label']))
         item = self.searchTable.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "Location"))
+        item.setText(_translate("MainWindow", translation_dict['Barcode_Label']))
 
 
 if __name__ == "__main__":

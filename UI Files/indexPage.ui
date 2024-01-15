@@ -121,6 +121,63 @@
      <enum>QFrame::Raised</enum>
     </property>
    </widget>
+   <widget class="QComboBox" name="translationComboBox">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">#translationComboBox {
+    font-family: Montserrat;
+    font-size: 12px;
+    color: #fff;
+    border-radius: 5px;
+    background-color: #0000AF;
+}
+
+#translationComboBox QAbstractItemView {
+    border: 1px solid #0000AF;
+    selection-background-color: #000080;
+}
+
+#translationComboBox QAbstractItemView::item {
+    padding: 8px;
+}
+
+#translationComboBox QAbstractItemView::item:selected {
+    background-color: #000080;
+}
+
+#translationComboBox QAbstractItemView::item:hover {
+    background-color: #0000D0;
+}
+
+#translationComboBox::down-arrow {
+    width: 15px;
+    height: 15px;
+    border-radius: 5px
+}
+
+#translationComboBox::down-arrow:disabled {
+    background-color: transparent;
+    border: none;
+}</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>English</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>日本語</string>
+     </property>
+    </item>
+   </widget>
   </widget>
  </widget>
  <resources/>

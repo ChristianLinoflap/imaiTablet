@@ -1,7 +1,43 @@
 # Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
+from config import Config, translations
+from PyQt5.QtWidgets import QMessageBox, QStackedWidget
+from PyQt5.QtGui import QPixmap
 
 class Ui_MainWindowTutorialMember(object):
+    def __init__(self):
+        self.tutorial_steps = []  # List to store tutorial steps (images or widgets)
+        self.current_step = 0  # Current step index
+
+    def showTutorialCompletionMessage(self):
+        QMessageBox.information(
+            None, "Tutorial Completed", "You are now ready to shop!", QMessageBox.Ok
+        )
+
+    def handleLoginButtonClick(self):
+        if self.current_step < len(self.tutorial_steps):
+            self.stackedWidget.setCurrentIndex(self.current_step)
+            self.current_step += 1
+        else:
+            self.showTutorialCompletionMessage()
+            self.current_step = 0
+
+    def setupTutorialSteps(self):
+        # Replace these paths with the actual file paths of your tutorial images
+        image_paths = [
+            r"C:\Users\orqui\OneDrive\Documents\GitHub\imaiTablet\Assets\1.png",
+            r"C:\Users\orqui\OneDrive\Documents\GitHub\imaiTablet\Assets\2.png",
+            r"C:\Users\orqui\OneDrive\Documents\GitHub\imaiTablet\Assets\3.png",
+            r"C:\Users\orqui\OneDrive\Documents\GitHub\imaiTablet\Assets\4.png"
+        ]
+
+        for image_path in image_paths:
+            step_label = QtWidgets.QLabel(self.qrFrame)
+            pixmap = QPixmap(image_path)
+            step_label.setPixmap(pixmap)
+            step_label.setScaledContents(True)
+            self.tutorial_steps.append(step_label)
+
     # Function to Call ItemView.py
     def ItemView(self):
         from itemView import Ui_MainWindowItemView
@@ -13,7 +49,7 @@ class Ui_MainWindowTutorialMember(object):
     # Function to Set Up tutorialMember.py
     def setupUiTutorialMember(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1200, 700)
+        MainWindow.showFullScreen()
         # Remove Navigation Tools in Main Window
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         MainWindow.setStyleSheet("#centralwidget{\n"
@@ -22,11 +58,11 @@ class Ui_MainWindowTutorialMember(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.backPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.backPushButton.setGeometry(QtCore.QRect(450, 540, 350, 45))
+        self.backPushButton.setGeometry(QtCore.QRect(985, 880, 200, 50))
         self.backPushButton.setStyleSheet("#backPushButton{\n"
 "    background-color:none;\n"
 "    border:4px solid #0000AF;\n"
-"    border-radius:20px;\n"
+"    border-radius:24px;\n"
 "    font-family:Montserrat;\n"
 "    font-size:20px;\n"
 "    color:#fff;\n"
@@ -36,25 +72,37 @@ class Ui_MainWindowTutorialMember(object):
         self.backPushButton.clicked.connect(self.ItemView)
         self.backPushButton.clicked.connect(MainWindow.close)
         self.loginPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.loginPushButton.setGeometry(QtCore.QRect(450, 480, 350, 45))
+        self.loginPushButton.setGeometry(QtCore.QRect(750, 880, 200, 50))
         self.loginPushButton.setStyleSheet("#loginPushButton{\n"
 "    background-color:#0000AF;\n"
-"    border-radius:20px;\n"
+"    border-radius:24px;\n"
 "    font-family:Montserrat;\n"
 "    font-size:20px;\n"
 "    color:#fff\n"
 "}")
         self.loginPushButton.setObjectName("loginPushButton")
         self.qrFrame = QtWidgets.QFrame(self.centralwidget)
-        self.qrFrame.setGeometry(QtCore.QRect(210, 50, 825, 390))
+        self.qrFrame.setGeometry(QtCore.QRect(350, 150, 1200, 700))
         self.qrFrame.setStyleSheet("#qrFrame{\n"
 "    background-color:#FEFCFC;\n"
 "    border-radius:25px;\n"
 "}")
+        self.stackedWidget = QStackedWidget(self.qrFrame)
+        self.stackedWidget.setGeometry(QtCore.QRect(0, 0, 1200, 700))
+
+        self.setupTutorialSteps()
+
+        for step in self.tutorial_steps:
+            self.stackedWidget.addWidget(step)
+
+        self.loginPushButton.clicked.connect(self.handleLoginButtonClick)
         self.qrFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.qrFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.qrFrame.setObjectName("qrFrame")
         MainWindow.setCentralWidget(self.centralwidget)
+
+        self.backPushButton.raise_()
+        self.loginPushButton.raise_()
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -62,8 +110,14 @@ class Ui_MainWindowTutorialMember(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.backPushButton.setText(_translate("MainWindow", "Skip"))
-        self.loginPushButton.setText(_translate("MainWindow", "Next"))
+
+        # Use the stored language from Config
+        language = Config.current_language
+        translation_dict = translations.get(language, translations['English'])
+
+        # Translate texts using the stored language
+        self.backPushButton.setText(_translate("MainWindow", translation_dict['Skip_Button']))
+        self.loginPushButton.setText(_translate("MainWindow", translation_dict['Next_Button']))
 
 if __name__ == "__main__":
     import sys

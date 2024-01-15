@@ -23,7 +23,7 @@ class Ui_MainWindowFeedbackQuestions(object):
         self.navigationFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.navigationFrame.setObjectName("navigationFrame")
         self.nameOutput = QtWidgets.QLabel(self.navigationFrame)
-        self.nameOutput.setGeometry(QtCore.QRect(20, 30, 400, 21))
+        self.nameOutput.setGeometry(QtCore.QRect(20, 30, 400, 35))
         self.nameOutput.setStyleSheet("#nameOutput{\n"
 "    font-weight:bold;\n"
 "    font-size:24px;\n"
@@ -36,7 +36,7 @@ class Ui_MainWindowFeedbackQuestions(object):
         self.nameOutput.setText(f"Welcome, {first_name} {last_name}")
         print(f"Debug - First Name: {first_name}, Last Name: {last_name}")
         self.roleOutput = QtWidgets.QLabel(self.navigationFrame)
-        self.roleOutput.setGeometry(QtCore.QRect(20, 50, 61, 16))
+        self.roleOutput.setGeometry(QtCore.QRect(20, 60, 61, 16))
         self.roleOutput.setStyleSheet("#roleOutput{\n"
 "    font-size:16px;\n"
 "    font-family:Montserrat;\n"

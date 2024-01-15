@@ -1,5 +1,6 @@
 # Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
+from config import Config, translations
 import config 
 
 class Ui_MainWindowPaymentOption(object):
@@ -58,7 +59,7 @@ class Ui_MainWindowPaymentOption(object):
     # Function to Set Up paymentOption.py 
     def setupUiPaymentOption(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1199, 700)
+        MainWindow.showFullScreen()
         MainWindow.setStyleSheet("#centralwidget{\n"
 "    background-color:#00C0FF;\n"
 "}")
@@ -67,7 +68,7 @@ class Ui_MainWindowPaymentOption(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.navigationFrame = QtWidgets.QFrame(self.centralwidget)
-        self.navigationFrame.setGeometry(QtCore.QRect(0, 0, 1200, 100))
+        self.navigationFrame.setGeometry(QtCore.QRect(0, 0, MainWindow.width(), 150))
         self.navigationFrame.setStyleSheet("#navigationFrame{\n"
 "    background-color:#0000AF;\n"
 "}")
@@ -75,43 +76,45 @@ class Ui_MainWindowPaymentOption(object):
         self.navigationFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.navigationFrame.setObjectName("navigationFrame")
         self.nameOutput = QtWidgets.QLabel(self.navigationFrame)
-        self.nameOutput.setGeometry(QtCore.QRect(20, 30, 400, 21))
+        self.nameOutput.setGeometry(QtCore.QRect(50, 50, 900, 35))
         self.nameOutput.setStyleSheet("#nameOutput{\n"
 "    font-weight:bold;\n"
-"    font-size:24px;\n"
+"    font-size:42px;\n"
 "    color:#fff;\n"
 "}")
         self.nameOutput.setObjectName("nameOutput")
+        # Translate the welcome message and user's name
+        welcome_message = translations[Config.current_language].get('Welcome_User', 'Welcome')
         first_name = config.user_info.get('first_name', '')
         last_name = config.user_info.get('last_name', '')
-        # Set the text in the nameOutput label
-        self.nameOutput.setText(f"Welcome, {first_name} {last_name}")
-        print(f"Debug - First Name: {first_name}, Last Name: {last_name}")
+        translated_welcome_message = f"{welcome_message}, {first_name} {last_name}"
+        self.nameOutput.setText(translated_welcome_message)
         self.roleOutput = QtWidgets.QLabel(self.navigationFrame)
-        self.roleOutput.setGeometry(QtCore.QRect(20, 50, 61, 16))
+        self.roleOutput.setGeometry(QtCore.QRect(50, 100, 75, 16))
         self.roleOutput.setStyleSheet("#roleOutput{\n"
-"    font-size:16px;\n"
+"    font-size:24px;\n"
 "    font-family:Montserrat;\n"
 "    color:#fff;\n"
 "}")
         self.roleOutput.setObjectName("roleOutput")
         self.helpPushButton = QtWidgets.QPushButton(self.navigationFrame)
-        self.helpPushButton.setGeometry(QtCore.QRect(1060, 30, 101, 41))
+        self.helpPushButton.setGeometry(QtCore.QRect(1700, 55, 150, 50))
         self.helpPushButton.setStyleSheet("#helpPushButton{\n"
 "    background-color:none;\n"
 "    border:none;\n"
 "    color:#fff;\n"
-"    font-size:16px;\n"
+"    font-size:24px;\n"
 "}")
         self.helpPushButton.setObjectName("helpPushButton")
         # To call the function HelpOption to open the page and close the main window
         self.helpPushButton.clicked.connect(self.HelpOption)
+
         self.checkOutPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.checkOutPushButton.setGeometry(QtCore.QRect(20, 620, 90, 51))
+        self.checkOutPushButton.setGeometry(QtCore.QRect(355, 870, 215, 75))
         self.checkOutPushButton.setStyleSheet("#checkOutPushButton{\n"
 "    background-color:#0000AF;\n"
 "    border-radius:15px;\n"
-"    font-size:16px;\n"
+"    font-size:24px;\n"
 "    font-family:Montserrat;\n"
 "    color:#fff;\n"
 "}")
@@ -119,8 +122,9 @@ class Ui_MainWindowPaymentOption(object):
         # To call the function ItemView to open the page and close the main window
         self.checkOutPushButton.clicked.connect(self.ItemView)
         self.checkOutPushButton.clicked.connect(MainWindow.close)
+
         self.helpViewFrame = QtWidgets.QFrame(self.centralwidget)
-        self.helpViewFrame.setGeometry(QtCore.QRect(20, 120, 1151, 491))
+        self.helpViewFrame.setGeometry(QtCore.QRect(360, 300, 1200, 550))
         self.helpViewFrame.setStyleSheet("#helpViewFrame{\n"
 "    background-color:#fff;\n"
 "    border-radius:15px;\n"
@@ -128,10 +132,11 @@ class Ui_MainWindowPaymentOption(object):
         self.helpViewFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.helpViewFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.helpViewFrame.setObjectName("helpViewFrame")
+
         self.paymentLabel = QtWidgets.QLabel(self.helpViewFrame)
         self.paymentLabel.setGeometry(QtCore.QRect(20, 20, 251, 31))
         self.paymentLabel.setStyleSheet("#paymentLabel{\n"
-"    font-size:20px;\n"
+"    font-size:24px;\n"
 "    font-family:Montserrat;\n"
 "}")
         self.paymentLabel.setObjectName("paymentLabel")
@@ -157,6 +162,7 @@ class Ui_MainWindowPaymentOption(object):
         # To call the function EWalletOption to open the page and close the main window
         self.eWalletPushButton.clicked.connect(self.EWalletPaymentOption)
         self.eWalletPushButton.clicked.connect(MainWindow.close)
+
         self.cashPushButton = QtWidgets.QPushButton(self.helpViewFrame)
         self.cashPushButton.setGeometry(QtCore.QRect(810, 60, 310, 175))
         self.cashPushButton.setStyleSheet("#cashPushButton{\n"
@@ -168,35 +174,47 @@ class Ui_MainWindowPaymentOption(object):
         # To call the function CashPaymentOption to open the page and close the main window
         self.cashPushButton.clicked.connect(self.CashPaymentOption)
         self.cashPushButton.clicked.connect(MainWindow.close)
+
         self.cardLabel = QtWidgets.QLabel(self.helpViewFrame)
         self.cardLabel.setGeometry(QtCore.QRect(130, 190, 91, 31))
         self.cardLabel.setStyleSheet("#cardLabel{\n"
-"    font-size:16px;\n"
+"    font-size:24px;\n"
 "    font-family:Montserrat;\n"
 "}")
         self.cardLabel.setObjectName("cardLabel")
+
         self.eWalletLabel = QtWidgets.QLabel(self.helpViewFrame)
         self.eWalletLabel.setGeometry(QtCore.QRect(510, 190, 121, 31))
         self.eWalletLabel.setStyleSheet("#cardLabel{\n"
-"    font-size:16px;\n"
+"    font-size:24px;\n"
 "    font-family:Montserrat;\n"
 "}")
         self.eWalletLabel.setObjectName("eWalletLabel")
+
         self.cashLabel = QtWidgets.QLabel(self.helpViewFrame)
         self.cashLabel.setGeometry(QtCore.QRect(910, 190, 121, 31))
         self.cashLabel.setStyleSheet("#cardLabel{\n"
-"    font-size:16px;\n"
+"    font-size:24px;\n"
 "    font-family:Montserrat;\n"
 "}")
         self.cashLabel.setObjectName("cashLabel")
+
         self.voucherLabel = QtWidgets.QLabel(self.helpViewFrame)
         self.voucherLabel.setGeometry(QtCore.QRect(20, 280, 251, 31))
         self.voucherLabel.setStyleSheet("#voucherLabel{\n"
-"    font-size:20px;\n"
+"    font-size:24px;\n"
 "    font-family:Montserrat;\n"
 "}")
         self.voucherLabel.setObjectName("voucherLabel")
         MainWindow.setCentralWidget(self.centralwidget)
+        self.roleOutput.raise_()
+        self.helpPushButton.raise_()
+        self.checkOutPushButton.raise_()
+        self.paymentLabel.raise_()
+        self.cardLabel.raise_()
+        self.eWalletLabel.raise_()
+        self.cashLabel.raise_()
+        self.voucherLabel.raise_()
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -204,15 +222,20 @@ class Ui_MainWindowPaymentOption(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.roleOutput.setText(_translate("MainWindow", "Member"))
-        self.helpPushButton.setText(_translate("MainWindow", "Help"))
-        self.checkOutPushButton.setText(_translate("MainWindow", "Back"))
-        self.paymentLabel.setText(_translate("MainWindow", "Choose Payment Method"))
-        self.cardLabel.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">Card Option</span></p></body></html>"))
-        self.eWalletLabel.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">E-Wallet Option</span></p></body></html>"))
-        self.cashLabel.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">Cash Option</span></p></body></html>"))
-        self.voucherLabel.setText(_translate("MainWindow", "Vouchers Available"))
 
+        # Use the stored language from Config
+        language = Config.current_language
+        translation_dict = translations.get(language, translations['English'])
+
+        # Translate texts using the stored language
+        self.roleOutput.setText(_translate("MainWindow", translation_dict['Role_Output']))
+        self.helpPushButton.setText(_translate("MainWindow", translation_dict['Help_Button']))
+        self.checkOutPushButton.setText(_translate("MainWindow", translation_dict['Back_Button']))
+        self.paymentLabel.setText(_translate("MainWindow", translation_dict['Payment_Label']))
+        self.cardLabel.setText(_translate("MainWindow", translation_dict['Card_Label']))
+        self.eWalletLabel.setText(_translate("MainWindow", translation_dict['E_Wallet_Label']))
+        self.cashLabel.setText(_translate("MainWindow", translation_dict['Cash_Label']))
+        self.voucherLabel.setText(_translate("MainWindow", translation_dict['Voucher_Label']))
 
 if __name__ == "__main__":
     import sys

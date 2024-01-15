@@ -1,3 +1,4 @@
+import config
 # Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
@@ -5,6 +6,7 @@ import pyodbc
 from config import db_server_name, db_name, db_username, db_password
 import logging 
 from datetime import datetime, timedelta
+from config import Config, translations
 
 # DataBase Management 
 class DatabaseManager:
@@ -32,6 +34,17 @@ class DatabaseManager:
         query = "SELECT UserClientId, FirstName, LastName FROM [dbo].[UserClient] WHERE Email = ? AND Password = ?"
         cursor.execute(query, username, password)
         return cursor.fetchone()
+    
+    def get_transaction_id(self, user_client_id, reference_number):
+        query = "SELECT TransactionId FROM [dbo].[Transaction] WHERE UserClientId = ? AND ReferenceNumber = ?;"
+        with self.connect() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(query, user_client_id, reference_number)
+                result = cursor.fetchone()
+                if result:
+                    return result[0]
+                else:
+                    return None
     
     # Insert new transaction
     def insert_transaction(self, user_client_id, reference_number):
@@ -71,7 +84,7 @@ class Ui_MainWindowLogInMember(object):
     # Function to Set Up loginMember.py
     def setupUiLogInMember(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1200, 700)
+        MainWindow.showFullScreen()
         # Remove Navigation Tools in Main Window
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint) 
         MainWindow.setStyleSheet("#centralwidget{\n"
@@ -79,56 +92,63 @@ class Ui_MainWindowLogInMember(object):
 "}")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+
         self.welcomeLabel = QtWidgets.QLabel(self.centralwidget)
-        self.welcomeLabel.setGeometry(QtCore.QRect(170, 110, 301, 41))
+        self.welcomeLabel.setGeometry(QtCore.QRect(570, 350, 400, 41))
         self.welcomeLabel.setStyleSheet("#welcomeLabel{\n"
-"    font-size:36px;\n"
+"    font-size:42px;\n"
 "    font-family:Montserrat;\n"
 "    \n"
 "}")
         self.welcomeLabel.setObjectName("welcomeLabel")
+
         self.secondaryLabel = QtWidgets.QLabel(self.centralwidget)
-        self.secondaryLabel.setGeometry(QtCore.QRect(240, 150, 151, 31))
+        self.secondaryLabel.setGeometry(QtCore.QRect(660, 400, 200, 31))
         self.secondaryLabel.setStyleSheet("#secondaryLabel{\n"
-"    font-size:20px;\n"
+"    font-size:24px;\n"
 "    font-family:Montserrat;\n"
 "}")
         self.secondaryLabel.setObjectName("secondaryLabel")
+
         self.emailLabel = QtWidgets.QLabel(self.centralwidget)
-        self.emailLabel.setGeometry(QtCore.QRect(150, 230, 61, 16))
+        self.emailLabel.setGeometry(QtCore.QRect(570, 460, 100, 30))
         self.emailLabel.setStyleSheet("#emailLabel{\n"
-"    font-size:20px;\n"
+"    font-size:24px;\n"
 "    font-family:Montserrat;\n"
 "}")
         self.emailLabel.setObjectName("emailLabel")
+
         self.passwordLabel = QtWidgets.QLabel(self.centralwidget)
-        self.passwordLabel.setGeometry(QtCore.QRect(150, 350, 91, 16))
+        self.passwordLabel.setGeometry(QtCore.QRect(570, 560, 100, 30))
         self.passwordLabel.setStyleSheet("#passwordLabel{\n"
-"    font-size:20px;\n"
+"    font-size:24px;\n"
 "    font-family:Montserrat;\n"
 "}")
         self.passwordLabel.setObjectName("passwordLabel")
+
         self.emailLineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.emailLineEdit.setGeometry(QtCore.QRect(140, 260, 350, 45))
+        self.emailLineEdit.setGeometry(QtCore.QRect(570, 495, 350, 50))
         self.emailLineEdit.setStyleSheet("#emailLineEdit{\n"
 "    border-radius:10px;\n"
-"    font-size:16px;\n"
+"    font-size:18px;\n"
 "    font-family:Montserrat;\n"
 "    padding:10px;\n"
 "}")
         self.emailLineEdit.setObjectName("emailLineEdit")
+
         self.passwordLineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.passwordLineEdit.setGeometry(QtCore.QRect(140, 380, 350, 45))
+        self.passwordLineEdit.setGeometry(QtCore.QRect(570, 595, 350, 50))
         self.passwordLineEdit.setStyleSheet("#passwordLineEdit{\n"
 "    border-radius:10px;\n"
-"    font-size:16px;\n"
+"    font-size:18px;\n"
 "    font-family:Montserrat;\n"
 "    padding:10px;\n"
 "}")
         self.passwordLineEdit.setObjectName("passwordLineEdit")
         self.passwordLineEdit.setEchoMode(QtWidgets.QLineEdit.Password)
+
         self.loginPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.loginPushButton.setGeometry(QtCore.QRect(140, 490, 350, 45))
+        self.loginPushButton.setGeometry(QtCore.QRect(570, 720, 350, 45))
         self.loginPushButton.setStyleSheet("#loginPushButton{\n"
 "    background-color:#0000AF;\n"
 "    border-radius:20px;\n"
@@ -137,8 +157,9 @@ class Ui_MainWindowLogInMember(object):
 "    color:#fff\n"
 "}")
         self.loginPushButton.setObjectName("loginPushButton")
+
         self.backPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.backPushButton.setGeometry(QtCore.QRect(140, 550, 350, 45))
+        self.backPushButton.setGeometry(QtCore.QRect(570, 780, 350, 45))
         self.backPushButton.setStyleSheet("#backPushButton{\n"
 "    background-color:none;\n"
 "    border:4px solid #0000AF;\n"
@@ -150,49 +171,66 @@ class Ui_MainWindowLogInMember(object):
         self.backPushButton.setObjectName("backPushButton")
         self.backPushButton.clicked.connect(self.LogInOption)
         self.backPushButton.clicked.connect(MainWindow.close)
+
         self.qrFrame = QtWidgets.QFrame(self.centralwidget)
-        self.qrFrame.setGeometry(QtCore.QRect(730, 160, 300, 300))
+        self.qrFrame.setGeometry(QtCore.QRect(1100, 300, 400, 400))
         self.qrFrame.setStyleSheet("#qrFrame{\n"
 "    background-color:#FEFCFC;\n"
 "    border-radius:25px;\n"
+"    border: 2px solid black;\n"
 "}")
         self.qrFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.qrFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.qrFrame.setObjectName("qrFrame")
+
         self.qrLabel = QtWidgets.QLabel(self.centralwidget)
-        self.qrLabel.setGeometry(QtCore.QRect(720, 490, 331, 51))
+        self.qrLabel.setGeometry(QtCore.QRect(1100, 710, 385, 65))
         self.qrLabel.setStyleSheet("#qrLabel{\n"
-"    font-size:36px;\n"
+"    font-size:42px;\n"
 "    font-family:Montserrat;\n"
 "}")
         self.qrLabel.setObjectName("qrLabel")
+        self.qrLabel.setAlignment(QtCore.Qt.AlignCenter)
+
         self.scanLabelFrame = QtWidgets.QFrame(self.centralwidget)
-        self.scanLabelFrame.setGeometry(QtCore.QRect(760, 540, 241, 64))
+        self.scanLabelFrame.setGeometry(QtCore.QRect(1130, 790, 350, 65))
         self.scanLabelFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.scanLabelFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.scanLabelFrame.setObjectName("scanLabelFrame")
+
         self.verticalLayout = QtWidgets.QVBoxLayout(self.scanLabelFrame)
         self.verticalLayout.setObjectName("verticalLayout")
+
         self.scanLabel = QtWidgets.QLabel(self.scanLabelFrame)
         self.scanLabel.setStyleSheet("#scanLabel{\n"
-"    font-size:16px;\n"
+"    font-size:24px;\n"
 "    font-family:Montserrat;\n"
 "}")
         self.scanLabel.setObjectName("scanLabel")
         self.verticalLayout.addWidget(self.scanLabel)
         self.scanLabel_2 = QtWidgets.QLabel(self.scanLabelFrame)
         self.scanLabel_2.setStyleSheet("#scanLabel_2{\n"
-"    font-size:16px;\n"
+"    font-size:24px;\n"
 "    font-family:Montserrat;\n"
 "}")
-        self.scanLabel_2.setObjectName("scanLabel_2")
+        self.scanLabel_2.setObjectName("scanLabel_2"
+                                       )
         self.verticalLayout.addWidget(self.scanLabel_2)
         MainWindow.setCentralWidget(self.centralwidget)
+        self.welcomeLabel.raise_()
+        self.secondaryLabel.raise_()
+        self.emailLabel.raise_()
+        self.passwordLabel.raise_()
+        self.loginPushButton.raise_()
+        self.backPushButton.raise_()
+        self.qrLabel.raise_()
+        self.scanLabel.raise_()
+        self.scanLabel_2.raise_()
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        # Database connection setup
+        # # Database connection setup
         self.db_manager = DatabaseManager(
             server_name=db_server_name,
             database_name=db_name,
@@ -216,16 +254,21 @@ class Ui_MainWindowLogInMember(object):
             if result:
                 user_client_id, first_name, last_name = result
 
-                # Store first name and last name for later use
-                import config
                 config.user_info['first_name'] = first_name
                 config.user_info['last_name'] = last_name
-                
-                reference_number = self.generate_reference_number()
+                config.user_info['user_client_id'] = user_client_id
 
+                reference_number = self.generate_reference_number()
+                config.transaction_info['reference_number'] = reference_number
+                
                 # Insert new transaction
                 self.db_manager.insert_transaction(user_client_id, reference_number)
                 print("Reference Number:", reference_number)
+
+                # Retrieve TransactionId
+                transaction_id = self.db_manager.get_transaction_id(user_client_id, reference_number)
+                if transaction_id is not None:
+                    config.transaction_info['transaction_id'] = transaction_id
 
                 # Update transaction details
                 self.db_manager.update_transaction(user_client_id, reference_number)
@@ -260,10 +303,14 @@ class Ui_MainWindowLogInMember(object):
 
     # Error Validation
     def show_invalid_login_alert(self):
-        self.show_alert("Invalid username or password.", "Login Failed")
+        message = translations[Config.current_language]['Invalid_Login_Message']
+        title = translations[Config.current_language]['Invalid_Login_Title']
+        self.show_alert(message, title)
 
     def show_input_required_alert(self):
-        self.show_alert("Please enter username and password.", "Input Required")
+        message = translations[Config.current_language]['Input_Required_Message']
+        title = translations[Config.current_language]['Input_Required_Title']
+        self.show_alert(message, title)
 
     def show_alert(self, message, title):
         msg = QMessageBox()
@@ -282,15 +329,21 @@ class Ui_MainWindowLogInMember(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.welcomeLabel.setText(_translate("MainWindow", "Welcome Shopper!"))
-        self.secondaryLabel.setText(_translate("MainWindow", "Good to see you!"))
-        self.emailLabel.setText(_translate("MainWindow", "E-Mail:"))
-        self.passwordLabel.setText(_translate("MainWindow", "Password"))
-        self.loginPushButton.setText(_translate("MainWindow", "Login"))
-        self.backPushButton.setText(_translate("MainWindow", "Back"))
-        self.qrLabel.setText(_translate("MainWindow", "Log in with QR Code"))
-        self.scanLabel.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">Scan this with the Supermarket </span></p></body></html>"))
-        self.scanLabel_2.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">mobile app to log in instantly.</span></p></body></html>"))
+
+        # Use the stored language from Config
+        language = Config.current_language
+        translation_dict = translations.get(language, translations['English'])
+
+        # Translate texts using the stored language
+        self.welcomeLabel.setText(_translate("MainWindow", translation_dict['Welcome_Label']))
+        self.secondaryLabel.setText(_translate("MainWindow", translation_dict['Secondary_Label']))
+        self.emailLabel.setText(_translate("MainWindow", translation_dict['Email_Label']))
+        self.passwordLabel.setText(_translate("MainWindow", translation_dict['Password_Label']))
+        self.loginPushButton.setText(_translate("MainWindow", translation_dict['Login_Button']))
+        self.backPushButton.setText(_translate("MainWindow", translation_dict['Back_Button']))
+        self.qrLabel.setText(_translate("MainWindow", translation_dict['QR_Label']))
+        self.scanLabel.setText(_translate("MainWindow", translation_dict['Scan_Label']))
+        self.scanLabel_2.setText(_translate("MainWindow", translation_dict['Scan_Label_2']))
 
 if __name__ == "__main__":
     import sys

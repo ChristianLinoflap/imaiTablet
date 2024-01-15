@@ -5,13 +5,13 @@ class Ui_MainWindowHelp(object):
     # Function to Set Up help.py
     def setupUiHelp(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1200, 534)
+        MainWindow.resize(1200, 566)
         MainWindow.setStyleSheet("#centralwidget{\n"
 "    background-color:#0000AF;\n"
 "}")
         # Remove Navigation Tools in Main Window
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        MainWindow.move(360, 266)
+        MainWindow.move(720, 150)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.helpViewFrame = QtWidgets.QFrame(self.centralwidget)
@@ -38,13 +38,13 @@ class Ui_MainWindowHelp(object):
 "}")
         self.questionOne.setObjectName("questionOne")
         self.answerOne = QtWidgets.QTextBrowser(self.helpViewFrame)
-        self.answerOne.setGeometry(QtCore.QRect(20, 90, 1101, 61))
+        self.answerOne.setGeometry(QtCore.QRect(20, 90, 1101, 75))
         self.answerOne.setStyleSheet("#answerOne{\n"
 "    border:none;\n"
 "}")
         self.answerOne.setObjectName("answerOne")
         self.answerTwo = QtWidgets.QTextBrowser(self.helpViewFrame)
-        self.answerTwo.setGeometry(QtCore.QRect(20, 190, 1101, 61))
+        self.answerTwo.setGeometry(QtCore.QRect(20, 190, 1101, 75))
         self.answerTwo.setStyleSheet("#answerTwo{\n"
 "    border:none;\n"
 "}")
@@ -64,7 +64,7 @@ class Ui_MainWindowHelp(object):
 "}")
         self.questionThree.setObjectName("questionThree")
         self.answerThree = QtWidgets.QTextBrowser(self.helpViewFrame)
-        self.answerThree.setGeometry(QtCore.QRect(20, 300, 1101, 61))
+        self.answerThree.setGeometry(QtCore.QRect(20, 300, 1101, 75))
         self.answerThree.setStyleSheet("#answerThree{\n"
 "    border:none;\n"
 "}")
@@ -77,7 +77,7 @@ class Ui_MainWindowHelp(object):
 "}")
         self.questionFour.setObjectName("questionFour")
         self.answerFour = QtWidgets.QTextBrowser(self.helpViewFrame)
-        self.answerFour.setGeometry(QtCore.QRect(20, 410, 1101, 61))
+        self.answerFour.setGeometry(QtCore.QRect(20, 410, 1101, 75))
         self.answerFour.setStyleSheet("#answerFour{\n"
 "    border:none;\n"
 "}")
