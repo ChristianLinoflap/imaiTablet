@@ -1,6 +1,7 @@
 # Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
 from config import translations, Config, component_classes
+import subprocess
 
 class LanguageManager:
     @classmethod
@@ -8,6 +9,16 @@ class LanguageManager:
         Config.set_language(language)
 
 class Ui_MainWindow(object):
+    def __init__(self):
+        # Reference to the Advertisement Videos process
+        self.advertisment_videos_process = None
+
+        # Start the Advertisment Videos when the item view window is opened
+        self.startAdvertisementVideos()
+
+    def startAdvertisementVideos(self):
+        self.advertisment_videos_process = subprocess.Popen(['python', r'Components\AdvertisementDownloader.py'])
+
     # Function to call loginOption.py
     def LogInOption (self):
         from loginOption import Ui_MainWindowLogInOption

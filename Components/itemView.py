@@ -18,6 +18,11 @@ from config import db_server_name, db_name, db_username, db_password
 from config import Config, translations
 import config
 
+# Add these imports to your existing imports
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+from PyQt5.QtMultimediaWidgets import QVideoWidget
+import glob
+
 # Database Management 
 class DatabaseManager:
     # Database Initializations
@@ -46,6 +51,20 @@ class DatabaseManager:
                 SELECT * FROM Fn_Products_BranchProducts (?)
             """
             cursor.execute(query, barcode)
+            return cursor.fetchone()
+        except Exception as e:
+            print(f"Error: {e}")
+            return None
+        
+     # Select Query for Advertisement Videos
+    def get_advertisement_video_details_by_id(self, cursor, video_id):
+        try:
+            query = """
+                SELECT AdvertisementVideoName, AdvertisementVideoURL
+                FROM AdvertisementVideos
+                WHERE AdvertisementVideoId = ?
+            """
+            cursor.execute(query, video_id)
             return cursor.fetchone()
         except Exception as e:
             print(f"Error: {e}")
@@ -82,7 +101,10 @@ class Ui_MainWindowItemView(object):
         # Check every 1000 milliseconds (1 second)
         self.predicted_class_timer = QTimer()
         self.predicted_class_timer.timeout.connect(self.checkPredictedClass)
-        self.predicted_class_timer.start(1000)  
+        self.predicted_class_timer.start(1000) 
+
+        # Initialize other parts of your class here
+        self.local_videos = self.getLocalVideosFromFolder()
 
     def checkPredictedClass(self):
         # Check if the predicted class file exists
@@ -385,6 +407,19 @@ class Ui_MainWindowItemView(object):
         self.advertisementFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.advertisementFrame.setObjectName("advertisementFrame")
 
+        # Initialize video player and video widget
+        self.video_player = QMediaPlayer()
+        self.video_widget = QVideoWidget(self.advertisementFrame)
+        self.video_player.setVideoOutput(self.video_widget)
+        self.video_widget.setFixedSize(700, 650)
+        self.video_player.mediaStatusChanged.connect(self.handleVideoStateChange)
+
+        self.local_videos = self.getLocalVideosFromFolder()
+        print("Local Videos:", self.local_videos)
+
+        # Start playing the first video
+        self.playNextVideo()
+
         self.checkOutPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.checkOutPushButton.setGeometry(QtCore.QRect(1615, 870, 215, 115))
         self.checkOutPushButton.setStyleSheet("#checkOutPushButton{\n"
@@ -423,6 +458,34 @@ class Ui_MainWindowItemView(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
     
+    def getLocalVideosFromFolder(self):
+        # Retrieve local videos from the Assets folder
+        local_videos_path = r"C:\Users\orqui\OneDrive\Documents\GitHub\imaiTablet\Assets\*.avi"
+        local_videos = glob.glob(local_videos_path)
+        print("Local Videos:", local_videos)
+        return local_videos
+
+    def playNextVideo(self):
+        if  self.local_videos:
+            video_url = self.local_videos.pop(0)
+            print(f"Playing local video: {video_url}")
+            content = QMediaContent(QtCore.QUrl.fromLocalFile(video_url))
+            self.video_player.setMedia(content)
+            self.video_player.play()
+            self.local_videos.append(video_url)
+        else:
+            print("No videos available.")
+
+    def handleVideoStateChange(self, new_state):
+        print(f"Video state changed: {new_state}")
+        # Handle video playback state changes
+        if new_state == QMediaPlayer.EndOfMedia:
+            # Video has ended, play the next one
+            self.playNextVideo()
+        elif new_state == QMediaPlayer.Error:
+            # Error occurred during playback, handle accordingly
+            print(f"Error during video playback: {self.video_player.errorString()}")
+
     # Scan Barcode Process
     def scanBarcode(self):
         if not hasattr(self, 'cap') or not self.cap.isOpened():

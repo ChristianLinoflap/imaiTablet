@@ -17,6 +17,12 @@ component_classes = {
     'shoppingList': 'Ui_MainWindowShoppingList',
 }
 
+video_paths = {
+    'Joy': r'C:\Users\orqui\OneDrive\Documents\GitHub\imaiTablet\Assets\Joy.mp4',
+    'Milo': r'C:\Users\orqui\OneDrive\Documents\GitHub\imaiTablet\Assets\Milo.mp4',
+    'Fita': r'C:\Users\orqui\OneDrive\Documents\GitHub\imaiTablet\Assets\Fita.mp4',
+}
+
 # Load environment variables from .env file
 load_dotenv()
 
