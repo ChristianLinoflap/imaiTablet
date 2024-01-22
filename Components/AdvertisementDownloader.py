@@ -28,7 +28,6 @@ class DatabaseManager:
             raise
 
     def getAdvertisementVideosFromDatabase(self):
-        # Retrieve advertisement videos from the database
         videos = []
         try:
             with self.conn.cursor() as cursor:
@@ -45,7 +44,6 @@ class DatabaseManager:
     def validate_youtube_url(self, url):
         pattern = re.compile(r'^(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/.*$')
         return pattern.match(url) is not None
-
 
     def download_and_convert_videos(self, download_path):
         video_urls = self.getAdvertisementVideosFromDatabase()
@@ -86,7 +84,8 @@ class DatabaseManager:
                 print(f"An error occurred during download and conversion: {e}")
 
 # Specify the download location
-download_path = r'C:\Users\orqui\OneDrive\Documents\GitHub\imaiTablet\Assets'
+# download_path = 'C:\\Users\\orqui\\OneDrive\\Documents\\GitHub\\imaiTablet\\Assets'
+download_path = 'Assets'
 
 # Create an instance of DatabaseManager
 db_manager = DatabaseManager(

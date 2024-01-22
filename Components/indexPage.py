@@ -17,7 +17,7 @@ class Ui_MainWindow(object):
         self.startAdvertisementVideos()
 
     def startAdvertisementVideos(self):
-        self.advertisment_videos_process = subprocess.Popen(['python', r'Components\AdvertisementDownloader.py'])
+        self.advertisment_videos_process = subprocess.Popen(['python', 'Components\\AdvertisementDownloader.py'])
 
     # Function to call loginOption.py
     def LogInOption (self):

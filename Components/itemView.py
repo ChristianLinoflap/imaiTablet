@@ -92,18 +92,13 @@ class Ui_MainWindowItemView(object):
         self.conn = self.db_manager.connect()
         self.cursor = self.conn.cursor()
 
-        # Reference to the classifier process
         self.classifier_process = None
-
-        # Start the classifier when the item view window is opened
         self.startClassifier()
 
-        # Check every 1000 milliseconds (1 second)
         self.predicted_class_timer = QTimer()
         self.predicted_class_timer.timeout.connect(self.checkPredictedClass)
         self.predicted_class_timer.start(1000) 
 
-        # Initialize other parts of your class here
         self.local_videos = self.getLocalVideosFromFolder()
 
     def checkPredictedClass(self):
@@ -113,7 +108,7 @@ class Ui_MainWindowItemView(object):
             with open("predicted_class.txt", "r") as file:
                 predicted_class = file.read().strip()
 
-            # Process the predicted class (barcode) and update the table
+            # Process the predicted class and update the table
             if predicted_class:
                 self.processScannedBarcode(predicted_class)
 
@@ -124,11 +119,9 @@ class Ui_MainWindowItemView(object):
             # Remove the file to avoid reprocessing the same class
             os.remove("predicted_class.txt")
 
-    # Start the classifier process
     def startClassifier(self):
-        self.classifier_process = subprocess.Popen(['python', r'Components\classifier.py'])
+        self.classifier_process = subprocess.Popen(['python', 'Components\\classifier.py'])
         
-    # Stop the classifier process if running
     def stopClassifier(self):
         if self.classifier_process and self.classifier_process.poll() is None:
             self.classifier_process.terminate()
@@ -432,6 +425,7 @@ class Ui_MainWindowItemView(object):
         self.checkOutPushButton.setObjectName("checkOutPushButton")
         # To call the function PaymentOption to open the page and close the main window
         self.checkOutPushButton.clicked.connect(self.PaymentOption)
+        self.checkOutPushButton.clicked.connect(self.stopVideosAndCheckout)
         self.checkOutPushButton.clicked.connect(MainWindow.close)
 
         self.scanBarcodePushButton = QtWidgets.QPushButton(self.centralwidget)
@@ -460,7 +454,7 @@ class Ui_MainWindowItemView(object):
     
     def getLocalVideosFromFolder(self):
         # Retrieve local videos from the Assets folder
-        local_videos_path = r"C:\Users\orqui\OneDrive\Documents\GitHub\imaiTablet\Assets\*.avi"
+        local_videos_path = "Assets\\*.avi"
         local_videos = glob.glob(local_videos_path)
         print("Local Videos:", local_videos)
         return local_videos
@@ -485,6 +479,19 @@ class Ui_MainWindowItemView(object):
         elif new_state == QMediaPlayer.Error:
             # Error occurred during playback, handle accordingly
             print(f"Error during video playback: {self.video_player.errorString()}")
+    
+    def stopVideosAndCheckout(self):
+        # Stop video playback
+        self.video_player.stop()
+
+        # Release video player resources
+        self.video_player.mediaStatusChanged.disconnect(self.handleVideoStateChange)
+        self.video_player.setMedia(QMediaContent())
+        self.video_player.setVideoOutput(None)
+        self.video_widget.deleteLater()
+
+        # Stop the classifier process
+        self.stopClassifier()
 
     # Scan Barcode Process
     def scanBarcode(self):
@@ -573,7 +580,7 @@ class Ui_MainWindowItemView(object):
                 self.productTable.setItem(rowPosition, 2, item_price) 
                 self.productTable.setItem(rowPosition, 3, item_barcode) 
 
-                self.scan_sound.play()
+                # self.scan_sound.play()
                 self.updateSummaryLabels()
 
                 print(f"Product with barcode {barcode_data} found in the database.")
