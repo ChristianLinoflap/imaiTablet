@@ -25,10 +25,10 @@ class Ui_MainWindowTutorialMember(object):
     def setupTutorialSteps(self):
         # Replace these paths with the actual file paths of your tutorial images
         image_paths = [
-            r"C:\Users\orqui\OneDrive\Documents\GitHub\imaiTablet\Assets\1.png",
-            r"C:\Users\orqui\OneDrive\Documents\GitHub\imaiTablet\Assets\2.png",
-            r"C:\Users\orqui\OneDrive\Documents\GitHub\imaiTablet\Assets\3.png",
-            r"C:\Users\orqui\OneDrive\Documents\GitHub\imaiTablet\Assets\4.png"
+            "Assets\\1.png",
+            "Assets\\2.png",
+            "Assets\\3.png",
+            "Assets\\4.png"
         ]
 
         for image_path in image_paths:

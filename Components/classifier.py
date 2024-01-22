@@ -17,7 +17,7 @@ def load_and_preprocess_image(image_path):
 def main():
     cap = cv2.VideoCapture(0)
 
-    TF_MODEL_FILE_PATH = r'C:\Users\orqui\OneDrive\Documents\GitHub\imaiTablet\Components\model.tflite'
+    TF_MODEL_FILE_PATH = r'Components\\model.tflite'
     interpreter = tf.lite.Interpreter(model_path=TF_MODEL_FILE_PATH)
     classify_lite = interpreter.get_signature_runner('serving_default')
     fgbg = cv2.createBackgroundSubtractorMOG2()
@@ -26,7 +26,7 @@ def main():
 
     frame_count = 0
 
-    predictions_count = r'C:\Users\orqui\OneDrive\Documents\GitHub\imaiTablet\Components\label.txt'
+    predictions_count = 'Components\\label.txt'
     with open(predictions_count, 'r') as file:
         class_names = [line.strip() for line in file.readlines()]
 
