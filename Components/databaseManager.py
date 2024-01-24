@@ -117,3 +117,14 @@ class DatabaseManager:
         except pyodbc.Error as e:
             print(f"Error fetching shopping list items: {e}")
             return None
+    
+    # ADVERTISEMENTVIDEOS - Get Advertisement Videos 
+    def get_advertisement_videos_from_database(self):
+        try:
+            with self.connect() as conn, conn.cursor() as cursor:
+                query = "SELECT AdvertisementVideoURL FROM AdvertisementVideos"
+                cursor.execute(query)
+                return [row.AdvertisementVideoURL for row in cursor.fetchall()]
+        except Exception as e:
+            logging.error(f"Error retrieving advertisement videos from the database: {e}")
+            return []
