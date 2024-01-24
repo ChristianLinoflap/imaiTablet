@@ -9,15 +9,15 @@ class LanguageManager:
         Config.set_language(language)
 
 class Ui_MainWindow(object):
-    def __init__(self):
-        # Reference to the Advertisement Videos process
-        self.advertisment_videos_process = None
+    # def __init__(self):
+    #     # Reference to the Advertisement Videos process
+    #     self.advertisment_videos_process = None
 
-        # Start the Advertisment Videos when the item view window is opened
-        self.startAdvertisementVideos()
+    #     # Start the Advertisment Videos when the item view window is opened
+    #     self.startAdvertisementVideos()
 
-    def startAdvertisementVideos(self):
-        self.advertisment_videos_process = subprocess.Popen(['python', 'Components\\AdvertisementDownloader.py'])
+    # def startAdvertisementVideos(self):
+    #     self.advertisment_videos_process = subprocess.Popen(['python', 'Components\\AdvertisementDownloader.py'])
 
     # Function to call loginOption.py
     def LogInOption (self):
@@ -42,10 +42,10 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
 
         self.startButton = QtWidgets.QPushButton(self.centralwidget)
-        self.startButton.setGeometry(QtCore.QRect(780, 700, 400, 100))
+        self.startButton.setGeometry(QtCore.QRect(683, 800, 575, 125))
         self.startButton.setStyleSheet("#startButton{\n"
 "    font-family: 'Montserrat', sans-serif;\n"
-"    font-size:42px;\n"
+"    font-size:52px;\n"
 "    color:#fff;\n"
 "    border-radius:20px;\n"
 "    background-color:#0000AF;\n"
@@ -58,9 +58,9 @@ class Ui_MainWindow(object):
         self.startButton.clicked.connect(MainWindow.close)
 
         self.productLabel = QtWidgets.QLabel(self.centralwidget)
-        self.productLabel.setGeometry(QtCore.QRect(780, 915, 400, 50))
+        self.productLabel.setGeometry(QtCore.QRect(780, 1050, 400, 50))
         self.productLabel.setStyleSheet("#productLabel{\n"
-"    font-size:30px;\n"
+"    font-size:32px;\n"
 "    font-weight:bold;\n"
 "    font-family: 'Montserrat', sans-serif;\n"
 "}")
@@ -68,33 +68,33 @@ class Ui_MainWindow(object):
         self.productLabel.setObjectName("productLabel")
 
         self.companyLabel = QtWidgets.QLabel(self.centralwidget)
-        self.companyLabel.setGeometry(QtCore.QRect(660, 965, 600, 30))
+        self.companyLabel.setGeometry(QtCore.QRect(665, 1105, 600, 30))
         self.companyLabel.setStyleSheet("#companyLabel{\n"
-"    font-size:24px;\n"
+"    font-size:32px;\n"
 "    font-family: 'Montserrat', sans-serif;\n"
 "}")
         self.companyLabel.setObjectName("companyLabel")
         self.companyLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.bgShape = QtWidgets.QFrame(self.centralwidget)
-        self.bgShape.setGeometry(QtCore.QRect(727, 100, 500, 500))
+        self.bgShape.setGeometry(QtCore.QRect(664, 100, 650, 650))
         self.bgShape.setStyleSheet("#bgShape{\n"
 "    background-color:#FEFCFC;\n"
-"    border-radius:250px;\n"
+"    border-radius:325px;\n"
 "}")
         self.bgShape.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.bgShape.setFrameShadow(QtWidgets.QFrame.Raised)
         self.bgShape.setObjectName("bgShape")
 
         self.translationComboBox = QtWidgets.QComboBox(self.centralwidget)
-        self.translationComboBox.setGeometry(QtCore.QRect(50, 925, 150, 70))
+        self.translationComboBox.setGeometry(QtCore.QRect(30, 30, 200, 100))
         self.translationComboBox.setStyleSheet("#translationComboBox {\n"
 "    font-family: Montserrat;\n"
-"    font-size: 24px;\n"
+"    font-size: 32px;\n"
 "    color: #fff;\n"
 "    border-radius: 0px;\n"
 "    background-color: #0000AF;\n"
-"    padding-left:15px;\n"
+"    padding-left: 15px;\n"
 "}\n"
 "\n"
 "#translationComboBox QAbstractItemView {\n"
@@ -103,7 +103,7 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "#translationComboBox QAbstractItemView::item {\n"
-"    padding: 8px;\n"
+"    padding: 24px;\n"
 "}\n"
 "\n"
 "#translationComboBox QAbstractItemView::item:selected {\n"
@@ -117,6 +117,7 @@ class Ui_MainWindow(object):
         self.translationComboBox.setObjectName("translationComboBox")
         self.translationComboBox.addItem("")
         self.translationComboBox.addItem("")
+
         MainWindow.setCentralWidget(self.centralwidget)
 
         # Connect language change signal

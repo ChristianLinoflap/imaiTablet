@@ -22,16 +22,16 @@ class Ui_MainWindowLogInOption(object):
         self.centralwidget.setObjectName("centralwidget")
 
         self.titleLabel = QtWidgets.QLabel(self.centralwidget)
-        self.titleLabel.setGeometry(QtCore.QRect(670, 319, 590, 41))
+        self.titleLabel.setGeometry(QtCore.QRect(450, 319, 1050, 65))
         self.titleLabel.setStyleSheet("#titleLabel{\n"
 "    font-family:Montserrat;\n"
-"    font-size:35px;\n"
+"    font-size:60px;\n"
 "}")
         self.titleLabel.setObjectName("titleLabel")
         self.titleLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.memberPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.memberPushButton.setGeometry(QtCore.QRect(510, 450, 350, 230))
+        self.memberPushButton.setGeometry(QtCore.QRect(310, 450, 550, 330))
         self.memberPushButton.setStyleSheet("#memberPushButton{\n"
 "    border-radius:25px;\n"
 "    background-color:#0000AF;\n"
@@ -42,9 +42,9 @@ class Ui_MainWindowLogInOption(object):
         self.memberPushButton.clicked.connect(MainWindow.close)
 
         self.memberLabel = QtWidgets.QLabel(self.centralwidget)
-        self.memberLabel.setGeometry(QtCore.QRect(530, 630, 310, 31))
+        self.memberLabel.setGeometry(QtCore.QRect(340, 710, 500, 50))
         self.memberLabel.setStyleSheet("#memberLabel{\n"
-"    font-size:25px;\n" 
+"    font-size:36px;\n" 
 "    font-family:Montserrat;\n"
 "    color:#fff;\n"
 "}")
@@ -52,9 +52,9 @@ class Ui_MainWindowLogInOption(object):
         self.memberLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.nonMemberLabel = QtWidgets.QLabel(self.centralwidget)
-        self.nonMemberLabel.setGeometry(QtCore.QRect(1045, 630, 310, 31))
+        self.nonMemberLabel.setGeometry(QtCore.QRect(1085, 710, 500, 50))
         self.nonMemberLabel.setStyleSheet("#nonMemberLabel{\n"
-"    font-size:25px;\n"
+"    font-size:36px;\n"
 "    font-family:Montserrat;\n"
 "    color:#fff;\n"
 "}")
@@ -62,7 +62,7 @@ class Ui_MainWindowLogInOption(object):
         self.nonMemberLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.nonMemberPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.nonMemberPushButton.setGeometry(QtCore.QRect(1025, 450, 350, 230))
+        self.nonMemberPushButton.setGeometry(QtCore.QRect(1055, 450, 550, 330))
         self.nonMemberPushButton.setStyleSheet("#nonMemberPushButton{\n"
 "    border-radius:25px;\n"
 "    background-color:#0000AF;\n"
