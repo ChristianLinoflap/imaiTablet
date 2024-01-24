@@ -2,69 +2,15 @@ import config
 # Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
-import pyodbc
-from config import db_server_name, db_name, db_username, db_password
-import logging 
-from datetime import datetime, timedelta
 from config import Config, translations
-
-# DataBase Management 
-class DatabaseManager:
-    # Database Initializations
-    def __init__(self, server_name, database_name, username, password):
-        self.server_name = server_name
-        self.database_name = database_name
-        self.username = username
-        self.password = password
-
-    # Database Connection
-    def connect(self):
-        driver_name = 'ODBC Driver 17 for SQL Server'
-        connection_string = f"DRIVER={{{driver_name}}};SERVER={self.server_name};DATABASE={self.database_name};UID={self.username};PWD={self.password}"
-        
-        try:
-            with pyodbc.connect(connection_string, timeout=5) as conn: 
-                return conn
-        except pyodbc.OperationalError as e:
-            logging.error(f"Error connecting to the database: {e}")
-            raise
-
-    # Database User Authentication
-    def authenticate_user(self, cursor, username, password):
-        query = "SELECT UserClientId, FirstName, LastName FROM [dbo].[UserClient] WHERE Email = ? AND Password = ?"
-        cursor.execute(query, username, password)
-        return cursor.fetchone()
-    
-    def get_transaction_id(self, user_client_id, reference_number):
-        query = "SELECT TransactionId FROM [dbo].[Transaction] WHERE UserClientId = ? AND ReferenceNumber = ?;"
-        with self.connect() as conn:
-            with conn.cursor() as cursor:
-                cursor.execute(query, user_client_id, reference_number)
-                result = cursor.fetchone()
-                if result:
-                    return result[0]
-                else:
-                    return None
-    
-    # Insert new transaction
-    def insert_transaction(self, user_client_id, reference_number):
-        japan_time = datetime.utcnow() + timedelta(hours=9)  # Convert UTC to Japan time
-        query = "INSERT INTO [dbo].[Transaction] (UserClientId, CreatedAt, UpdatedAt, TransactionStatus, ReferenceNumber) VALUES (?, ?, ?, 'On-going', ?);"
-        with self.connect() as conn:
-            with conn.cursor() as cursor:
-                cursor.execute(query, user_client_id, japan_time, japan_time, reference_number)
-                conn.commit()
-
-    # Update transaction details
-    def update_transaction(self, user_client_id, reference_number):
-        japan_time = datetime.utcnow() + timedelta(hours=9)  # Convert UTC to Japan time
-        query = "UPDATE [dbo].[Transaction] SET UpdatedAt = ? WHERE UserClientId = ? AND ReferenceNumber = ?;"
-        with self.connect() as conn:
-            with conn.cursor() as cursor:
-                cursor.execute(query, japan_time, user_client_id, reference_number)
-                conn.commit()
+from databaseManager import DatabaseManager, EnvironmentLoader
 
 class Ui_MainWindowLogInMember(object):
+    def __init__(self):
+        self.db_manager = DatabaseManager(*EnvironmentLoader.load_env_variables())
+        self.conn = self.db_manager.connect()
+        self.cursor = self.conn.cursor()
+        
     # Function to Call tutorialMember.py
     def TutorialMember(self):
         from tutorialMember import Ui_MainWindowTutorialMember
@@ -229,16 +175,6 @@ class Ui_MainWindowLogInMember(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-        # # Database connection setup
-        self.db_manager = DatabaseManager(
-            server_name=db_server_name,
-            database_name=db_name,
-            username=db_username,
-            password=db_password
-        )
-        self.conn = self.db_manager.connect()
-        self.cursor = self.conn.cursor()
 
         self.loginPushButton.clicked.connect(self.authenticate_user)
         self.MainWindow = MainWindow

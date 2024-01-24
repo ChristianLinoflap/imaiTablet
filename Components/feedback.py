@@ -1,8 +1,5 @@
 # Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
-
-# Module Imports
-from config import db_server_name, db_name, db_username, db_password
 from config import Config, translations
 import config
 

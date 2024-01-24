@@ -1,79 +1,43 @@
 # Standard Python Library Imports
 import threading
-import subprocess
 import os
 import time
 
-# Third Party Library Imports
+# Third-Party Library Imports
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QTimer
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+from PyQt5.QtMultimediaWidgets import QVideoWidget
+from PyQt5.QtWidgets import QMessageBox
 import cv2
 from pyzbar.pyzbar import decode
-from PyQt5.QtWidgets import QMessageBox
 import pyodbc
 import pygame
 
 # Module Imports
-from config import db_server_name, db_name, db_username, db_password
-from config import Config, translations
 import config
+from classifier import ObjectClassifier
+from config import Config, translations
+from databaseManager import DatabaseManager, EnvironmentLoader
 
-# Add these imports to your existing imports
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
-from PyQt5.QtMultimediaWidgets import QVideoWidget
+# Additional Imports
 import glob
 
-# Database Management 
-class DatabaseManager:
-    # Database Initializations
-    def __init__(self, server_name, database_name, username, password):
-        self.server_name = server_name
-        self.database_name = database_name
-        self.username = username
-        self.password = password
-        
-    # Database Connection
-    def connect(self):
-        driver_name = 'ODBC Driver 17 for SQL Server'
-        connection_string = f"DRIVER={{{driver_name}}};SERVER={self.server_name};DATABASE={self.database_name};UID={self.username};PWD={self.password}"
+class ObjectClassifierThread(QtCore.QThread):
+    def __init__(self, parent=None):
+        super(ObjectClassifierThread, self).__init__(parent)
+        self.object_classifier = ObjectClassifier()
 
-        try:
-            with pyodbc.connect(connection_string, timeout=5) as conn:
-                return conn
-        except pyodbc.OperationalError as e:
-            print(f"Error connecting to the database: {e}")
-            raise
-
-    # Select Query for Product
-    def get_product_details_by_barcode(self, cursor, barcode):
-        try:
-            query = """
-                SELECT * FROM Fn_Products_BranchProducts (?)
-            """
-            cursor.execute(query, barcode)
-            return cursor.fetchone()
-        except Exception as e:
-            print(f"Error: {e}")
-            return None
-        
-     # Select Query for Advertisement Videos
-    def get_advertisement_video_details_by_id(self, cursor, video_id):
-        try:
-            query = """
-                SELECT AdvertisementVideoName, AdvertisementVideoURL
-                FROM AdvertisementVideos
-                WHERE AdvertisementVideoId = ?
-            """
-            cursor.execute(query, video_id)
-            return cursor.fetchone()
-        except Exception as e:
-            print(f"Error: {e}")
-            return None
+    def run(self):
+        self.object_classifier.run_classifier()
 
 # UI Mainwindow Management
 class Ui_MainWindowItemView(object):
     # Initializations
     def __init__(self):
+        self.db_manager = DatabaseManager(*EnvironmentLoader.load_env_variables())
+        self.conn = self.db_manager.connect()
+        self.cursor = self.conn.cursor()
         self.scanning_in_progress = False
         self.scanning_thread = None
         self.last_scan_time = 0
@@ -82,24 +46,23 @@ class Ui_MainWindowItemView(object):
         self.help_window_open = False
         pygame.mixer.init()
         self.scan_sound = pygame.mixer.Sound("Assets\\bgSound.mp3")
-        # Database connection setup
-        self.db_manager = DatabaseManager(
-            server_name=db_server_name,
-            database_name=db_name,
-            username=db_username,
-            password=db_password, 
-        )
-        self.conn = self.db_manager.connect()
-        self.cursor = self.conn.cursor()
 
-        self.classifier_process = None
-        self.startClassifier()
-
+        self.object_classifier_thread = ObjectClassifierThread()
+        self.startObjectClassifierThread()
+    
         self.predicted_class_timer = QTimer()
         self.predicted_class_timer.timeout.connect(self.checkPredictedClass)
         self.predicted_class_timer.start(1000) 
 
         self.local_videos = self.getLocalVideosFromFolder()
+    
+    def startObjectClassifierThread(self):
+        self.object_classifier_thread.start()
+
+    def stopClassifierThread(self):
+        if self.object_classifier_thread.isRunning():
+            self.object_classifier_thread.terminate()
+            self.object_classifier_thread.wait()
 
     def checkPredictedClass(self):
         # Check if the predicted class file exists
@@ -118,14 +81,6 @@ class Ui_MainWindowItemView(object):
             
             # Remove the file to avoid reprocessing the same class
             os.remove("predicted_class.txt")
-
-    def startClassifier(self):
-        self.classifier_process = subprocess.Popen(['python', 'Components\\classifier.py'])
-        
-    def stopClassifier(self):
-        if self.classifier_process and self.classifier_process.poll() is None:
-            self.classifier_process.terminate()
-            self.classifier_process.wait()
 
     # Function to Call help.py
     def SearchProductOption(self):
@@ -491,13 +446,13 @@ class Ui_MainWindowItemView(object):
         self.video_widget.deleteLater()
 
         # Stop the classifier process
-        self.stopClassifier()
+        self.stopClassifierThread()
 
     # Scan Barcode Process
     def scanBarcode(self):
         if not hasattr(self, 'cap') or not self.cap.isOpened():
             # Stop the classifier when the barcode scanner is opened
-            self.stopClassifier()
+            self.stopClassifierThread()
             self.scanBarcodePushButton.setText(translations[Config.current_language]['Close_Barcode_Scanner'])
             QMessageBox.information(None, translations[Config.current_language]['Scan_Barcode_Title'],
                         translations[Config.current_language]['Scan_Barcode_Message'])
@@ -516,7 +471,7 @@ class Ui_MainWindowItemView(object):
             self.scan_timer.stop()
             self.scanning_in_progress = False
             # Start the classifier when the barcode scanner is closed
-            self.startClassifier()  
+            self.startObjectClassifierThread() 
 
     # Decode Barcode 
     def scanBarcodeThread(self):
@@ -532,7 +487,6 @@ class Ui_MainWindowItemView(object):
                     if current_time - self.last_scan_time > 1:
                         self.last_scan_time = current_time
                         self.processScannedBarcode(barcode_data)
-                        
             self.cap.release()
             cv2.destroyAllWindows()
         except Exception as e:
@@ -547,7 +501,7 @@ class Ui_MainWindowItemView(object):
                 # Extract relevant information from product_details
                 product_id = product_details[0]
                 product_name = product_details[1]  
-                product_weight = product_details[7]  
+                product_weight = product_details[6]  
                 product_price = product_details[-1] 
 
                 existing_product = self.checkProductInShoppingList(product_id)

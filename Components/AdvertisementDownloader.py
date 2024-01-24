@@ -1,7 +1,6 @@
 import os
 import re
 import pyodbc
-import threading
 import logging
 from pytube import YouTube
 from moviepy.editor import VideoFileClip
@@ -62,26 +61,30 @@ class DatabaseManager:
         except Exception as e:
             logging.error(f"An error occurred during download and conversion: {e}")
 
-def download_and_convert_videos_batch(video_urls, download_path):
-    db_manager = DatabaseManager(db_server_name, db_name, db_username, db_password)
+class AdvertisementDownloader:
+    def __init__(self):
+        self.db_manager = DatabaseManager(db_server_name, db_name, db_username, db_password)
 
-    for url in video_urls:
-        db_manager.download_and_convert_video(url, download_path)
+    def download_and_convert_videos_batch(self, video_urls, download_path):
+        for url in video_urls:
+            self.db_manager.download_and_convert_video(url, download_path)
+
+    def start_download(self):
+        logging.basicConfig(level=logging.INFO)
+        
+        # Specify the download location
+        download_path = 'Assets'
+
+        # Get the list of advertisement videos and download them in batches
+        video_urls = self.db_manager.get_advertisement_videos_from_database()
+
+        # Split the video URLs into batches (adjust the batch size as needed)
+        batch_size = 5
+        for i in range(0, len(video_urls), batch_size):
+            batch_urls = video_urls[i:i + batch_size]
+            self.download_and_convert_videos_batch(batch_urls, download_path)
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    
-    # Specify the download location
-    download_path = 'Assets'
-
-    # Create an instance of DatabaseManager
-    db_manager = DatabaseManager(db_server_name, db_name, db_username, db_password)
-
-    # Get the list of advertisement videos and download them in batches
-    video_urls = db_manager.get_advertisement_videos_from_database()
-
-    # Split the video URLs into batches (adjust the batch size as needed)
-    batch_size = 5
-    for i in range(0, len(video_urls), batch_size):
-        batch_urls = video_urls[i:i + batch_size]
-        threading.Thread(target=download_and_convert_videos_batch, args=(batch_urls, download_path)).start()
+    # Instantiate AdvertisementDownloader and start the download
+    downloader = AdvertisementDownloader()
+    downloader.start_download()
