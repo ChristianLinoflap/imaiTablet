@@ -4,29 +4,14 @@ import pyodbc
 import logging
 from pytube import YouTube
 from moviepy.editor import VideoFileClip
-from config import db_server_name, db_name, db_username, db_password
+from databaseManager import DatabaseManager, EnvironmentLoader
 
-class DatabaseManager:
-    def __init__(self, server_name, database_name, username, password):
-        self.server_name = server_name
-        self.database_name = database_name
-        self.username = username
-        self.password = password
-        self.connection_string = f"DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={self.server_name};DATABASE={self.database_name};UID={self.username};PWD={self.password}"
-
-    def connect(self):
-        return pyodbc.connect(self.connection_string, timeout=5)
-
-    def get_advertisement_videos_from_database(self):
-        try:
-            with self.connect() as conn, conn.cursor() as cursor:
-                query = "SELECT AdvertisementVideoURL FROM AdvertisementVideos"
-                cursor.execute(query)
-                return [row.AdvertisementVideoURL for row in cursor.fetchall()]
-        except Exception as e:
-            logging.error(f"Error retrieving advertisement videos from the database: {e}")
-            return []
-
+class AdvertisementDownloader:
+    def __init__(self):
+        self.db_manager = DatabaseManager(*EnvironmentLoader.load_env_variables())
+        self.conn = self.db_manager.connect()
+        self.cursor = self.conn.cursor()
+    
     def validate_youtube_url(self, url):
         pattern = re.compile(r'^(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/.*$')
         return pattern.match(url) is not None
@@ -61,13 +46,9 @@ class DatabaseManager:
         except Exception as e:
             logging.error(f"An error occurred during download and conversion: {e}")
 
-class AdvertisementDownloader:
-    def __init__(self):
-        self.db_manager = DatabaseManager(db_server_name, db_name, db_username, db_password)
-
     def download_and_convert_videos_batch(self, video_urls, download_path):
         for url in video_urls:
-            self.db_manager.download_and_convert_video(url, download_path)
+            self.download_and_convert_video(url, download_path)
 
     def start_download(self):
         logging.basicConfig(level=logging.INFO)

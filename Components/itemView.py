@@ -27,9 +27,14 @@ class ObjectClassifierThread(QtCore.QThread):
     def __init__(self, parent=None):
         super(ObjectClassifierThread, self).__init__(parent)
         self.object_classifier = ObjectClassifier()
+        self.is_running = True
 
     def run(self):
         self.object_classifier.run_classifier()
+        time.sleep(1) 
+
+    def stop(self):
+        self.is_running = False
 
 # UI Mainwindow Management
 class Ui_MainWindowItemView(object):
@@ -61,7 +66,7 @@ class Ui_MainWindowItemView(object):
 
     def stopClassifierThread(self):
         if self.object_classifier_thread.isRunning():
-            self.object_classifier_thread.terminate()
+            self.object_classifier_thread.stop() 
             self.object_classifier_thread.wait()
 
     def checkPredictedClass(self):
@@ -452,7 +457,8 @@ class Ui_MainWindowItemView(object):
     def scanBarcode(self):
         if not hasattr(self, 'cap') or not self.cap.isOpened():
             # Stop the classifier when the barcode scanner is opened
-            self.stopClassifierThread()
+            stop = self.stopClassifierThread()
+            print('Stop', stop)
             self.scanBarcodePushButton.setText(translations[Config.current_language]['Close_Barcode_Scanner'])
             QMessageBox.information(None, translations[Config.current_language]['Scan_Barcode_Title'],
                         translations[Config.current_language]['Scan_Barcode_Message'])
@@ -471,7 +477,8 @@ class Ui_MainWindowItemView(object):
             self.scan_timer.stop()
             self.scanning_in_progress = False
             # Start the classifier when the barcode scanner is closed
-            self.startObjectClassifierThread() 
+            start = self.startObjectClassifierThread() 
+            print('Start', start )
 
     # Decode Barcode 
     def scanBarcodeThread(self):
@@ -585,6 +592,7 @@ class Ui_MainWindowItemView(object):
                         translations[Config.current_language]['Scanner_Closed_Message'])
             self.scanning_in_progress = False
             self.scan_timer.stop()
+            self.startObjectClassifierThread()
     
     def populateTableWithScannedProducts(self):
         # Retrieve Reference Number
