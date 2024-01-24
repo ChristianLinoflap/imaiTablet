@@ -40,53 +40,55 @@ class Ui_MainWindowLogInMember(object):
         self.centralwidget.setObjectName("centralwidget")
 
         self.welcomeLabel = QtWidgets.QLabel(self.centralwidget)
-        self.welcomeLabel.setGeometry(QtCore.QRect(570, 350, 400, 41))
+        self.welcomeLabel.setGeometry(QtCore.QRect(685, 150, 600, 70))
         self.welcomeLabel.setStyleSheet("#welcomeLabel{\n"
-"    font-size:42px;\n"
+"    font-size:60px;\n"
 "    font-family:Montserrat;\n"
 "    \n"
 "}")
         self.welcomeLabel.setObjectName("welcomeLabel")
+        self.welcomeLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.secondaryLabel = QtWidgets.QLabel(self.centralwidget)
-        self.secondaryLabel.setGeometry(QtCore.QRect(660, 400, 200, 31))
+        self.secondaryLabel.setGeometry(QtCore.QRect(730, 250, 500, 70))
         self.secondaryLabel.setStyleSheet("#secondaryLabel{\n"
-"    font-size:24px;\n"
+"    font-size:42px;\n"
 "    font-family:Montserrat;\n"
 "}")
         self.secondaryLabel.setObjectName("secondaryLabel")
+        self.secondaryLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.emailLabel = QtWidgets.QLabel(self.centralwidget)
-        self.emailLabel.setGeometry(QtCore.QRect(570, 460, 100, 30))
+        self.emailLabel.setGeometry(QtCore.QRect(425, 350, 150, 80))
         self.emailLabel.setStyleSheet("#emailLabel{\n"
-"    font-size:24px;\n"
+"    font-size:36px;\n"
 "    font-family:Montserrat;\n"
 "}")
         self.emailLabel.setObjectName("emailLabel")
 
         self.passwordLabel = QtWidgets.QLabel(self.centralwidget)
-        self.passwordLabel.setGeometry(QtCore.QRect(570, 560, 100, 30))
+        self.passwordLabel.setGeometry(QtCore.QRect(425, 520, 150, 80))
         self.passwordLabel.setStyleSheet("#passwordLabel{\n"
-"    font-size:24px;\n"
+"    font-size:36px;\n"
 "    font-family:Montserrat;\n"
 "}")
         self.passwordLabel.setObjectName("passwordLabel")
 
         self.emailLineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.emailLineEdit.setGeometry(QtCore.QRect(570, 495, 350, 50))
+        self.emailLineEdit.setGeometry(QtCore.QRect(420, 425, 450, 80))
         self.emailLineEdit.setStyleSheet("#emailLineEdit{\n"
 "    border-radius:10px;\n"
-"    font-size:18px;\n"
+"    font-size:32px;\n"
 "    font-family:Montserrat;\n"
 "    padding:10px;\n"
 "}")
         self.emailLineEdit.setObjectName("emailLineEdit")
 
         self.passwordLineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.passwordLineEdit.setGeometry(QtCore.QRect(570, 595, 350, 50))
+        self.passwordLineEdit.setGeometry(QtCore.QRect(420, 595, 450, 80))
         self.passwordLineEdit.setStyleSheet("#passwordLineEdit{\n"
 "    border-radius:10px;\n"
-"    font-size:18px;\n"
+"    font-size:32px;\n"
 "    font-family:Montserrat;\n"
 "    padding:10px;\n"
 "}")
@@ -94,24 +96,24 @@ class Ui_MainWindowLogInMember(object):
         self.passwordLineEdit.setEchoMode(QtWidgets.QLineEdit.Password)
 
         self.loginPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.loginPushButton.setGeometry(QtCore.QRect(570, 720, 350, 45))
+        self.loginPushButton.setGeometry(QtCore.QRect(420, 820, 450, 100))
         self.loginPushButton.setStyleSheet("#loginPushButton{\n"
 "    background-color:#0000AF;\n"
-"    border-radius:20px;\n"
+"    border-radius:35px;\n"
 "    font-family:Montserrat;\n"
-"    font-size:20px;\n"
+"    font-size:32px;\n"
 "    color:#fff\n"
 "}")
         self.loginPushButton.setObjectName("loginPushButton")
 
         self.backPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.backPushButton.setGeometry(QtCore.QRect(570, 780, 350, 45))
+        self.backPushButton.setGeometry(QtCore.QRect(420, 950, 450, 100))
         self.backPushButton.setStyleSheet("#backPushButton{\n"
 "    background-color:none;\n"
-"    border:4px solid #0000AF;\n"
-"    border-radius:20px;\n"
+"    border:6px solid #0000AF;\n"
+"    border-radius:35px;\n"
 "    font-family:Montserrat;\n"
-"    font-size:20px;\n"
+"    font-size:32px;\n"
 "    color:#fff;\n"
 "}")
         self.backPushButton.setObjectName("backPushButton")
@@ -119,7 +121,7 @@ class Ui_MainWindowLogInMember(object):
         self.backPushButton.clicked.connect(MainWindow.close)
 
         self.qrFrame = QtWidgets.QFrame(self.centralwidget)
-        self.qrFrame.setGeometry(QtCore.QRect(1100, 300, 400, 400))
+        self.qrFrame.setGeometry(QtCore.QRect(1000, 360, 500, 500))
         self.qrFrame.setStyleSheet("#qrFrame{\n"
 "    background-color:#FEFCFC;\n"
 "    border-radius:25px;\n"
@@ -130,7 +132,7 @@ class Ui_MainWindowLogInMember(object):
         self.qrFrame.setObjectName("qrFrame")
 
         self.qrLabel = QtWidgets.QLabel(self.centralwidget)
-        self.qrLabel.setGeometry(QtCore.QRect(1100, 710, 385, 65))
+        self.qrLabel.setGeometry(QtCore.QRect(1025, 860, 480, 85))
         self.qrLabel.setStyleSheet("#qrLabel{\n"
 "    font-size:42px;\n"
 "    font-family:Montserrat;\n"
@@ -139,7 +141,7 @@ class Ui_MainWindowLogInMember(object):
         self.qrLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.scanLabelFrame = QtWidgets.QFrame(self.centralwidget)
-        self.scanLabelFrame.setGeometry(QtCore.QRect(1130, 790, 350, 65))
+        self.scanLabelFrame.setGeometry(QtCore.QRect(980, 930, 550, 125))
         self.scanLabelFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.scanLabelFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.scanLabelFrame.setObjectName("scanLabelFrame")
@@ -149,18 +151,17 @@ class Ui_MainWindowLogInMember(object):
 
         self.scanLabel = QtWidgets.QLabel(self.scanLabelFrame)
         self.scanLabel.setStyleSheet("#scanLabel{\n"
-"    font-size:24px;\n"
+"    font-size:28px;\n"
 "    font-family:Montserrat;\n"
 "}")
         self.scanLabel.setObjectName("scanLabel")
         self.verticalLayout.addWidget(self.scanLabel)
         self.scanLabel_2 = QtWidgets.QLabel(self.scanLabelFrame)
         self.scanLabel_2.setStyleSheet("#scanLabel_2{\n"
-"    font-size:24px;\n"
+"    font-size:28px;\n"
 "    font-family:Montserrat;\n"
 "}")
-        self.scanLabel_2.setObjectName("scanLabel_2"
-                                       )
+        self.scanLabel_2.setObjectName("scanLabel_2")
         self.verticalLayout.addWidget(self.scanLabel_2)
         MainWindow.setCentralWidget(self.centralwidget)
         self.welcomeLabel.raise_()
