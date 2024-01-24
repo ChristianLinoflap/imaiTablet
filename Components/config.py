@@ -1,30 +1,4 @@
-from dotenv import load_dotenv
-import os
 from PyQt5 import QtCore
-
-component_classes = {
-    'loginMember': 'Ui_MainWindowLogInMember',
-    'tutorialMember': 'Ui_MainWindowTutorialMember',
-    'cardPaymentOption': 'Ui_MainWindowCardPaymentOption',
-    'cashPaymentOption': 'Ui_MainWindowCashPaymentOption',
-    'eWalletPaymentOption': 'Ui_MainWindowEWalletPaymentOption',
-    'feedback': 'Ui_MainWindowFeedback',
-    'feedbackQuestions': 'Ui_MainWindowFeedbackQuestions',
-    'help': 'Ui_MainWindowHelp',
-    'itemView': 'Ui_MainWindowItemView',
-    'paymentOption': 'Ui_MainWindowPaymentOption',
-    'search': 'Ui_MainWindowSearchProduct',
-    'shoppingList': 'Ui_MainWindowShoppingList',
-}
-
-# Load environment variables from .env file
-load_dotenv()
-
-# Access the variables
-db_server_name = os.getenv('DB_SERVER_NAME')
-db_name = os.getenv('DB_NAME')
-db_username = os.getenv('DB_USERNAME')
-db_password = os.getenv('DB_PASSWORD')
 
 user_info = {
     'first_name': None,

@@ -1,44 +1,14 @@
 # Third Pary Library Imports
 from PyQt5 import QtCore, QtGui, QtWidgets
-import pyodbc
-
-# Module Imports
-from config import db_server_name, db_name, db_username, db_password
 from config import Config, translations
 import config 
-
-# Database Management 
-class DatabaseManager:
-    # Database Initializations
-    def __init__(self, server_name, database_name, username, password):
-        self.server_name = server_name
-        self.database_name = database_name
-        self.username = username
-        self.password = password
-        
-    # Database Connection
-    def connect(self):
-        driver_name = 'ODBC Driver 17 for SQL Server'
-        connection_string = f"DRIVER={{{driver_name}}};SERVER={self.server_name};DATABASE={self.database_name};UID={self.username};PWD={self.password}"
-
-        try:
-            with pyodbc.connect(connection_string, timeout=5) as conn:
-                return conn
-        except pyodbc.OperationalError as e:
-            print(f"Error connecting to the database: {e}")
-            raise
+from databaseManager import DatabaseManager, EnvironmentLoader
 
 class Ui_MainWindowCashPaymentOption(object):
     # Initializations
     def __init__(self):
         self.help_window_open = False
-        # Database connection setup
-        self.db_manager = DatabaseManager(
-            server_name=db_server_name,
-            database_name=db_name,
-            username=db_username,
-            password=db_password
-        )
+        self.db_manager = DatabaseManager(*EnvironmentLoader.load_env_variables())
         self.conn = self.db_manager.connect()
         self.cursor = self.conn.cursor()
 
