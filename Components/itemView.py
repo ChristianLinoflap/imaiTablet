@@ -451,14 +451,12 @@ class Ui_MainWindowItemView(object):
         self.video_widget.deleteLater()
 
         # Stop the classifier process
-        self.stopClassifierThread()
+        # self.stopClassifierThread()
 
     # Scan Barcode Process
     def scanBarcode(self):
         if not hasattr(self, 'cap') or not self.cap.isOpened():
             # Stop the classifier when the barcode scanner is opened
-            stop = self.stopClassifierThread()
-            print('Stop', stop)
             self.scanBarcodePushButton.setText(translations[Config.current_language]['Close_Barcode_Scanner'])
             QMessageBox.information(None, translations[Config.current_language]['Scan_Barcode_Title'],
                         translations[Config.current_language]['Scan_Barcode_Message'])
@@ -477,8 +475,6 @@ class Ui_MainWindowItemView(object):
             self.scan_timer.stop()
             self.scanning_in_progress = False
             # Start the classifier when the barcode scanner is closed
-            start = self.startObjectClassifierThread() 
-            print('Start', start )
 
     # Decode Barcode 
     def scanBarcodeThread(self):
@@ -592,7 +588,6 @@ class Ui_MainWindowItemView(object):
                         translations[Config.current_language]['Scanner_Closed_Message'])
             self.scanning_in_progress = False
             self.scan_timer.stop()
-            self.startObjectClassifierThread()
     
     def populateTableWithScannedProducts(self):
         # Retrieve Reference Number
