@@ -20,11 +20,11 @@ class ObjectClassifier:
             os.makedirs(directory)
 
     def load_and_preprocess_image(self, image_path):
-        img = image.load_img(image_path, target_size=(180, 180))
-        img_array = image.img_to_array(img)
+        img = tf.keras.preprocessing.image.load_img(image_path, target_size=(180, 180))
+        img_array = tf.keras.preprocessing.image.img_to_array(img)
         img_array = np.expand_dims(img_array, axis=0)
         return img_array
-
+    
     def classify_objects(self, frame):
         fgmask = self.fgbg.apply(frame)
         contours, _ = cv2.findContours(fgmask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -62,7 +62,13 @@ class ObjectClassifier:
                     self.frame_count = 0
 
     def run_classifier(self):
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture(1)
+        
+        desired_width = 640 
+        desired_height = 480
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, desired_width)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, desired_height)
+
         self.create_directory(self.image_directory)
 
         self.frame_count = 0
@@ -71,6 +77,7 @@ class ObjectClassifier:
             ret, frame = cap.read()
             self.classify_objects(frame)
 
+            cv2.imshow('Webcam', frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
