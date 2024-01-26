@@ -11,7 +11,6 @@ from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtWidgets import QMessageBox
 import cv2
 from pyzbar.pyzbar import decode
-import pyodbc
 import pygame
 
 # Module Imports
@@ -27,14 +26,9 @@ class ObjectClassifierThread(QtCore.QThread):
     def __init__(self, parent=None):
         super(ObjectClassifierThread, self).__init__(parent)
         self.object_classifier = ObjectClassifier()
-        self.is_running = True
 
     def run(self):
         self.object_classifier.run_classifier()
-        time.sleep(1) 
-
-    def stop(self):
-        self.is_running = False
 
 # UI Mainwindow Management
 class Ui_MainWindowItemView(object):
@@ -46,6 +40,7 @@ class Ui_MainWindowItemView(object):
         self.scanning_in_progress = False
         self.scanning_thread = None
         self.last_scan_time = 0
+        self.transaction_counter = 1
         self.search_window_open = False
         self.shopping_list_window_open = False
         self.help_window_open = False
@@ -63,11 +58,10 @@ class Ui_MainWindowItemView(object):
     
     def startObjectClassifierThread(self):
         self.object_classifier_thread.start()
-
-    def stopClassifierThread(self):
-        if self.object_classifier_thread.isRunning():
-            self.object_classifier_thread.stop() 
-            self.object_classifier_thread.wait()
+    
+    # def stopObjectClassifierThread(self):
+    #     self.object_classifier_thread.quit()
+    #     self.object_classifier_thread.wait()
 
     def checkPredictedClass(self):
         # Check if the predicted class file exists
@@ -238,10 +232,10 @@ class Ui_MainWindowItemView(object):
         self.searchProductsButton.clicked.connect(self.SearchProductOption)
 
         self.productTable = QtWidgets.QTableWidget(self.centralwidget)
-        self.productTable.setGeometry(QtCore.QRect(50, 200, 1000, 650))
+        self.productTable.setGeometry(QtCore.QRect(50, 200, 1150, 650))
         self.productTable.setGridStyle(QtCore.Qt.SolidLine)
         self.productTable.setObjectName("productTable")
-        self.productTable.setColumnCount(4)
+        self.productTable.setColumnCount(6)
         self.productTable.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(0, item)
@@ -255,6 +249,12 @@ class Ui_MainWindowItemView(object):
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(3, item)
         self.productTable.setColumnWidth(3, 200) 
+        item = QtWidgets.QTableWidgetItem()
+        self.productTable.setHorizontalHeaderItem(4, item)
+        self.productTable.setColumnWidth(4, 150) 
+        item = QtWidgets.QTableWidgetItem()
+        self.productTable.setHorizontalHeaderItem(5, item)
+        self.productTable.setColumnWidth(5, 0) 
         self.productTable.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         # Set the table to read-only
         self.productTable.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
@@ -352,7 +352,7 @@ class Ui_MainWindowItemView(object):
         self.totalOutput.setObjectName("totalOutput")
 
         self.advertisementFrame = QtWidgets.QFrame(self.centralwidget)
-        self.advertisementFrame.setGeometry(QtCore.QRect(1130, 200, 700, 650))
+        self.advertisementFrame.setGeometry(QtCore.QRect(1450, 200, 500, 650))
         self.advertisementFrame.setStyleSheet("#advertisementFrame{\n"
 "    background-color:#FEFCFC;\n"
 "}")
@@ -374,7 +374,7 @@ class Ui_MainWindowItemView(object):
         self.playNextVideo()
 
         self.checkOutPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.checkOutPushButton.setGeometry(QtCore.QRect(1615, 870, 215, 115))
+        self.checkOutPushButton.setGeometry(QtCore.QRect(1665, 870, 215, 115))
         self.checkOutPushButton.setStyleSheet("#checkOutPushButton{\n"
 "    background-color:#0000AF;\n"
 "    border-radius:15px;\n"
@@ -450,13 +450,11 @@ class Ui_MainWindowItemView(object):
         self.video_player.setVideoOutput(None)
         self.video_widget.deleteLater()
 
-        # Stop the classifier process
-        # self.stopClassifierThread()
+        # self.stopObjectClassifierThread()
 
     # Scan Barcode Process
     def scanBarcode(self):
         if not hasattr(self, 'cap') or not self.cap.isOpened():
-            # Stop the classifier when the barcode scanner is opened
             self.scanBarcodePushButton.setText(translations[Config.current_language]['Close_Barcode_Scanner'])
             QMessageBox.information(None, translations[Config.current_language]['Scan_Barcode_Title'],
                         translations[Config.current_language]['Scan_Barcode_Message'])
@@ -474,7 +472,7 @@ class Ui_MainWindowItemView(object):
                         translations[Config.current_language]['Scanning_Done_Message'])
             self.scan_timer.stop()
             self.scanning_in_progress = False
-            # Start the classifier when the barcode scanner is closed
+            self.startObjectClassifierThread()
 
     # Decode Barcode 
     def scanBarcodeThread(self):
@@ -497,6 +495,18 @@ class Ui_MainWindowItemView(object):
             self.cap.release()
             cv2.destroyAllWindows()
 
+    def removeProduct(self, row_position):
+        item_transaction = self.productTable.item(row_position, 5)
+        if item_transaction:
+            identifier = item_transaction.text()
+            self.db_manager.deleteTransactionDetail(identifier)
+            self.productTable.removeRow(row_position)
+            self.updateSummaryLabels()
+
+            print(f"Product with identifier {identifier} removed.")
+        else:
+            print("Error: Unable to retrieve transaction identifier.")
+
     # Proccess Decoded Barcode
     def processScannedBarcode(self, barcode_data):
         product_details = self.db_manager.get_product_details_by_barcode(self.cursor, barcode_data)
@@ -507,10 +517,20 @@ class Ui_MainWindowItemView(object):
                 product_weight = product_details[6]  
                 product_price = product_details[-1] 
 
-                existing_product = self.checkProductInShoppingList(product_id)
+                identifier = f"{config.transaction_info.get('reference_number')} - {self.transaction_counter}"
+                sales_trans = config.transaction_info.get('reference_number')
+
+                remove_button = QtWidgets.QPushButton()
+                remove_icon = QtGui.QIcon('Assets\\remove.png')
+                button_size = QtCore.QSize(130, 30)
+                remove_button.setFixedSize(button_size)
+                remove_button.setIcon(remove_icon)
+                remove_button.clicked.connect(lambda: self.removeProduct(rowPosition))
+
+                existing_product = self.db_manager.checkProductInShoppingList(product_id)
                 if existing_product:
                     # Product exists in the ShoppingListDetail table, update CartQuantity
-                    self.updateCartQuantity(product_id)
+                    self.db_manager.updateCartQuantity(product_id)
                     print(f"CartQuantity updated for ProductId {product_id}.")
                 else:
                     # Product not in the ShoppingListDetail table, perform other actions if needed
@@ -528,14 +548,19 @@ class Ui_MainWindowItemView(object):
                 item_price = QtWidgets.QTableWidgetItem(f"¥ {product_price:.2f}")
                 # Set barcode data to the barcode column
                 item_barcode = QtWidgets.QTableWidgetItem(barcode_data)
+                item_transaction = QtWidgets.QTableWidgetItem(str(identifier))
+                transaction_text = item_transaction.text()
+                self.db_manager.saveTransactionDetail(product_name, product_weight, product_price, barcode_data, sales_trans, transaction_text)
 
-                sales_trans = config.transaction_info.get('reference_number')
-                self.saveTransactionDetail(product_name, product_weight, product_price, barcode_data, sales_trans)
-            
                 self.productTable.setItem(rowPosition, 0, item_name)  
                 self.productTable.setItem(rowPosition, 1, item_weight)
                 self.productTable.setItem(rowPosition, 2, item_price) 
                 self.productTable.setItem(rowPosition, 3, item_barcode) 
+                self.productTable.setCellWidget(rowPosition, 4, remove_button)
+                self.productTable.setItem(rowPosition, 5, item_transaction) 
+
+                # Increment the transaction counter for the next item
+                self.transaction_counter += 1
 
                 # self.scan_sound.play()
                 self.updateSummaryLabels()
@@ -543,40 +568,6 @@ class Ui_MainWindowItemView(object):
                 print(f"Product with barcode {barcode_data} found in the database.")
         else:
                 print(f"Product with barcode {barcode_data} not found in the database.")
-    
-    # Check if the product exists in the ShoppingListDetail table
-    def checkProductInShoppingList(self, product_id):
-        query = "SELECT TOP 1 * FROM ShoppingListDetail WHERE ProductId = ?"
-        self.cursor.execute(query, product_id)
-        return self.cursor.fetchone()
-
-    def updateCartQuantity(self, product_id):
-        # Get the current CartQuantity from ShoppingListDetail
-        query_select = "SELECT CartQuantity FROM ShoppingListDetail WHERE ProductId = ?"
-        self.cursor.execute(query_select, product_id)
-        current_cart_quantity = self.cursor.fetchone()[0]
-
-        # Call the stored procedure to update CartQuantity
-        query_update = "UPDATE ShoppingListDetail SET CartQuantity = ? WHERE ProductId = ?"
-        new_cart_quantity = current_cart_quantity + 1  # Update CartQuantity as needed
-        self.cursor.execute(query_update, new_cart_quantity, product_id)
-        self.conn.commit()
-
-    def saveTransactionDetail(self, item_name, item_weight, item_price, item_barcode, sales_trans):
-        try:
-            # Call the stored procedure using the pyodbc connection
-            self.cursor.execute(
-                "{CALL sp_SaveTransDetail (?, ?, ?, ?, ?)}",
-                item_name, item_weight, item_price, item_barcode, sales_trans
-            )
-            self.conn.commit()
-            print(f"Transaction details for {item_name} saved successfully.")
-        except pyodbc.Error as e:
-            print(f"Error executing the stored procedure: {e}")
-            self.conn.rollback()
-        except Exception as e:
-            print(f"An unexpected error occurred: {e}")
-            self.conn.rollback()
 
     def closeScanner(self):
         if hasattr(self, 'cap') and self.cap.isOpened():
@@ -604,6 +595,13 @@ class Ui_MainWindowItemView(object):
 
         # Fetch one row, expected to return one row
         summary_data = self.cursor.fetchone()
+
+        remove_button = QtWidgets.QPushButton()
+        remove_icon = QtGui.QIcon('Assets\\remove.png')
+        button_size = QtCore.QSize(130, 30)
+        remove_button.setFixedSize(button_size)
+        remove_button.setIcon(remove_icon)
+        remove_button.clicked.connect(lambda: self.removeProduct(rowPosition))
 
         # Check if summary_data is not None before accessing its values
         if summary_data is not None:
@@ -638,6 +636,8 @@ class Ui_MainWindowItemView(object):
             self.productTable.setItem(rowPosition, 1, item_weight)
             self.productTable.setItem(rowPosition, 2, item_price)
             self.productTable.setItem(rowPosition, 3, item_barcode)
+            self.productTable.setCellWidget(rowPosition, 4, remove_button)
+            
 
     def updateSummaryLabels(self):
         # Get the number of unique products
@@ -680,6 +680,10 @@ class Ui_MainWindowItemView(object):
         item.setText(_translate("MainWindow", translation_dict['Price_Label']))
         item = self.productTable.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", translation_dict['Barcode_Label']))
+        item = self.productTable.horizontalHeaderItem(4)
+        item.setText(_translate("MainWindow", translation_dict['Remove_Label']))
+        item = self.productTable.horizontalHeaderItem(5)
+        item.setText(_translate("MainWindow", translation_dict['Remove_Label']))
         self.summaryLabel.setText(_translate("MainWindow", translation_dict['Summary_Label']))
         self.productsLabel.setText(_translate("MainWindow", translation_dict['Total_Products_Label']))
         self.grossLabel.setText(_translate("MainWindow", translation_dict['Total_Gross_Weight']))

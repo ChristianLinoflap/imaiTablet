@@ -62,12 +62,12 @@ class ObjectClassifier:
                     self.frame_count = 0
 
     def run_classifier(self):
-        cap = cv2.VideoCapture(1)
+        cap = cv2.VideoCapture(0)
         
-        desired_width = 640 
-        desired_height = 480
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH, desired_width)
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, desired_height)
+        # desired_width = 640 
+        # desired_height = 480
+        # cap.set(cv2.CAP_PROP_FRAME_WIDTH, desired_width)
+        # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, desired_height)
 
         self.create_directory(self.image_directory)
 
@@ -77,7 +77,7 @@ class ObjectClassifier:
             ret, frame = cap.read()
             self.classify_objects(frame)
 
-            cv2.imshow('Webcam', frame)
+            # cv2.imshow('Webcam', frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
