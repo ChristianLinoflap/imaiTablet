@@ -3,6 +3,7 @@ import numpy as np
 import os
 from keras.preprocessing import image
 import tensorflow as tf
+import threading
 
 class ObjectClassifier:
     def __init__(self, model_path='Components\\model.tflite', label_path='Components\\label.txt'):
@@ -11,9 +12,12 @@ class ObjectClassifier:
         self.fgbg = cv2.createBackgroundSubtractorMOG2()
         self.image_directory = "capture"
         self.label_path = label_path
-
+        
         with open(self.label_path, 'r') as file:
             self.class_names = [line.strip() for line in file.readlines()]
+
+        self.stop_event = threading.Event()
+        threading.Thread(target=self.run_classifier).start()
 
     def create_directory(self, directory):
         if not os.path.exists(directory):
@@ -62,26 +66,29 @@ class ObjectClassifier:
                     self.frame_count = 0
 
     def run_classifier(self):
-        cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(0)
+        self.create_directory(self.image_directory)
+        self.frame_count = 0
         
         # desired_width = 640 
         # desired_height = 480
-        # cap.set(cv2.CAP_PROP_FRAME_WIDTH, desired_width)
-        # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, desired_height)
+        # self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, desired_width)
+        # self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, desired_height)
 
         self.create_directory(self.image_directory)
 
-        self.frame_count = 0
-
         while True:
-            ret, frame = cap.read()
+            ret, frame = self.cap.read()
             self.classify_objects(frame)
 
             # cv2.imshow('Webcam', frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
+                self.stop_classifier()
                 break
-
-        cap.release()
+    
+    def stop_classifier(self):
+        self.stop_event.set()  # Set the stop event
+        self.cap.release()
         cv2.destroyAllWindows()
 
 def main():

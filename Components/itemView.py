@@ -21,15 +21,7 @@ from databaseManager import DatabaseManager, EnvironmentLoader
 
 # Additional Imports
 import glob
-
-class ObjectClassifierThread(QtCore.QThread):
-    def __init__(self, parent=None):
-        super(ObjectClassifierThread, self).__init__(parent)
-        self.object_classifier = ObjectClassifier()
-
-    def run(self):
-        self.object_classifier.run_classifier()
-
+     
 # UI Mainwindow Management
 class Ui_MainWindowItemView(object):
     # Initializations
@@ -46,23 +38,20 @@ class Ui_MainWindowItemView(object):
         self.help_window_open = False
         pygame.mixer.init()
         self.scan_sound = pygame.mixer.Sound("Assets\\bgSound.mp3")
-
-        self.object_classifier_thread = ObjectClassifierThread()
-        self.startObjectClassifierThread()
     
         self.predicted_class_timer = QTimer()
         self.predicted_class_timer.timeout.connect(self.checkPredictedClass)
         self.predicted_class_timer.start(1000) 
 
         self.local_videos = self.getLocalVideosFromFolder()
-    
-    def startObjectClassifierThread(self):
-        self.object_classifier_thread.start()
-    
-    # def stopObjectClassifierThread(self):
-    #     self.object_classifier_thread.quit()
-    #     self.object_classifier_thread.wait()
 
+        # Initialize the ObjectClassifier
+        self.object_classifier = ObjectClassifier()
+    
+    def stop_classifier(self):
+        # Stop the classifier
+        self.object_classifier.stop_classifier()
+ 
     def checkPredictedClass(self):
         # Check if the predicted class file exists
         if os.path.exists("predicted_class.txt"):
@@ -441,38 +430,41 @@ class Ui_MainWindowItemView(object):
             print(f"Error during video playback: {self.video_player.errorString()}")
     
     def stopVideosAndCheckout(self):
-        # Stop video playback
+        self.stop_classifier()
         self.video_player.stop()
-
-        # Release video player resources
         self.video_player.mediaStatusChanged.disconnect(self.handleVideoStateChange)
         self.video_player.setMedia(QMediaContent())
         self.video_player.setVideoOutput(None)
         self.video_widget.deleteLater()
 
-        # self.stopObjectClassifierThread()
-
     # Scan Barcode Process
     def scanBarcode(self):
         if not hasattr(self, 'cap') or not self.cap.isOpened():
+            # Stop the classifier first
+            self.object_classifier.stop_classifier()
+
             self.scanBarcodePushButton.setText(translations[Config.current_language]['Close_Barcode_Scanner'])
             QMessageBox.information(None, translations[Config.current_language]['Scan_Barcode_Title'],
                         translations[Config.current_language]['Scan_Barcode_Message'])
+            
             self.cap = cv2.VideoCapture(0)
             self.scanning_in_progress = True
             self.scan_timer.start(self.scan_timeout)
             self.scanning_thread = threading.Thread(target=self.scanBarcodeThread)
             self.scanning_thread.start()
         else:
+            self.scanning_in_progress = False  # Signal the scanning thread to stop
+            self.scanning_thread.join() 
+
             self.cap.release()
             cv2.destroyAllWindows()
+
             self.scanBarcodePushButton.setText(translations[Config.current_language]['Scan_Barcode_Push_Button'])
             if self.scanning_in_progress:
                 QMessageBox.information(None, translations[Config.current_language]['Scanning_Done_Title'],
                         translations[Config.current_language]['Scanning_Done_Message'])
             self.scan_timer.stop()
-            self.scanning_in_progress = False
-            self.startObjectClassifierThread()
+            self.object_classifier = ObjectClassifier()
 
     # Decode Barcode 
     def scanBarcodeThread(self):
@@ -488,6 +480,7 @@ class Ui_MainWindowItemView(object):
                     if current_time - self.last_scan_time > 1:
                         self.last_scan_time = current_time
                         self.processScannedBarcode(barcode_data)
+            time.sleep(0.5)
             self.cap.release()
             cv2.destroyAllWindows()
         except Exception as e:
@@ -579,6 +572,8 @@ class Ui_MainWindowItemView(object):
                         translations[Config.current_language]['Scanner_Closed_Message'])
             self.scanning_in_progress = False
             self.scan_timer.stop()
+            self.object_classifier = ObjectClassifier()
+            
     
     def populateTableWithScannedProducts(self):
         # Retrieve Reference Number
