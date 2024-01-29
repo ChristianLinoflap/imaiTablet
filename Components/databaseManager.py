@@ -98,6 +98,59 @@ class DatabaseManager:
         except Exception as e:
             print(f"Error: {e}")
             return None
+    
+    # ITEMVIEW - Select Query for Products in Shopping List
+    def checkProductInShoppingList(self, product_id):
+        query = "SELECT TOP 1 * FROM ShoppingListDetail WHERE ProductId = ?"
+        with self.connect() as conn, conn.cursor() as cursor:
+            cursor.execute(query, product_id)
+            return cursor.fetchone()
+
+    # ITEMVIEW - Select Query and Update for Shopping List Detail
+    def updateCartQuantity(self, product_id):
+        query_select = "SELECT CartQuantity FROM ShoppingListDetail WHERE ProductId = ?"
+        with self.connect() as conn, conn.cursor() as cursor:
+            cursor.execute(query_select, product_id)
+            current_cart_quantity = cursor.fetchone()[0]
+
+            query_update = "UPDATE ShoppingListDetail SET CartQuantity = ? WHERE ProductId = ?"
+            new_cart_quantity = current_cart_quantity + 1 
+            cursor.execute(query_update, new_cart_quantity, product_id)
+            conn.commit()
+
+    # ITEMVIEW - Select Query for Save Transaction Detail
+    def saveTransactionDetail(self, item_name, item_weight, item_price, item_barcode, sales_trans, transaction_text):
+        try:
+            with self.connect() as conn, conn.cursor() as cursor:
+                cursor.execute(
+                    "{CALL sp_SaveTransDetail (?, ?, ?, ?, ?, ?)}",
+                    item_name, item_weight, item_price, item_barcode, sales_trans, transaction_text
+                )
+                conn.commit()
+                print(f"Transaction details for {item_name} saved successfully.")
+        except pyodbc.Error as e:
+            print(f"Error executing the stored procedure: {e}")
+            conn.rollback()
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+            conn.rollback()
+
+    # ITEMVIEW - Delete Query for Transaction Detail
+    def deleteTransactionDetail(self, identifier):
+        try:
+            query = "EXEC sp_DeleteTransDetail @Identifier = ?"
+            with self.connect() as conn, conn.cursor() as cursor:
+                cursor.execute(query, identifier)
+                conn.commit()
+                print(f"Transaction detail with identifier {identifier} deleted successfully.")
+        except pyodbc.Error as e:
+            logging.error(f"Error executing the stored procedure to delete transaction detail: {e}")
+            conn.rollback()
+            raise  # Re-raise the exception for higher-level error handling
+        except Exception as e:
+            logging.error(f"An unexpected error occurred while deleting transaction detail: {e}")
+            conn.rollback()
+            raise
         
     # SHOPPINGLIST - Populate Shopping List
     def populate_shopping_list(self, cursor, user_client_id):
