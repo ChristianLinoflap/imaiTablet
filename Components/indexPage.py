@@ -1,4 +1,4 @@
- # Import Python Files
+# Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
 from config import translations, Config
 from AdvertisementDownloader import AdvertisementDownloader
@@ -50,7 +50,7 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
 
         self.startButton = QtWidgets.QPushButton(self.centralwidget)
-        self.startButton.setGeometry(QtCore.QRect(683, 800, 575, 125))
+        self.startButton.setGeometry(QtCore.QRect(683, 670, 575, 125))
         self.startButton.setStyleSheet("#startButton{\n"
 "    font-family: 'Montserrat', sans-serif;\n"
 "    font-size:52px;\n"
@@ -66,7 +66,7 @@ class Ui_MainWindow(object):
         self.startButton.clicked.connect(MainWindow.close)
 
         self.productLabel = QtWidgets.QLabel(self.centralwidget)
-        self.productLabel.setGeometry(QtCore.QRect(780, 1050, 400, 50))
+        self.productLabel.setGeometry(QtCore.QRect(780, 850, 400, 50))
         self.productLabel.setStyleSheet("#productLabel{\n"
 "    font-size:32px;\n"
 "    font-weight:bold;\n"
@@ -76,7 +76,7 @@ class Ui_MainWindow(object):
         self.productLabel.setObjectName("productLabel")
 
         self.companyLabel = QtWidgets.QLabel(self.centralwidget)
-        self.companyLabel.setGeometry(QtCore.QRect(665, 1105, 600, 30))
+        self.companyLabel.setGeometry(QtCore.QRect(665, 905, 600, 30))
         self.companyLabel.setStyleSheet("#companyLabel{\n"
 "    font-size:32px;\n"
 "    font-family: 'Montserrat', sans-serif;\n"
@@ -85,10 +85,10 @@ class Ui_MainWindow(object):
         self.companyLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.bgShape = QtWidgets.QFrame(self.centralwidget)
-        self.bgShape.setGeometry(QtCore.QRect(664, 100, 650, 650))
+        self.bgShape.setGeometry(QtCore.QRect(725, 100, 500, 500))
         self.bgShape.setStyleSheet("#bgShape{\n"
 "    background-color:#FEFCFC;\n"
-"    border-radius:325px;\n"
+"    border-radius:250px;\n"
 "}")
         self.bgShape.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.bgShape.setFrameShadow(QtWidgets.QFrame.Raised)
