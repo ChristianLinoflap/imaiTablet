@@ -31,6 +31,17 @@ class ObjectClassifier:
         img_array = np.expand_dims(img_array, axis=0)
         return img_array
     
+    def saturate_image(self, frame):
+        # Convert BGR image to HSV color space
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+        # Increase saturation (channel index 1 in HSV)
+        hsv[:, :, 1] = np.clip(hsv[:, :, 1] * 1.5, 0, 255).astype(np.uint8)
+
+        # Convert back to BGR color space
+        saturated_frame = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
+
+        return saturated_frame
 
     def classify_objects(self, frame):
         def is_intersect(rect1, rect2):
@@ -52,11 +63,14 @@ class ObjectClassifier:
                 x, y, w, h = cv2.boundingRect(contour)
                 # if is_intersect((x, y, x + w, y + h), fixed_box):
                     # cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                if self.frame_count <= 0:
+                if self.frame_count <= 4:
                     roi = frame[y:y + h, x:x + w]
                     roi_resized = cv2.resize(roi, (180, 180))
                     self.frame_count += 1
-                    cv2.imwrite(f"{self.image_directory}/frame_{self.frame_count}.png", cropped_frame)
+                    saturated_frame = self.saturate_image(cropped_frame)
+
+
+                    cv2.imwrite(f"{self.image_directory}/frame_{self.frame_count}.png", saturated_frame)
                 else:
                     image_paths = [os.path.join(self.image_directory, filename) for filename in os.listdir(self.image_directory)]
 
@@ -79,7 +93,7 @@ class ObjectClassifier:
                     self.frame_count = 0
 
     def run_classifier(self):
-        self.cap = cv2.VideoCapture(1)
+        self.cap = cv2.VideoCapture(0)
         self.create_directory(self.image_directory)
         self.frame_count = 0
 
