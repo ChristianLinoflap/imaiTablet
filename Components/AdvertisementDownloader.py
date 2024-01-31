@@ -1,6 +1,5 @@
 import os
 import re
-import pyodbc
 import logging
 from pytube import YouTube
 from moviepy.editor import VideoFileClip

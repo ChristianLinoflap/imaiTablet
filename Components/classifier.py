@@ -4,6 +4,7 @@ import os
 from keras.preprocessing import image
 import tensorflow as tf
 import threading
+from PyQt5 import QtWidgets
 
 class ObjectClassifier:
     def __init__(self, model_path='Components\\model.tflite', label_path='Components\\label.txt'):
@@ -17,6 +18,7 @@ class ObjectClassifier:
             self.class_names = [line.strip() for line in file.readlines()]
 
         self.stop_event = threading.Event()
+        self.frame_count = 0
         threading.Thread(target=self.run_classifier).start()
 
     def create_directory(self, directory):
@@ -24,7 +26,7 @@ class ObjectClassifier:
             os.makedirs(directory)
 
     def load_and_preprocess_image(self, image_path):
-        img = tf.keras.preprocessing.image.load_img(image_path, target_size=(180, 180))
+        img = tf.keras.preprocessing.image.load_img(image_path, target_size=(256, 256))
         img_array = tf.keras.preprocessing.image.img_to_array(img)
         img_array = np.expand_dims(img_array, axis=0)
         return img_array
@@ -69,27 +71,26 @@ class ObjectClassifier:
         self.cap = cv2.VideoCapture(0)
         self.create_directory(self.image_directory)
         self.frame_count = 0
-        
-        # desired_width = 640 
-        # desired_height = 480
-        # self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, desired_width)
-        # self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, desired_height)
 
-        self.create_directory(self.image_directory)
-
-        while True:
+        while not self.stop_event.is_set():  # Check the stop_event
             ret, frame = self.cap.read()
             self.classify_objects(frame)
 
-            # cv2.imshow('Webcam', frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 self.stop_classifier()
                 break
+
     
     def stop_classifier(self):
-        self.stop_event.set()  # Set the stop event
-        self.cap.release()
-        cv2.destroyAllWindows()
+        try:
+            self.stop_event.set()  # Set the stop event
+            if hasattr(self, 'cap') and self.cap.isOpened():
+                self.cap.release()
+            cv2.destroyAllWindows()
+        except Exception as e:
+            error_message = f"An unexpected error occurred while stopping the classifier: {e}"
+            print(error_message)
+            QtWidgets.QMessageBox.critical(None, "Error", error_message)
 
 def main():
     classifier = ObjectClassifier()
