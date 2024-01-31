@@ -31,21 +31,32 @@ class ObjectClassifier:
         img_array = np.expand_dims(img_array, axis=0)
         return img_array
     
+
     def classify_objects(self, frame):
+        def is_intersect(rect1, rect2):
+            return not (rect1[2] < rect2[0] or rect1[0] > rect2[2] or rect1[3] < rect2[1] or rect1[1] > rect2[3])
+
         fgmask = self.fgbg.apply(frame)
         contours, _ = cv2.findContours(fgmask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
+        cropped_frame = frame[150:, :1000]
+        center_x, center_y = frame.shape[1] // 2, frame.shape[0] // 1
+        box_size = 800
+        fixed_box = (
+        center_x - box_size // 1, center_y - box_size // 30, center_x + box_size // 1, center_y + box_size // 30)
+        # cv2.rectangle(frame, (fixed_box[0], fixed_box[1]), (fixed_box[2], fixed_box[3]), (255, 0, 0), 1)
+        
         for contour in contours:
             area = cv2.contourArea(contour)
 
-            if area >= 50000:
+            if area >= 40000:
                 x, y, w, h = cv2.boundingRect(contour)
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                if self.frame_count <= 4:
+                # if is_intersect((x, y, x + w, y + h), fixed_box):
+                    # cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                if self.frame_count <= 0:
                     roi = frame[y:y + h, x:x + w]
                     roi_resized = cv2.resize(roi, (180, 180))
                     self.frame_count += 1
-                    cv2.imwrite(f"{self.image_directory}/frame_{self.frame_count}.png", roi_resized)
+                    cv2.imwrite(f"{self.image_directory}/frame_{self.frame_count}.png", cropped_frame)
                 else:
                     image_paths = [os.path.join(self.image_directory, filename) for filename in os.listdir(self.image_directory)]
 
@@ -68,14 +79,14 @@ class ObjectClassifier:
                     self.frame_count = 0
 
     def run_classifier(self):
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(1)
         self.create_directory(self.image_directory)
         self.frame_count = 0
 
         while not self.stop_event.is_set():  # Check the stop_event
             ret, frame = self.cap.read()
             self.classify_objects(frame)
-
+            cv2.imshow('frame', frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 self.stop_classifier()
                 break

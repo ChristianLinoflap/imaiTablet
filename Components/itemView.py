@@ -42,7 +42,7 @@ class Ui_MainWindowItemView(object):
     
         self.predicted_class_timer = QTimer()
         self.predicted_class_timer.timeout.connect(self.checkPredictedClass)
-        self.predicted_class_timer.start(2500) 
+        self.predicted_class_timer.start(3000) 
 
         self.local_videos = self.getLocalVideosFromFolder()
 
