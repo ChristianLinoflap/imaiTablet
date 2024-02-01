@@ -32,43 +32,30 @@ class ObjectClassifier:
         return img_array
     
     def saturate_image(self, frame):
-        # Convert BGR image to HSV color space
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-
-        # Increase saturation (channel index 1 in HSV)
         hsv[:, :, 1] = np.clip(hsv[:, :, 1] * 1.5, 0, 255).astype(np.uint8)
-
-        # Convert back to BGR color space
         saturated_frame = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
-
         return saturated_frame
 
     def classify_objects(self, frame):
-        def is_intersect(rect1, rect2):
-            return not (rect1[2] < rect2[0] or rect1[0] > rect2[2] or rect1[3] < rect2[1] or rect1[1] > rect2[3])
-
         fgmask = self.fgbg.apply(frame)
         contours, _ = cv2.findContours(fgmask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cropped_frame = frame[150:, :1000]
         center_x, center_y = frame.shape[1] // 2, frame.shape[0] // 1
         box_size = 800
         fixed_box = (
-        center_x - box_size // 1, center_y - box_size // 30, center_x + box_size // 1, center_y + box_size // 30)
-        # cv2.rectangle(frame, (fixed_box[0], fixed_box[1]), (fixed_box[2], fixed_box[3]), (255, 0, 0), 1)
+            center_x - box_size // 1, center_y - box_size // 30, center_x + box_size // 1, center_y + box_size // 30)
         
         for contour in contours:
             area = cv2.contourArea(contour)
 
             if area >= 40000:
                 x, y, w, h = cv2.boundingRect(contour)
-                # if is_intersect((x, y, x + w, y + h), fixed_box):
-                    # cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
                 if self.frame_count <= 4:
                     roi = frame[y:y + h, x:x + w]
                     roi_resized = cv2.resize(roi, (180, 180))
                     self.frame_count += 1
                     saturated_frame = self.saturate_image(cropped_frame)
-
 
                     cv2.imwrite(f"{self.image_directory}/frame_{self.frame_count}.png", saturated_frame)
                 else:
@@ -97,18 +84,16 @@ class ObjectClassifier:
         self.create_directory(self.image_directory)
         self.frame_count = 0
 
-        while not self.stop_event.is_set():  # Check the stop_event
+        while not self.stop_event.is_set():  
             ret, frame = self.cap.read()
             self.classify_objects(frame)
-            cv2.imshow('frame', frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 self.stop_classifier()
                 break
 
-    
     def stop_classifier(self):
         try:
-            self.stop_event.set()  # Set the stop event
+            self.stop_event.set()
             if hasattr(self, 'cap') and self.cap.isOpened():
                 self.cap.release()
             cv2.destroyAllWindows()

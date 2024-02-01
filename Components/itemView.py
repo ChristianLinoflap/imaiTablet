@@ -561,8 +561,8 @@ class Ui_MainWindowItemView(object):
                     else:
                         print(f"Product with ProductId {product_id} not found in the ShoppingListDetail table.")
 
-                    rowPosition = self.productTable.rowCount()
-                    self.productTable.insertRow(rowPosition)
+                    rowPosition = 0
+                    self.productTable.insertRow(0)
 
                     item_name = QtWidgets.QTableWidgetItem(product_name)
                     item_weight = QtWidgets.QTableWidgetItem(f"{product_weight} grams")       
@@ -572,10 +572,10 @@ class Ui_MainWindowItemView(object):
                     transaction_text = item_transaction.text()
                     self.db_manager.saveTransactionDetail(product_name, product_weight, product_price, barcode_data, sales_trans, transaction_text)
 
-                    self.productTable.setItem(rowPosition, 0, item_name)  
-                    self.productTable.setItem(rowPosition, 1, item_weight)
-                    self.productTable.setItem(rowPosition, 2, item_price) 
-                    self.productTable.setItem(rowPosition, 3, item_barcode) 
+                    self.productTable.setItem(0, 0, item_name)  
+                    self.productTable.setItem(0, 1, item_weight)
+                    self.productTable.setItem(0, 2, item_price) 
+                    self.productTable.setItem(0, 3, item_barcode) 
 
                     remove_button = QtWidgets.QPushButton()
                     remove_icon = QtGui.QIcon('Assets\\remove.png')
@@ -583,12 +583,12 @@ class Ui_MainWindowItemView(object):
                     remove_button.setFixedSize(button_size)
                     remove_button.setIcon(remove_icon)
 
-                    remove_button.clicked.connect(lambda row=rowPosition: self.removeProduct(row))
+                    remove_button.clicked.connect(lambda row=0: self.removeProduct(row))
 
                     print(f"Creating remove_button for row {rowPosition}")
-                    QtCore.QTimer.singleShot(0, lambda: self.productTable.setCellWidget(rowPosition, 4, remove_button))
+                    QtCore.QTimer.singleShot(0, lambda: self.productTable.setCellWidget(0, 4, remove_button))
                     self.productTable.repaint()
-                    self.productTable.setItem(rowPosition, 5, item_transaction) 
+                    self.productTable.setItem(0, 5, item_transaction)
 
                     self.transaction_counter += 1
 
