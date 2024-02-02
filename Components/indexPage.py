@@ -8,24 +8,24 @@ class LanguageManager:
     def set_language(cls, language):
         Config.set_language(language)
 
-class AdvertisementThread(QtCore.QThread):
-    def __init__(self, parent=None):
-        super(AdvertisementThread, self).__init__(parent)
-        self.advertisement_downloader = AdvertisementDownloader()
+# class AdvertisementThread(QtCore.QThread):
+#     def __init__(self, parent=None):
+#         super(AdvertisementThread, self).__init__(parent)
+#         self.advertisement_downloader = AdvertisementDownloader()
 
-    def run(self):
-        self.advertisement_downloader.start_download()
+#     def run(self):
+#         self.advertisement_downloader.start_download()
 
 class Ui_MainWindow(object):
-    def __init__(self):
-         # Reference to the Advertisement Thread
-        self.advertisement_thread = AdvertisementThread()
+    # def __init__(self):
+    #      # Reference to the Advertisement Thread
+    #     self.advertisement_thread = AdvertisementThread()
 
-        # Start the Advertisement Thread when the item view window is opened
-        self.startAdvertisementThread()
+    #     # Start the Advertisement Thread when the item view window is opened
+    #     self.startAdvertisementThread()
 
-    def startAdvertisementThread(self):
-        self.advertisement_thread.start()
+    # def startAdvertisementThread(self):
+    #     self.advertisement_thread.start()
 
     # Function to call loginOption.py
     def LogInOption (self):
@@ -50,14 +50,14 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
 
         self.startButton = QtWidgets.QPushButton(self.centralwidget)
-        self.startButton.setGeometry(QtCore.QRect(683, 670, 575, 125))
+        self.startButton.setGeometry(QtCore.QRect(510, 440, 255, 100))
         self.startButton.setStyleSheet("#startButton{\n"
 "    font-family: 'Montserrat', sans-serif;\n"
-"    font-size:52px;\n"
+"    font-size:32px;\n"
 "    color:#fff;\n"
 "    border-radius:20px;\n"
 "    background-color:#0000AF;\n"
-"    padding: 5px;\n"
+"    padding: 10px;\n"
 "    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);\n"
 "}")
         self.startButton.setObjectName("startButton")
@@ -66,9 +66,9 @@ class Ui_MainWindow(object):
         self.startButton.clicked.connect(MainWindow.close)
 
         self.productLabel = QtWidgets.QLabel(self.centralwidget)
-        self.productLabel.setGeometry(QtCore.QRect(780, 850, 400, 50))
+        self.productLabel.setGeometry(QtCore.QRect(535, 635, 200, 50))
         self.productLabel.setStyleSheet("#productLabel{\n"
-"    font-size:32px;\n"
+"    font-size:24px;\n"
 "    font-weight:bold;\n"
 "    font-family: 'Montserrat', sans-serif;\n"
 "}")
@@ -76,29 +76,29 @@ class Ui_MainWindow(object):
         self.productLabel.setObjectName("productLabel")
 
         self.companyLabel = QtWidgets.QLabel(self.centralwidget)
-        self.companyLabel.setGeometry(QtCore.QRect(665, 905, 600, 30))
+        self.companyLabel.setGeometry(QtCore.QRect(430, 605, 405, 30))
         self.companyLabel.setStyleSheet("#companyLabel{\n"
-"    font-size:32px;\n"
+"    font-size:24px;\n"
 "    font-family: 'Montserrat', sans-serif;\n"
 "}")
         self.companyLabel.setObjectName("companyLabel")
         self.companyLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.bgShape = QtWidgets.QFrame(self.centralwidget)
-        self.bgShape.setGeometry(QtCore.QRect(725, 100, 500, 500))
+        self.bgShape.setGeometry(QtCore.QRect(465, 50, 350, 350))
         self.bgShape.setStyleSheet("#bgShape{\n"
 "    background-color:#FEFCFC;\n"
-"    border-radius:250px;\n"
+"    border-radius:175px;\n"
 "}")
         self.bgShape.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.bgShape.setFrameShadow(QtWidgets.QFrame.Raised)
         self.bgShape.setObjectName("bgShape")
 
         self.translationComboBox = QtWidgets.QComboBox(self.centralwidget)
-        self.translationComboBox.setGeometry(QtCore.QRect(30, 30, 200, 100))
+        self.translationComboBox.setGeometry(QtCore.QRect(25, 25, 150, 75))
         self.translationComboBox.setStyleSheet("#translationComboBox {\n"
 "    font-family: Montserrat;\n"
-"    font-size: 32px;\n"
+"    font-size: 24px;\n"
 "    color: #fff;\n"
 "    border-radius: 0px;\n"
 "    background-color: #0000AF;\n"

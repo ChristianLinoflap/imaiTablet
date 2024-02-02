@@ -153,7 +153,7 @@ class Ui_MainWindowItemView(object):
         self.centralwidget.setObjectName("centralwidget")
 
         self.navigationFrame = QtWidgets.QFrame(self.centralwidget)
-        self.navigationFrame.setGeometry(QtCore.QRect(0, 0, MainWindow.width(), 150))
+        self.navigationFrame.setGeometry(QtCore.QRect(0, 0, MainWindow.width(), 110))
         self.navigationFrame.setStyleSheet("#navigationFrame{\n"
 "    background-color:#0000AF;\n"
 "}")
@@ -162,10 +162,10 @@ class Ui_MainWindowItemView(object):
         self.navigationFrame.setObjectName("navigationFrame")
 
         self.nameOutput = QtWidgets.QLabel(self.navigationFrame)
-        self.nameOutput.setGeometry(QtCore.QRect(50, 50, 900, 35))
+        self.nameOutput.setGeometry(QtCore.QRect(20, 20, 920, 55))
         self.nameOutput.setStyleSheet("#nameOutput{\n"
 "    font-weight:bold;\n"
-"    font-size:42px;\n"
+"    font-size:28px;\n"
 "    color:#fff;\n"
 "}")
         self.nameOutput.setObjectName("nameOutput")
@@ -177,7 +177,7 @@ class Ui_MainWindowItemView(object):
         self.nameOutput.setText(translated_welcome_message)
 
         self.roleOutput = QtWidgets.QLabel(self.navigationFrame)
-        self.roleOutput.setGeometry(QtCore.QRect(50, 100, 75, 16))
+        self.roleOutput.setGeometry(QtCore.QRect(20, 51, 95, 25))
         self.roleOutput.setStyleSheet("#roleOutput{\n"
 "    font-size:24px;\n"
 "    font-family:Montserrat;\n"
@@ -186,7 +186,7 @@ class Ui_MainWindowItemView(object):
         self.roleOutput.setObjectName("roleOutput")
         
         self.helpPushButton = QtWidgets.QPushButton(self.navigationFrame)
-        self.helpPushButton.setGeometry(QtCore.QRect(1700, 55, 150, 50))
+        self.helpPushButton.setGeometry(QtCore.QRect(1145, 25, 150, 50))
         self.helpPushButton.setStyleSheet("#helpPushButton{\n"
 "    background-color:none;\n"
 "    border:none;\n"
@@ -198,7 +198,7 @@ class Ui_MainWindowItemView(object):
         self.helpPushButton.clicked.connect(self.HelpOption)
 
         self.shoppingListButton = QtWidgets.QPushButton(self.navigationFrame)
-        self.shoppingListButton.setGeometry(QtCore.QRect(1425, 55, 150, 50))
+        self.shoppingListButton.setGeometry(QtCore.QRect(975, 25, 150, 50))
         self.shoppingListButton.setStyleSheet("#shoppingListButton{\n"
 "    background-color:none;\n"
 "    border:none;\n"
@@ -210,7 +210,7 @@ class Ui_MainWindowItemView(object):
         self.shoppingListButton.clicked.connect(self.ShoppingList)
 
         self.searchProductsButton = QtWidgets.QPushButton(self.navigationFrame)
-        self.searchProductsButton.setGeometry(QtCore.QRect(1125, 55, 150, 50))
+        self.searchProductsButton.setGeometry(QtCore.QRect(710, 25, 200, 50))
         self.searchProductsButton.setStyleSheet("#searchProductsButton{\n"
 "    background-color:none;\n"
 "    border:none;\n"
@@ -222,30 +222,29 @@ class Ui_MainWindowItemView(object):
         self.searchProductsButton.clicked.connect(self.SearchProductOption)
 
         self.productTable = QtWidgets.QTableWidget(self.centralwidget)
-        self.productTable.setGeometry(QtCore.QRect(50, 200, 1150, 650))
+        self.productTable.setGeometry(QtCore.QRect(20, 130, 740, 475))
         self.productTable.setGridStyle(QtCore.Qt.SolidLine)
         self.productTable.setObjectName("productTable")
         self.productTable.setColumnCount(6)
         self.productTable.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(0, item)
-        self.productTable.setColumnWidth(0, 400)
+        self.productTable.setColumnWidth(0, 518)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(1, item)
-        self.productTable.setColumnWidth(1, 200)
+        self.productTable.setColumnWidth(1, 0)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(2, item)
-        self.productTable.setColumnWidth(2, 200) 
+        self.productTable.setColumnWidth(2, 110) 
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(3, item)
-        self.productTable.setColumnWidth(3, 200) 
+        self.productTable.setColumnWidth(3, 0) 
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(4, item)
-        self.productTable.setColumnWidth(4, 150) 
+        self.productTable.setColumnWidth(4, 110) 
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(5, item)
         self.productTable.setColumnWidth(5, 0) 
-        self.productTable.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         # Set the table to read-only
         self.productTable.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
         # Make column headers not movable
@@ -253,17 +252,17 @@ class Ui_MainWindowItemView(object):
         # Set column width and row height to be fixed
         self.productTable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         self.productTable.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
+        self.productTable.verticalHeader().setVisible(False)
         data_font = QtGui.QFont()
         header_font = QtGui.QFont()
-        data_font.setPointSize(12)
-        header_font.setPointSize(14)
-
+        data_font.setPointSize(16)
+        header_font.setPointSize(16)
         self.productTable.setFont(data_font)
         header_stylesheet = "QHeaderView::section { font-size: 14px; }"
         self.productTable.horizontalHeader().setStyleSheet(header_stylesheet)
 
         self.summaryFrame = QtWidgets.QFrame(self.centralwidget)
-        self.summaryFrame.setGeometry(QtCore.QRect(50, 870, 740, 115))
+        self.summaryFrame.setGeometry(QtCore.QRect(20, 610, 550, 100))
         self.summaryFrame.setStyleSheet("#summaryFrame{\n"
 "    background-color:#FEFCFC;\n"
 "    border-radius:15px;\n"
@@ -273,7 +272,7 @@ class Ui_MainWindowItemView(object):
         self.summaryFrame.setObjectName("summaryFrame")
 
         self.summaryLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.summaryLabel.setGeometry(QtCore.QRect(10, 10, 100, 30))
+        self.summaryLabel.setGeometry(QtCore.QRect(6, 10, 120, 30))
         self.summaryLabel.setStyleSheet("#summaryLabel{\n"
 "    font-size:24px;\n"
 "    font-family:Montserrat;\n"
@@ -282,7 +281,7 @@ class Ui_MainWindowItemView(object):
         self.summaryLabel.setObjectName("summaryLabel")
 
         self.productsLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.productsLabel.setGeometry(QtCore.QRect(10, 55, 111, 16))
+        self.productsLabel.setGeometry(QtCore.QRect(10, 45, 150, 25))
         self.productsLabel.setStyleSheet("#productsLabel{\n"
 "    font-size:16px;\n"
 "    color:#A0A0A0;\n"
@@ -290,7 +289,7 @@ class Ui_MainWindowItemView(object):
         self.productsLabel.setObjectName("productsLabel")
 
         self.grossLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.grossLabel.setGeometry(QtCore.QRect(175, 55, 71, 16))
+        self.grossLabel.setGeometry(QtCore.QRect(160, 45, 125, 25))
         self.grossLabel.setStyleSheet("#grossLabel{\n"
 "    font-size:16px;\n"
 "    color:#A0A0A0;\n"
@@ -298,7 +297,7 @@ class Ui_MainWindowItemView(object):
         self.grossLabel.setObjectName("grossLabel")
 
         self.itemsLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.itemsLabel.setGeometry(QtCore.QRect(360, 55, 101, 16))
+        self.itemsLabel.setGeometry(QtCore.QRect(310, 45, 125, 25))
         self.itemsLabel.setStyleSheet("#itemsLabel{\n"
 "    font-size:16px;\n"
 "    color:#A0A0A0;\n"
@@ -306,7 +305,7 @@ class Ui_MainWindowItemView(object):
         self.itemsLabel.setObjectName("itemsLabel")
 
         self.totalLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.totalLabel.setGeometry(QtCore.QRect(515, 55, 61, 16))
+        self.totalLabel.setGeometry(QtCore.QRect(455, 45, 125, 25))
         self.totalLabel.setStyleSheet("#totalLabel{\n"
 "    font-size:16px;\n"
 "    color:#A0A0A0;\n"
@@ -314,35 +313,35 @@ class Ui_MainWindowItemView(object):
         self.totalLabel.setObjectName("totalLabel")
 
         self.productsOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.productsOutput.setGeometry(QtCore.QRect(10, 75, 100, 16))
+        self.productsOutput.setGeometry(QtCore.QRect(10, 65, 100, 15))
         self.productsOutput.setStyleSheet("#productsOutput{\n"
 "    font-size:16px;\n"
 "}")
         self.productsOutput.setObjectName("productsOutput")
 
         self.grossOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.grossOutput.setGeometry(QtCore.QRect(175, 70, 100, 25))
+        self.grossOutput.setGeometry(QtCore.QRect(160, 65, 125, 20))
         self.grossOutput.setStyleSheet("#grossOutput{\n"
 "    font-size:16px;\n"
 "}")
         self.grossOutput.setObjectName("grossOutput")
 
         self.itemsOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.itemsOutput.setGeometry(QtCore.QRect(360, 75, 100, 13))
+        self.itemsOutput.setGeometry(QtCore.QRect(310, 65, 100, 15))
         self.itemsOutput.setStyleSheet("#itemsOutput{\n"
 "    font-size:16px;\n"
 "}")
         self.itemsOutput.setObjectName("itemsOutput")
 
         self.totalOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.totalOutput.setGeometry(QtCore.QRect(515, 75, 100, 13))
+        self.totalOutput.setGeometry(QtCore.QRect(455, 65, 100, 15))
         self.totalOutput.setStyleSheet("#totalOutput{\n"
 "    font-size:16px;\n"
 "}")
         self.totalOutput.setObjectName("totalOutput")
 
         self.advertisementFrame = QtWidgets.QFrame(self.centralwidget)
-        self.advertisementFrame.setGeometry(QtCore.QRect(1250, 200, 630, 650))
+        self.advertisementFrame.setGeometry(QtCore.QRect(780, 130, 475, 475))
         self.advertisementFrame.setStyleSheet("#advertisementFrame{\n"
 "    background-color:#FEFCFC;\n"
 "}")
@@ -354,7 +353,7 @@ class Ui_MainWindowItemView(object):
         self.video_player = QMediaPlayer()
         self.video_widget = QVideoWidget(self.advertisementFrame)
         self.video_player.setVideoOutput(self.video_widget)
-        self.video_widget.setFixedSize(700, 650)
+        self.video_widget.setFixedSize(475, 475)
         self.video_player.mediaStatusChanged.connect(self.handleVideoStateChange)
 
         self.local_videos = self.getLocalVideosFromFolder()
@@ -364,11 +363,11 @@ class Ui_MainWindowItemView(object):
         self.playNextVideo()
 
         self.checkOutPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.checkOutPushButton.setGeometry(QtCore.QRect(1665, 870, 215, 115))
+        self.checkOutPushButton.setGeometry(QtCore.QRect(1085, 610, 170, 100))
         self.checkOutPushButton.setStyleSheet("#checkOutPushButton{\n"
 "    background-color:#0000AF;\n"
 "    border-radius:15px;\n"
-"    font-size:20px;\n"
+"    font-size:14px;\n"
 "    font-family:Montserrat;\n"
 "    color:#fff;\n"
 "}")
@@ -379,11 +378,11 @@ class Ui_MainWindowItemView(object):
         self.checkOutPushButton.clicked.connect(MainWindow.close)
 
         self.scanBarcodePushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.scanBarcodePushButton.setGeometry(QtCore.QRect(840, 870, 215, 115))
+        self.scanBarcodePushButton.setGeometry(QtCore.QRect(590, 610, 170, 100))
         self.scanBarcodePushButton.setStyleSheet("#scanBarcodePushButton{\n"
 "    background-color:#F4C430;\n"
-"    border-radius:5px;\n"
-"    font-size:20px;\n"
+"    border-radius:20px;\n"
+"    font-size:14px;\n"
 "    font-family:Montserrat;\n"
 "    color:#000;\n"
 "}")
@@ -565,7 +564,7 @@ class Ui_MainWindowItemView(object):
                     self.productTable.insertRow(0)
 
                     item_name = QtWidgets.QTableWidgetItem(product_name)
-                    item_weight = QtWidgets.QTableWidgetItem(f"{product_weight} grams")       
+                    item_weight = QtWidgets.QTableWidgetItem(f"{product_weight} g")       
                     item_price = QtWidgets.QTableWidgetItem(f"¥ {product_price:.2f}")
                     item_barcode = QtWidgets.QTableWidgetItem(barcode_data)
                     item_transaction = QtWidgets.QTableWidgetItem(str(identifier))
@@ -579,7 +578,7 @@ class Ui_MainWindowItemView(object):
 
                     remove_button = QtWidgets.QPushButton()
                     remove_icon = QtGui.QIcon('Assets\\remove.png')
-                    button_size = QtCore.QSize(130, 30)
+                    button_size = QtCore.QSize(110, 30)
                     remove_button.setFixedSize(button_size)
                     remove_button.setIcon(remove_icon)
 
@@ -667,7 +666,7 @@ class Ui_MainWindowItemView(object):
             self.productTable.insertRow(rowPosition)
 
             item_name = QtWidgets.QTableWidgetItem(product_name)
-            item_weight = QtWidgets.QTableWidgetItem(f"{product_weight} grams")
+            item_weight = QtWidgets.QTableWidgetItem(f"{product_weight} g")
             item_price = QtWidgets.QTableWidgetItem(f"¥ {product_price:.2f}")
             item_barcode = QtWidgets.QTableWidgetItem(barcode_data)
             item_transaction = QtWidgets.QTableWidgetItem(str(identifier))
