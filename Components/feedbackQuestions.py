@@ -6,7 +6,7 @@ class Ui_MainWindowFeedbackQuestions(object):
     # Function to Set Up feedbackQuestions.py
     def setupUiFeedbackQuestions(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1200, 700)
+        MainWindow.resize(1280, 720)
         MainWindow.setStyleSheet("#centralwidget{\n"
 "    background-color:#00C0FF;\n"
 "}")
@@ -15,7 +15,7 @@ class Ui_MainWindowFeedbackQuestions(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.navigationFrame = QtWidgets.QFrame(self.centralwidget)
-        self.navigationFrame.setGeometry(QtCore.QRect(0, 0, 1200, 100))
+        self.navigationFrame.setGeometry(QtCore.QRect(0, 0, MainWindow.width(), 100))
         self.navigationFrame.setStyleSheet("#navigationFrame{\n"
 "    background-color:#0000AF;\n"
 "}")
@@ -23,7 +23,7 @@ class Ui_MainWindowFeedbackQuestions(object):
         self.navigationFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.navigationFrame.setObjectName("navigationFrame")
         self.nameOutput = QtWidgets.QLabel(self.navigationFrame)
-        self.nameOutput.setGeometry(QtCore.QRect(20, 30, 400, 35))
+        self.nameOutput.setGeometry(QtCore.QRect(20, 20, 920, 55))
         self.nameOutput.setStyleSheet("#nameOutput{\n"
 "    font-weight:bold;\n"
 "    font-size:24px;\n"
@@ -36,15 +36,15 @@ class Ui_MainWindowFeedbackQuestions(object):
         self.nameOutput.setText(f"Welcome, {first_name} {last_name}")
         print(f"Debug - First Name: {first_name}, Last Name: {last_name}")
         self.roleOutput = QtWidgets.QLabel(self.navigationFrame)
-        self.roleOutput.setGeometry(QtCore.QRect(20, 60, 61, 16))
+        self.roleOutput.setGeometry(QtCore.QRect(20, 51, 95, 25))
         self.roleOutput.setStyleSheet("#roleOutput{\n"
-"    font-size:16px;\n"
+"    font-size:24px;\n"
 "    font-family:Montserrat;\n"
 "    color:#fff;\n"
 "}")
         self.roleOutput.setObjectName("roleOutput")
         self.finishPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.finishPushButton.setGeometry(QtCore.QRect(940, 630, 231, 51))
+        self.finishPushButton.setGeometry(QtCore.QRect(1020, 630, 231, 51))
         self.finishPushButton.setStyleSheet("#finishPushButton{\n"
 "    background-color:none;\n"
 "    border:4px solid #0000AF;\n"
@@ -56,7 +56,7 @@ class Ui_MainWindowFeedbackQuestions(object):
 "}")
         self.finishPushButton.setObjectName("finishPushButton")
         self.surveyFrame = QtWidgets.QFrame(self.centralwidget)
-        self.surveyFrame.setGeometry(QtCore.QRect(20, 140, 1151, 471))
+        self.surveyFrame.setGeometry(QtCore.QRect(20, 140, 1230, 471))
         self.surveyFrame.setStyleSheet("#surveyFrame{\n"
 "    background-color:#FEFCFC;\n"
 "    border-radius:25px;\n"
@@ -79,7 +79,7 @@ class Ui_MainWindowFeedbackQuestions(object):
 "}")
         self.surveyTwo.setObjectName("surveyTwo")
         self.surveyFour = QtWidgets.QLabel(self.surveyFrame)
-        self.surveyFour.setGeometry(QtCore.QRect(570, 20, 521, 21))
+        self.surveyFour.setGeometry(QtCore.QRect(590, 20, 521, 21))
         self.surveyFour.setStyleSheet("#surveyFour{\n"
 "    font-style:Montserrat;\n"
 "    font-size:14px;\n"
@@ -93,7 +93,7 @@ class Ui_MainWindowFeedbackQuestions(object):
 "}")
         self.surveyThree.setObjectName("surveyThree")
         self.surveyFive = QtWidgets.QLabel(self.surveyFrame)
-        self.surveyFive.setGeometry(QtCore.QRect(570, 210, 551, 21))
+        self.surveyFive.setGeometry(QtCore.QRect(590, 210, 551, 21))
         self.surveyFive.setStyleSheet("#surveyFive{\n"
 "    font-style:Montserrat;\n"
 "    font-size:14px;\n"
@@ -199,7 +199,7 @@ class Ui_MainWindowFeedbackQuestions(object):
         self.surveyThreeYes.setFont(font)
         self.surveyThreeYes.setObjectName("surveyThreeYes")
         self.surveyFourFrame = QtWidgets.QFrame(self.surveyFrame)
-        self.surveyFourFrame.setGeometry(QtCore.QRect(570, 50, 141, 141))
+        self.surveyFourFrame.setGeometry(QtCore.QRect(590, 50, 141, 141))
         self.surveyFourFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.surveyFourFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.surveyFourFrame.setObjectName("surveyFourFrame")
@@ -239,7 +239,7 @@ class Ui_MainWindowFeedbackQuestions(object):
         self.surveyFourNeutral.setFont(font)
         self.surveyFourNeutral.setObjectName("surveyFourNeutral")
         self.surveyFiveFrame = QtWidgets.QFrame(self.surveyFrame)
-        self.surveyFiveFrame.setGeometry(QtCore.QRect(570, 230, 201, 151))
+        self.surveyFiveFrame.setGeometry(QtCore.QRect(590, 230, 201, 151))
         self.surveyFiveFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.surveyFiveFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.surveyFiveFrame.setObjectName("surveyFiveFrame")

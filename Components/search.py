@@ -1,29 +1,13 @@
 # Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
-import pyodbc
-
-# Module Import 
+from databaseManager import DatabaseManager, EnvironmentLoader
 from config import Config, translations
 
-class DatabaseManager:
-    def __init__(self, server_name, database_name):
-        self.server_name = server_name
-        self.database_name = database_name
-
-    def connect(self):
-        driver_name = 'SQL Server'
-        connection_string = f"DRIVER={{{driver_name}}};SERVER={self.server_name};DATABASE={self.database_name};Trusted_Connection=yes;"
-        return pyodbc.connect(connection_string)
-
-    def search_products(self, cursor, keyword):
-        query = "SELECT * FROM cart.dbo.Product WHERE ProductName LIKE ?"
-        cursor.execute(query, f"%{keyword}%")
-        return cursor.fetchall()
-    
 class Ui_MainWindowSearchProduct(object):
     def __init__(self):
-        # Create an instance of DatabaseManager
-        self.db_manager = DatabaseManager(server_name='LF-DEV-0001\SQLEXPRESS', database_name='cart')
+        self.db_manager = DatabaseManager(*EnvironmentLoader.load_env_variables())
+        self.conn = self.db_manager.connect()
+        self.cursor = self.conn.cursor()
 
     # Function to Call ItemView.py
     def ItemView(self):
@@ -36,8 +20,8 @@ class Ui_MainWindowSearchProduct(object):
     # Function to Set Up help.py
     def setupUiSearchProduct(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1200, 350)
-        MainWindow.move(720, 150)
+        MainWindow.resize(1280, 450)
+        MainWindow.move(0, 110)
         MainWindow.setStyleSheet("#centralwidget{\n"
 "    background-color:#0000AF;\n"
 "}")
@@ -46,34 +30,29 @@ class Ui_MainWindowSearchProduct(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.searchLineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.searchLineEdit.setGeometry(QtCore.QRect(20, 20, 351, 41))
+        self.searchLineEdit.setGeometry(QtCore.QRect(20, 20, 351, 60))
         self.searchLineEdit.setStyleSheet("#searchLineEdit{\n"
 "    border-radius:15px;\n"
 "    padding:10px;\n"
-"    font-size:16px;\n"
+"    font-size:18px;\n"
 "}")
         self.searchLineEdit.setObjectName("searchLineEdit")
         # Connect the searchLineEdit to the search function
         self.searchLineEdit.textChanged.connect(self.search_products)
-        # Don't forget to close the cursor and connection when you're done
-        MainWindow.destroyed.connect(self.close_database_connection)
         self.searchTable = QtWidgets.QTableWidget(self.centralwidget)
-        self.searchTable.setGeometry(QtCore.QRect(20, 80, 681, 250))
+        self.searchTable.setGeometry(QtCore.QRect(20, 100, 750, 320))
         self.searchTable.setObjectName("searchTable")
-        self.searchTable.setColumnCount(4)
+        self.searchTable.setColumnCount(3)
         self.searchTable.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.searchTable.setHorizontalHeaderItem(0, item)
-        self.searchTable.setColumnWidth(0, 300)
+        self.searchTable.setColumnWidth(0, 497)
         item = QtWidgets.QTableWidgetItem()
         self.searchTable.setHorizontalHeaderItem(1, item)
         self.searchTable.setColumnWidth(1, 125)
         item = QtWidgets.QTableWidgetItem()
         self.searchTable.setHorizontalHeaderItem(2, item)
         self.searchTable.setColumnWidth(2, 125)
-        item = QtWidgets.QTableWidgetItem()
-        self.searchTable.setHorizontalHeaderItem(3, item)
-        self.searchTable.setColumnWidth(3, 125)
         # Set the table to read-only
         self.searchTable.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
         # Make column headers not movable
@@ -81,45 +60,54 @@ class Ui_MainWindowSearchProduct(object):
         # Set column width and row height to be fixed
         self.searchTable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         self.searchTable.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
+        self.searchTable.verticalHeader().setVisible(False)
         self.advertisementFrame = QtWidgets.QFrame(self.centralwidget)
-        self.advertisementFrame.setGeometry(QtCore.QRect(720, 20, 461, 311))
+        self.advertisementFrame.setGeometry(QtCore.QRect(805, 20, 450, 400))
         self.advertisementFrame.setStyleSheet("#advertisementFrame{\n"
 "    background-color:#FEFCFC;\n"
 "}")
         self.advertisementFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.advertisementFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.advertisementFrame.setObjectName("advertisementFrame")
+        data_font = QtGui.QFont()
+        header_font = QtGui.QFont()
+        data_font.setPointSize(16)
+        header_font.setPointSize(16)
+        self.searchTable.setFont(data_font)
+        header_stylesheet = "QHeaderView::section { font-size: 16px; }"
+        self.searchTable.horizontalHeader().setStyleSheet(header_stylesheet)
+
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
     
     def search_products(self):
-        keyword = self.searchLineEdit.text()
-        # Connect to the database
-        connection = self.db_manager.connect()
-        # Create a cursor for executing queries
-        cursor = connection.cursor()
-        # Search for products based on the keyword
-        search_result = self.db_manager.search_products(cursor, keyword)
-        # Populate the search table with the search result
-        self.populate_search_table(search_result)
-        # Close the cursor and connection
-        cursor.close()
-        connection.close()
-    
-    def populate_search_table(self, products):
-        self.searchTable.setRowCount(len(products))
-        for row, product in enumerate(products):
-            _, _, product_name, product_weight, product_price = product
+        search_text = self.searchLineEdit.text()
 
-            # Set the product details directly to the searchTable
-            self.searchTable.setItem(row, 0, QtWidgets.QTableWidgetItem(product_name))  # Product Name column
-            self.searchTable.setItem(row, 1, QtWidgets.QTableWidgetItem(f"{product_weight}"))  # Details column
-            self.searchTable.setItem(row, 2, QtWidgets.QTableWidgetItem(f"{product_price}"))   # Price column
+        if not search_text:
+            # If search text is empty, clear the table and return
+            self.searchTable.setRowCount(0)
+            return
 
-    def close_database_connection(self):
-        pass  
+        # If search text is not empty, proceed with searching products
+        self.searchTable.setRowCount(0)
+
+        search_results = self.db_manager.search_products(self.cursor, search_text)
+
+        if search_results:
+            for row_num, result in enumerate(search_results):
+                self.searchTable.insertRow(row_num)
+                for col_num, value in enumerate(result):
+                    item = QtWidgets.QTableWidgetItem(str(value))
+                    if col_num == 0:
+                        self.searchTable.setItem(row_num, 0, item)
+                    elif col_num == 1:
+                        self.searchTable.setItem(row_num, 1, item)
+                    elif col_num == 2:
+                        item.setText(f"¥ {value}")
+                        self.searchTable.setItem(row_num, 2, item)
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -138,9 +126,6 @@ class Ui_MainWindowSearchProduct(object):
         item.setText(_translate("MainWindow", translation_dict['Detail_Label']))
         item = self.searchTable.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", translation_dict['Price_Label']))
-        item = self.searchTable.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", translation_dict['Barcode_Label']))
-
 
 if __name__ == "__main__":
     import sys

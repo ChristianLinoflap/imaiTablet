@@ -181,3 +181,29 @@ class DatabaseManager:
         except Exception as e:
             logging.error(f"Error retrieving advertisement videos from the database: {e}")
             return []
+
+    # SEARCH - Search Items
+    def search_products(self, cursor, keyword):
+        try:
+            query = "SELECT Name, ProductWeight, Price FROM dbo.vw_Products_BranchProducts WHERE Name LIKE ?"
+            cursor.execute(query, f"{keyword}%")
+            return cursor.fetchall()
+        except pyodbc.Error as e:
+            logging.error(f"Error searching for products: {e}")
+            return []
+        except Exception as e:
+            logging.error(f"An unexpected error occurred while searching for products: {e}")
+            return []
+        
+    # SEARCH - Get All Times 
+    def get_all_products(self, cursor):
+        try:
+            query = "SELECT Name, ProductWeight, Price FROM dbo.vw_Products_BranchProducts"
+            cursor.execute(query)
+            return cursor.fetchall()
+        except pyodbc.Error as e:
+            logging.error(f"Error fetching all products: {e}")
+            return []
+        except Exception as e:
+            logging.error(f"An unexpected error occurred while fetching all products: {e}")
+            return []

@@ -26,7 +26,7 @@ class Ui_MainWindowFeedback(object):
         self.centralwidget.setObjectName("centralwidget")
 
         self.navigationFrame = QtWidgets.QFrame(self.centralwidget)
-        self.navigationFrame.setGeometry(QtCore.QRect(0, 0, MainWindow.width(), 150))
+        self.navigationFrame.setGeometry(QtCore.QRect(0, 0, MainWindow.width(), 110))
         self.navigationFrame.setStyleSheet("#navigationFrame{\n"
 "    background-color:#0000AF;\n"
 "}")
@@ -35,7 +35,7 @@ class Ui_MainWindowFeedback(object):
         self.navigationFrame.setObjectName("navigationFrame")
 
         self.nameOutput = QtWidgets.QLabel(self.navigationFrame)
-        self.nameOutput.setGeometry(QtCore.QRect(50, 50, 900, 35))
+        self.nameOutput.setGeometry(QtCore.QRect(20, 20, 920, 55))
         self.nameOutput.setStyleSheet("#nameOutput{\n"
 "    font-weight:bold;\n"
 "    font-size:42px;\n"
@@ -49,7 +49,7 @@ class Ui_MainWindowFeedback(object):
         translated_welcome_message = f"{welcome_message}, {first_name} {last_name}"
         self.nameOutput.setText(translated_welcome_message)
         self.roleOutput = QtWidgets.QLabel(self.navigationFrame)
-        self.roleOutput.setGeometry(QtCore.QRect(50, 100, 75, 16))
+        self.roleOutput.setGeometry(QtCore.QRect(20, 51, 95, 25))
         self.roleOutput.setStyleSheet("#roleOutput{\n"
 "    font-size:24px;\n"
 "    font-family:Montserrat;\n"
@@ -58,7 +58,7 @@ class Ui_MainWindowFeedback(object):
         self.roleOutput.setObjectName("roleOutput")
 
         self.finishPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.finishPushButton.setGeometry(QtCore.QRect(1010, 740, 275, 115))
+        self.finishPushButton.setGeometry(QtCore.QRect(700, 515, 275, 100))
         self.finishPushButton.setStyleSheet("#finishPushButton{\n"
 "    background-color:none;\n"
 "    border:4px solid #0000AF;\n"
@@ -70,7 +70,7 @@ class Ui_MainWindowFeedback(object):
         self.finishPushButton.setObjectName("finishPushButton")
 
         self.feedBackPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.feedBackPushButton.setGeometry(QtCore.QRect(670, 740, 275, 115))
+        self.feedBackPushButton.setGeometry(QtCore.QRect(390, 515, 275, 100))
         self.feedBackPushButton.setStyleSheet("#feedBackPushButton{\n"
 "    background-color:#0000AF;\n"
 "    border-radius:15px;\n"
@@ -84,7 +84,7 @@ class Ui_MainWindowFeedback(object):
         self.feedBackPushButton.clicked.connect(MainWindow.close)
 
         self.qrFrame = QtWidgets.QFrame(self.centralwidget)
-        self.qrFrame.setGeometry(QtCore.QRect(600, 400, 760, 300))
+        self.qrFrame.setGeometry(QtCore.QRect(300, 190, 760, 300))
         self.qrFrame.setStyleSheet("#qrFrame{\n"
 "    background-color:#FEFCFC;\n"
 "    border-radius:25px;\n"
@@ -94,7 +94,7 @@ class Ui_MainWindowFeedback(object):
         self.qrFrame.setObjectName("qrFrame")
 
         self.thankyouLabel = QtWidgets.QLabel(self.qrFrame)
-        self.thankyouLabel.setGeometry(QtCore.QRect(90, 60, 600, 41))
+        self.thankyouLabel.setGeometry(QtCore.QRect(180, 60, 600, 41))
         self.thankyouLabel.setStyleSheet("#thankyouLabel{\n"
 "    font-family:Montserrat;\n"
 "    font-size:36px;\n"

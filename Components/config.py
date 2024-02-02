@@ -13,7 +13,7 @@ transaction_info = {
 
 class Config:
     # Default language
-    DEFAULT_LANGUAGE = "日本語"
+    DEFAULT_LANGUAGE = "English"
 
     # Variable to store the current language
     current_language = DEFAULT_LANGUAGE
@@ -86,7 +86,7 @@ translations = {
         'ShoppingList_Label': 'Payment Details',
         'Checkout_Button': 'Proceed to Checkout',
         'Payment_Button': 'Proceed to Payment',
-        'Scan_Barcode_Push_Button': 'Open Barcode Barcode',
+        'Scan_Barcode_Push_Button': 'Open Barcode Scanner',
         # Item View Error Message
         'Close_Barcode_Scanner': 'Close Barcode Scanner',
         'Scan_Barcode_Title': 'Scan Barcode',

@@ -58,13 +58,13 @@ class Ui_MainWindowTutorialMember(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.backPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.backPushButton.setGeometry(QtCore.QRect(985, 880, 200, 50))
+        self.backPushButton.setGeometry(QtCore.QRect(655, 600, 200, 60))
         self.backPushButton.setStyleSheet("#backPushButton{\n"
 "    background-color:none;\n"
 "    border:4px solid #0000AF;\n"
 "    border-radius:24px;\n"
 "    font-family:Montserrat;\n"
-"    font-size:20px;\n"
+"    font-size:24px;\n"
 "    color:#fff;\n"
 "}")
         self.backPushButton.setObjectName("backPushButton")
@@ -72,23 +72,23 @@ class Ui_MainWindowTutorialMember(object):
         self.backPushButton.clicked.connect(self.ItemView)
         self.backPushButton.clicked.connect(MainWindow.close)
         self.loginPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.loginPushButton.setGeometry(QtCore.QRect(750, 880, 200, 50))
+        self.loginPushButton.setGeometry(QtCore.QRect(430, 600, 200, 60))
         self.loginPushButton.setStyleSheet("#loginPushButton{\n"
 "    background-color:#0000AF;\n"
 "    border-radius:24px;\n"
 "    font-family:Montserrat;\n"
-"    font-size:20px;\n"
+"    font-size:24px;\n"
 "    color:#fff\n"
 "}")
         self.loginPushButton.setObjectName("loginPushButton")
         self.qrFrame = QtWidgets.QFrame(self.centralwidget)
-        self.qrFrame.setGeometry(QtCore.QRect(350, 150, 1200, 700))
+        self.qrFrame.setGeometry(QtCore.QRect(350, 50, 600, 500))
         self.qrFrame.setStyleSheet("#qrFrame{\n"
 "    background-color:#FEFCFC;\n"
 "    border-radius:25px;\n"
 "}")
         self.stackedWidget = QStackedWidget(self.qrFrame)
-        self.stackedWidget.setGeometry(QtCore.QRect(0, 0, 1200, 700))
+        self.stackedWidget.setGeometry(QtCore.QRect(0, 0, 600, 500))
 
         self.setupTutorialSteps()
 

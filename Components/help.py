@@ -5,17 +5,17 @@ class Ui_MainWindowHelp(object):
     # Function to Set Up help.py
     def setupUiHelp(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1200, 566)
+        MainWindow.resize(1280, 450)
+        MainWindow.move(0, 110)
         MainWindow.setStyleSheet("#centralwidget{\n"
 "    background-color:#0000AF;\n"
 "}")
         # Remove Navigation Tools in Main Window
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        MainWindow.move(720, 150)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.helpViewFrame = QtWidgets.QFrame(self.centralwidget)
-        self.helpViewFrame.setGeometry(QtCore.QRect(20, 20, 1151, 491))
+        self.helpViewFrame.setGeometry(QtCore.QRect(20, 20, 1240, 400))
         self.helpViewFrame.setStyleSheet("#helpViewFrame{\n"
 "    background-color:#fff;\n"
 "    border-radius:15px;\n"
@@ -31,57 +31,44 @@ class Ui_MainWindowHelp(object):
 "}")
         self.helpLabel.setObjectName("helpLabel")
         self.questionOne = QtWidgets.QLabel(self.helpViewFrame)
-        self.questionOne.setGeometry(QtCore.QRect(25, 70, 131, 21))
+        self.questionOne.setGeometry(QtCore.QRect(25, 70, 1100, 21))
         self.questionOne.setStyleSheet("#questionOne{\n"
 "    font-family:Montserrat;\n"
 "    font-size:16px;\n"
 "}")
         self.questionOne.setObjectName("questionOne")
         self.answerOne = QtWidgets.QTextBrowser(self.helpViewFrame)
-        self.answerOne.setGeometry(QtCore.QRect(20, 90, 1101, 75))
+        self.answerOne.setGeometry(QtCore.QRect(20, 90, 1200, 75))
         self.answerOne.setStyleSheet("#answerOne{\n"
 "    border:none;\n"
 "}")
         self.answerOne.setObjectName("answerOne")
         self.answerTwo = QtWidgets.QTextBrowser(self.helpViewFrame)
-        self.answerTwo.setGeometry(QtCore.QRect(20, 190, 1101, 75))
+        self.answerTwo.setGeometry(QtCore.QRect(20, 190, 1200, 75))
         self.answerTwo.setStyleSheet("#answerTwo{\n"
 "    border:none;\n"
 "}")
         self.answerTwo.setObjectName("answerTwo")
         self.questionTwo = QtWidgets.QLabel(self.helpViewFrame)
-        self.questionTwo.setGeometry(QtCore.QRect(25, 170, 131, 21))
+        self.questionTwo.setGeometry(QtCore.QRect(25, 170, 1200, 21))
         self.questionTwo.setStyleSheet("#questionTwo{\n"
 "    font-family:Montserrat;\n"
 "    font-size:16px;\n"
 "}")
         self.questionTwo.setObjectName("questionTwo")
         self.questionThree = QtWidgets.QLabel(self.helpViewFrame)
-        self.questionThree.setGeometry(QtCore.QRect(25, 280, 131, 21))
+        self.questionThree.setGeometry(QtCore.QRect(25, 280, 1200, 21))
         self.questionThree.setStyleSheet("#questionThree{\n"
 "    font-family:Montserrat;\n"
 "    font-size:16px;\n"
 "}")
         self.questionThree.setObjectName("questionThree")
         self.answerThree = QtWidgets.QTextBrowser(self.helpViewFrame)
-        self.answerThree.setGeometry(QtCore.QRect(20, 300, 1101, 75))
+        self.answerThree.setGeometry(QtCore.QRect(20, 300, 1200, 75))
         self.answerThree.setStyleSheet("#answerThree{\n"
 "    border:none;\n"
 "}")
         self.answerThree.setObjectName("answerThree")
-        self.questionFour = QtWidgets.QLabel(self.helpViewFrame)
-        self.questionFour.setGeometry(QtCore.QRect(25, 390, 131, 21))
-        self.questionFour.setStyleSheet("#questionFour{\n"
-"    font-family:Montserrat;\n"
-"    font-size:16px;\n"
-"}")
-        self.questionFour.setObjectName("questionFour")
-        self.answerFour = QtWidgets.QTextBrowser(self.helpViewFrame)
-        self.answerFour.setGeometry(QtCore.QRect(20, 410, 1101, 75))
-        self.answerFour.setStyleSheet("#answerFour{\n"
-"    border:none;\n"
-"}")
-        self.answerFour.setObjectName("answerFour")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -109,14 +96,7 @@ class Ui_MainWindowHelp(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et  dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></p></body></html>"))
-        self.questionFour.setText(_translate("MainWindow", "Lorem Ipsum"))
-        self.answerFour.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et  dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></p></body></html>"))
-
-
+        
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
