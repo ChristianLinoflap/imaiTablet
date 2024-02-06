@@ -6,24 +6,24 @@ from PyQt5.QtGui import QPixmap
 
 class Ui_MainWindowTutorialMember(object):
     def __init__(self):
-        self.tutorial_steps = []  # List to store tutorial steps (images or widgets)
-        self.current_step = 0  # Current step index
+        self.tutorial_steps = []
+        self.current_step = 0 
 
     def showTutorialCompletionMessage(self):
         QMessageBox.information(
             None, "Tutorial Completed", "You are now ready to shop!", QMessageBox.Ok
         )
 
-    def handleLoginButtonClick(self):
+    def handleLoginButtonClick(self, MainWindow):
         if self.current_step < len(self.tutorial_steps):
             self.stackedWidget.setCurrentIndex(self.current_step)
             self.current_step += 1
         else:
             self.showTutorialCompletionMessage()
             self.current_step = 0
+            self.ItemView()
 
     def setupTutorialSteps(self):
-        # Replace these paths with the actual file paths of your tutorial images
         image_paths = [
             "Assets\\1.png",
             "Assets\\2.png",
@@ -45,6 +45,7 @@ class Ui_MainWindowTutorialMember(object):
         self.ui = Ui_MainWindowItemView()
         self.ui.setupUiItemView(self.window)
         self.window.show() 
+        MainWindow.close()
 
     # Function to Set Up tutorialMember.py
     def setupUiTutorialMember(self, MainWindow):
@@ -70,7 +71,7 @@ class Ui_MainWindowTutorialMember(object):
         self.backPushButton.setObjectName("backPushButton")
         # To call the function ItemView to open the page and close the main window
         self.backPushButton.clicked.connect(self.ItemView)
-        self.backPushButton.clicked.connect(MainWindow.close)
+        # self.backPushButton.clicked.connect(MainWindow.close)
         self.loginPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.loginPushButton.setGeometry(QtCore.QRect(430, 600, 200, 60))
         self.loginPushButton.setStyleSheet("#loginPushButton{\n"
