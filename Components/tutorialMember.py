@@ -1,13 +1,33 @@
 # Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
 from config import Config, translations
-from PyQt5.QtWidgets import QMessageBox, QStackedWidget
+from PyQt5.QtWidgets import QMessageBox, QStackedWidget, QDialog, QVBoxLayout, QLabel, QProgressBar
 from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import Qt, QTimer
 
 class Ui_MainWindowTutorialMember(object):
     def __init__(self):
         self.tutorial_steps = []
         self.current_step = 0 
+
+    def startProgressBar(self):
+        # Create and set up the progress bar
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setRange(0, 0)  # Setting range to (0, 0) makes it an indefinite progress bar
+        self.progress_bar.setMinimumWidth(310)  # Set the minimum width of the progress bar
+        layout = QVBoxLayout()
+        layout.addWidget(self.progress_bar)
+        self.loading_dialog = QDialog()
+        self.loading_dialog.setWindowTitle("Loading and Initializing. . .")
+        self.loading_dialog.setFixedSize(300, 70)
+        self.loading_dialog.setLayout(layout)
+        self.loading_dialog.setWindowFlags(Qt.CustomizeWindowHint | Qt.WindowTitleHint)
+        self.loading_dialog.setWindowFlags(self.loading_dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
+        self.loading_dialog.show()
+
+    def stopProgressBar(self):
+        if hasattr(self, 'loading_dialog'):
+            self.loading_dialog.close()
 
     def showTutorialCompletionMessage(self):
         QMessageBox.information(
@@ -19,7 +39,7 @@ class Ui_MainWindowTutorialMember(object):
             self.stackedWidget.setCurrentIndex(self.current_step)
             self.current_step += 1
         else:
-            self.showTutorialCompletionMessage()
+            QTimer.singleShot(2000, lambda: self.showTutorialCompletionMessage())
             self.current_step = 0
             self.ItemView()
 
@@ -40,11 +60,16 @@ class Ui_MainWindowTutorialMember(object):
 
     # Function to Call ItemView.py
     def ItemView(self):
+        self.startProgressBar()
+        QTimer.singleShot(2000, lambda: self.showItemView())
+
+    def showItemView(self):
         from itemView import Ui_MainWindowItemView
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_MainWindowItemView()
         self.ui.setupUiItemView(self.window)
         self.window.show() 
+        self.stopProgressBar()
         MainWindow.close()
 
     # Function to Set Up tutorialMember.py
@@ -92,7 +117,7 @@ class Ui_MainWindowTutorialMember(object):
         self.stackedWidget.setGeometry(QtCore.QRect(0, 0, 600, 500))
 
         self.setupTutorialSteps()
-
+        
         for step in self.tutorial_steps:
             self.stackedWidget.addWidget(step)
 
