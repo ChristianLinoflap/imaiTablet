@@ -108,7 +108,7 @@ class Ui_MainWindowCashPaymentOption(object):
         self.productTable.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(0, item)
-        self.productTable.setColumnWidth(0, 485)
+        self.productTable.setColumnWidth(0, 518)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(1, item)
         self.productTable.setColumnWidth(1, 110)
