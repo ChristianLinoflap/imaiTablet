@@ -60,7 +60,7 @@ class ObjectClassifier:
             ret, frame = self.cap.read()
             cropped_frame = frame[150:1000, 90:500]
             fgmask = self.fgbg.apply(cropped_frame)
-            _, fgmask = cv2.threshold(fgmask, 230, 255, cv2.THRESH_BINARY)
+            _, fgmask = cv2.threshold(fgmask, 120, 255, cv2.THRESH_BINARY)
             contours, _ = cv2.findContours(fgmask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             if self.frame_count > 19:
                 self.frame_count = 0
@@ -68,10 +68,10 @@ class ObjectClassifier:
                 self.frame_count += 1
             for contour in contours:
                 area = cv2.contourArea(contour)
-                if area >= 22000:
+                if area >= 10000:
                     if self.frame_count >= 20:
                         image_paths = [os.path.join(self.image_directory, filename) for filename in
-                                       os.listdir(self.image_directory)]
+                                        os.listdir(self.image_directory)]
                         preprocessed_images = [self.load_and_preprocess_image(image_path) for image_path in image_paths]
                         preprocessed_images_array = np.vstack(preprocessed_images)
                         predictions_lite = self.classify_lite(sequential_1_input=preprocessed_images_array)['outputs']
@@ -84,20 +84,25 @@ class ObjectClassifier:
                                 print("Predicted class:", predicted_class)
                                 print("Confidence:", 100 * np.max(scores_lite[i]))
                         class_counts = Counter(predicted_classes)
-                        if any(count >= 15 for count in class_counts.values()):
+                        if any(count >= 19 for count in class_counts.values()):
                             print("It is accurate!")
                             for predicted_class, count in class_counts.items():
                                 print(f"{predicted_class}: {count} times")
                                 with open("predicted_class.txt", "w") as file:
                                     file.write(predicted_class)
+                            predicted_classes = []
+                            self.frame_count = 0
                             self.play_sound('Assets\\scanned_item.mp3')
+                            # Clear all images after accurate scanning
+                            for file in os.listdir(self.image_directory):
+                                os.remove(os.path.join(self.image_directory, file))
                         else:
                             print("It is not accurate. Try again!")
                     else:
                         saturated_frame = self.saturate_image(cropped_frame)
                         cv2.imwrite(f"{self.image_directory}/frame_{self.frame_count}.png", saturated_frame)
-            cv2.imshow('Original Frames', cropped_frame)
-            cv2.imshow('Original Frame', fgmask)
+            # cv2.imshow('Original Frames', cropped_frame)
+            # cv2.imshow('Original Frame', fgmask)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 self.stop_classifier()
