@@ -9,21 +9,35 @@ class Ui_MainWindowTutorialMember(object):
     def __init__(self):
         self.tutorial_steps = []
         self.current_step = 0 
+        self.loading_titles = ["Initializing assets. . .", "Loading configurations. . .", "Preparing user interface. . ."]
+        self.title_index = 0
 
     def startProgressBar(self):
         # Create and set up the progress bar
         self.progress_bar = QProgressBar()
-        self.progress_bar.setRange(0, 0)  # Setting range to (0, 0) makes it an indefinite progress bar
-        self.progress_bar.setMinimumWidth(310)  # Set the minimum width of the progress bar
+        self.progress_bar.setRange(0, 0)
+        self.progress_bar.setMinimumWidth(310) 
         layout = QVBoxLayout()
         layout.addWidget(self.progress_bar)
+
         self.loading_dialog = QDialog()
-        self.loading_dialog.setWindowTitle("Loading and Initializing. . .")
+        self.loading_dialog.setWindowTitle(self.loading_titles[self.title_index])
         self.loading_dialog.setFixedSize(300, 70)
         self.loading_dialog.setLayout(layout)
         self.loading_dialog.setWindowFlags(Qt.CustomizeWindowHint | Qt.WindowTitleHint)
         self.loading_dialog.setWindowFlags(self.loading_dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         self.loading_dialog.show()
+
+        # Create a timer to update the title every two seconds
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.updateTitle)
+        self.timer.start(2500)
+
+    def updateTitle(self):
+        # Increment the title index
+        self.title_index = (self.title_index + 1) % len(self.loading_titles)
+        # Update the title of the loading dialog
+        self.loading_dialog.setWindowTitle(self.loading_titles[self.title_index])
 
     def stopProgressBar(self):
         if hasattr(self, 'loading_dialog'):
@@ -39,7 +53,7 @@ class Ui_MainWindowTutorialMember(object):
             self.stackedWidget.setCurrentIndex(self.current_step)
             self.current_step += 1
         else:
-            QTimer.singleShot(2000, lambda: self.showTutorialCompletionMessage())
+            self.showTutorialCompletionMessage()
             self.current_step = 0
             self.ItemView()
 
@@ -68,8 +82,8 @@ class Ui_MainWindowTutorialMember(object):
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_MainWindowItemView()
         self.ui.setupUiItemView(self.window)
-        self.window.show() 
         self.stopProgressBar()
+        self.window.show() 
         MainWindow.close()
 
     # Function to Set Up tutorialMember.py

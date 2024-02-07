@@ -351,6 +351,7 @@ class Ui_MainWindowItemView(object):
 
         # Initialize video player and video widget
         self.video_player = QMediaPlayer()
+        self.video_player.setVolume(10)  
         self.video_widget = QVideoWidget(self.advertisementFrame)
         self.video_player.setVideoOutput(self.video_widget)
         self.video_widget.setFixedSize(475, 475)
@@ -592,6 +593,7 @@ class Ui_MainWindowItemView(object):
                     self.transaction_counter += 1
 
                     self.scan_sound.play()
+                    self.scan_sound.set_volume(1) 
                     self.updateSummaryLabels()
                     print(f"Product with barcode {barcode_data} found in the database.")
             else:
