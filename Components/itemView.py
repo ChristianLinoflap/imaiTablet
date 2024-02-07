@@ -42,7 +42,7 @@ class Ui_MainWindowItemView(object):
     
         self.predicted_class_timer = QTimer()
         self.predicted_class_timer.timeout.connect(self.checkPredictedClass)
-        self.predicted_class_timer.start(3000) 
+        self.predicted_class_timer.start(0) 
 
         self.local_videos = self.getLocalVideosFromFolder()
 
@@ -592,8 +592,8 @@ class Ui_MainWindowItemView(object):
 
                     self.transaction_counter += 1
 
-                    self.scan_sound.play()
-                    self.scan_sound.set_volume(1) 
+                    # self.scan_sound.play()
+                    # self.scan_sound.set_volume(1) 
                     self.updateSummaryLabels()
                     print(f"Product with barcode {barcode_data} found in the database.")
             else:
