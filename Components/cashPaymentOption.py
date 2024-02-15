@@ -101,24 +101,29 @@ class Ui_MainWindowCashPaymentOption(object):
         self.helpPushButton.clicked.connect(self.HelpOption)
 
         self.productTable = QtWidgets.QTableWidget(self.centralwidget)
-        self.productTable.setGeometry(QtCore.QRect(20, 130, 740, 475))
+        self.productTable.setGeometry(QtCore.QRect(20, 130, 790, 475))
         self.productTable.setGridStyle(QtCore.Qt.SolidLine)
         self.productTable.setObjectName("productTable")
-        self.productTable.setColumnCount(4)
+        self.productTable.setColumnCount(6)
         self.productTable.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(0, item)
-        self.productTable.setColumnWidth(0, 518)
+        self.productTable.setColumnWidth(0, 564)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(1, item)
-        self.productTable.setColumnWidth(1, 110)
+        self.productTable.setColumnWidth(1, 0)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(2, item)
-        self.productTable.setColumnWidth(2, 120) 
+        self.productTable.setColumnWidth(2, 110) 
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(3, item)
-        self.productTable.setColumnWidth(3, 0)
-        self.productTable.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff) 
+        self.productTable.setColumnWidth(3, 0) 
+        item = QtWidgets.QTableWidgetItem()
+        self.productTable.setHorizontalHeaderItem(4, item)
+        self.productTable.setColumnWidth(4, 110) 
+        item = QtWidgets.QTableWidgetItem()
+        self.productTable.setHorizontalHeaderItem(5, item)
+        self.productTable.setColumnWidth(5, 0) 
         # Set the table to read-only
         self.productTable.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
         # Make column headers not movable
@@ -134,17 +139,17 @@ class Ui_MainWindowCashPaymentOption(object):
         self.productTable.setFont(data_font)
         header_stylesheet = "QHeaderView::section { font-size: 14px; }"
         self.productTable.horizontalHeader().setStyleSheet(header_stylesheet)
-        
+
         self.summaryFrame = QtWidgets.QFrame(self.centralwidget)
-        self.summaryFrame.setGeometry(QtCore.QRect(20, 610, 550, 100))
+        self.summaryFrame.setGeometry(QtCore.QRect(20, 610, 610, 100))
         self.summaryFrame.setStyleSheet("#summaryFrame{\n"
 "    background-color:#FEFCFC;\n"
 "    border-radius:15px;\n"
 "}")
         self.summaryFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.summaryFrame.setFrameShadow(QtWidgets.QFrame.Raised)
-
         self.summaryFrame.setObjectName("summaryFrame")
+
         self.summaryLabel = QtWidgets.QLabel(self.summaryFrame)
         self.summaryLabel.setGeometry(QtCore.QRect(6, 10, 120, 30))
         self.summaryLabel.setStyleSheet("#summaryLabel{\n"
@@ -155,67 +160,52 @@ class Ui_MainWindowCashPaymentOption(object):
         self.summaryLabel.setObjectName("summaryLabel")
 
         self.productsLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.productsLabel.setGeometry(QtCore.QRect(10, 45, 150, 25))
+        self.productsLabel.setGeometry(QtCore.QRect(6, 35, 250, 45))
         self.productsLabel.setStyleSheet("#productsLabel{\n"
-"    font-size:16px;\n"
+"    font-size:24px;\n"
 "    color:#A0A0A0;\n"
 "}")
         self.productsLabel.setObjectName("productsLabel")
 
-        self.grossLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.grossLabel.setGeometry(QtCore.QRect(160, 45, 125, 25))
-        self.grossLabel.setStyleSheet("#grossLabel{\n"
-"    font-size:16px;\n"
-"    color:#A0A0A0;\n"
-"}")
-        self.grossLabel.setObjectName("grossLabel")
-
         self.itemsLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.itemsLabel.setGeometry(QtCore.QRect(310, 45, 125, 25))
+        self.itemsLabel.setGeometry(QtCore.QRect(240, 35, 200, 45))
         self.itemsLabel.setStyleSheet("#itemsLabel{\n"
-"    font-size:16px;\n"
+"    font-size:24px;\n"
 "    color:#A0A0A0;\n"
 "}")
         self.itemsLabel.setObjectName("itemsLabel")
 
         self.totalLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.totalLabel.setGeometry(QtCore.QRect(455, 45, 125, 25))
+        self.totalLabel.setGeometry(QtCore.QRect(445, 35, 200, 45))
         self.totalLabel.setStyleSheet("#totalLabel{\n"
-"    font-size:16px;\n"
+"    font-size:24px;\n"
 "    color:#A0A0A0;\n"
 "}")
         self.totalLabel.setObjectName("totalLabel")
 
         self.productsOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.productsOutput.setGeometry(QtCore.QRect(10, 65, 100, 15))
+        self.productsOutput.setGeometry(QtCore.QRect(6, 65, 100, 25))
         self.productsOutput.setStyleSheet("#productsOutput{\n"
-"    font-size:16px;\n"
+"    font-size:20px;\n"
 "}")
         self.productsOutput.setObjectName("productsOutput")
 
-        self.grossOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.grossOutput.setGeometry(QtCore.QRect(160, 65, 125, 20))
-        self.grossOutput.setStyleSheet("#grossOutput{\n"
-"    font-size:16px;\n"
-"}")
-        self.grossOutput.setObjectName("grossOutput")
-
         self.itemsOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.itemsOutput.setGeometry(QtCore.QRect(310, 65, 100, 15))
+        self.itemsOutput.setGeometry(QtCore.QRect(240, 65, 100, 25))
         self.itemsOutput.setStyleSheet("#itemsOutput{\n"
-"    font-size:16px;\n"
+"    font-size:20px;\n"
 "}")
         self.itemsOutput.setObjectName("itemsOutput")
 
         self.totalOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.totalOutput.setGeometry(QtCore.QRect(455, 65, 100, 15))
+        self.totalOutput.setGeometry(QtCore.QRect(445, 65, 175, 25))
         self.totalOutput.setStyleSheet("#totalOutput{\n"
-"    font-size:16px;\n"
+"    font-size:24px;\n"
 "}")
         self.totalOutput.setObjectName("totalOutput")
 
         self.PaymentFrame = QtWidgets.QFrame(self.centralwidget)
-        self.PaymentFrame.setGeometry(QtCore.QRect(780, 130, 475, 475))
+        self.PaymentFrame.setGeometry(QtCore.QRect(820, 130, 435, 475))
         self.PaymentFrame.setStyleSheet("#PaymentFrame{\n"
 "    background-color:#FEFCFC;\n"
 "    border-radius:15px;\n"
@@ -234,7 +224,7 @@ class Ui_MainWindowCashPaymentOption(object):
         self.shoppingListLabel.setObjectName("shoppingListLabel")
 
         self.backPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.backPushButton.setGeometry(QtCore.QRect(590, 610, 170, 100))
+        self.backPushButton.setGeometry(QtCore.QRect(640, 610, 170, 100))
         self.backPushButton.setStyleSheet("#backPushButton{\n"
 "    background-color:none;\n"
 "    border:4px solid #0000AF;\n"
@@ -289,13 +279,11 @@ class Ui_MainWindowCashPaymentOption(object):
         if summary_data is not None:
             # Update UI elements with summary information
             products_count = summary_data[1]
-            total_gross_weight = summary_data[3]
             total_items = summary_data[2]  
             total_price = summary_data[4]  
 
             # Use a lambda function to update the UI on the main thread
             QtCore.QMetaObject.invokeMethod(self.productsOutput, "setText", QtCore.Qt.QueuedConnection, QtCore.Q_ARG(str, f"{products_count} Products"))
-            QtCore.QMetaObject.invokeMethod(self.grossOutput, "setText", QtCore.Qt.QueuedConnection, QtCore.Q_ARG(str, f"¥ {total_gross_weight:.2f}"))
             QtCore.QMetaObject.invokeMethod(self.itemsOutput, "setText", QtCore.Qt.QueuedConnection, QtCore.Q_ARG(str, f"{total_items} Items"))
             QtCore.QMetaObject.invokeMethod(self.totalOutput, "setText", QtCore.Qt.QueuedConnection, QtCore.Q_ARG(str, f"¥ {total_price:.2f}"))
 
@@ -341,11 +329,9 @@ class Ui_MainWindowCashPaymentOption(object):
         item.setText(_translate("MainWindow", translation_dict['Barcode_Label']))
         self.summaryLabel.setText(_translate("MainWindow", translation_dict['Summary_Label']))
         self.productsLabel.setText(_translate("MainWindow", translation_dict['Total_Products_Label']))
-        self.grossLabel.setText(_translate("MainWindow", translation_dict['Total_Gross_Weight']))
         self.itemsLabel.setText(_translate("MainWindow", translation_dict['Total_Items_Label']))
         self.totalLabel.setText(_translate("MainWindow", translation_dict['Total_Price_Label']))
         self.productsOutput.setText(_translate("MainWindow", translation_dict['Total_Products_Output']))
-        self.grossOutput.setText(_translate("MainWindow", translation_dict['Total_Gross_Weight_Output']))
         self.itemsOutput.setText(_translate("MainWindow", translation_dict['Total_Items_Output']))
         self.totalOutput.setText(_translate("MainWindow", translation_dict['Total_Price_Output']))
         self.shoppingListLabel.setText(_translate("MainWindow", translation_dict['ShoppingList_Label']))
