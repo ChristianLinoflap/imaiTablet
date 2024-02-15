@@ -2,25 +2,19 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from databaseManager import DatabaseManager, EnvironmentLoader
 from config import Config, translations
+from onScreenKeyboard import OnScreenKeyboard
 
 class Ui_MainWindowSearchProduct(object):
     def __init__(self):
         self.db_manager = DatabaseManager(*EnvironmentLoader.load_env_variables())
         self.conn = self.db_manager.connect()
         self.cursor = self.conn.cursor()
-
-    # Function to Call ItemView.py
-    def ItemView(self):
-        from itemView import Ui_MainWindowItemView
-        self.window = QtWidgets.QMainWindow()
-        self.ui = Ui_MainWindowItemView()
-        self.ui.setupUiItemView(self.window)
-        self.window.show() 
+        self.keyboard = OnScreenKeyboard()
 
     # Function to Set Up help.py
     def setupUiSearchProduct(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1280, 450)
+        MainWindow.resize(1280, 380)
         MainWindow.move(0, 110)
         MainWindow.setStyleSheet("#centralwidget{\n"
 "    background-color:#0000AF;\n"
@@ -39,8 +33,10 @@ class Ui_MainWindowSearchProduct(object):
         self.searchLineEdit.setObjectName("searchLineEdit")
         # Connect the searchLineEdit to the search function
         self.searchLineEdit.textChanged.connect(self.search_products)
+        self.searchLineEdit.setReadOnly(True)
+        self.searchLineEdit.mousePressEvent = self.show_keyboard_for_search
         self.searchTable = QtWidgets.QTableWidget(self.centralwidget)
-        self.searchTable.setGeometry(QtCore.QRect(20, 100, 750, 320))
+        self.searchTable.setGeometry(QtCore.QRect(20, 100, 750, 260))
         self.searchTable.setObjectName("searchTable")
         self.searchTable.setColumnCount(3)
         self.searchTable.setRowCount(0)
@@ -62,7 +58,7 @@ class Ui_MainWindowSearchProduct(object):
         self.searchTable.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         self.searchTable.verticalHeader().setVisible(False)
         self.advertisementFrame = QtWidgets.QFrame(self.centralwidget)
-        self.advertisementFrame.setGeometry(QtCore.QRect(805, 20, 450, 400))
+        self.advertisementFrame.setGeometry(QtCore.QRect(805, 20, 450, 340))
         self.advertisementFrame.setStyleSheet("#advertisementFrame{\n"
 "    background-color:#FEFCFC;\n"
 "}")
@@ -78,9 +74,20 @@ class Ui_MainWindowSearchProduct(object):
         self.searchTable.horizontalHeader().setStyleSheet(header_stylesheet)
 
         MainWindow.setCentralWidget(self.centralwidget)
+        MainWindow.mousePressEvent = self.hide_keyboard_on_mouse_click
 
         self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow) 
+    
+    def show_keyboard_for_search(self, event):
+        self.keyboard.text_input = self.searchLineEdit
+        self.keyboard.raise_()
+        self.keyboard.show()
+    
+    def hide_keyboard_on_mouse_click(self, event):
+        # Hide the keyboard if it's visible
+        if self.keyboard.isVisible():
+            self.keyboard.close()
     
     def search_products(self):
         search_text = self.searchLineEdit.text()
@@ -133,5 +140,6 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindowSearchProduct()
     ui.setupUiSearchProduct(MainWindow)
+    MainWindow.close = ui.hide_keyboard_on_mouse_click
     MainWindow.show()
     sys.exit(app.exec_())

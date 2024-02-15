@@ -2,7 +2,6 @@
 import threading
 import os
 import time
-import concurrent.futures
 
 # Third-Party Library Imports
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -38,37 +37,27 @@ class Ui_MainWindowItemView(object):
         self.shopping_list_window_open = False
         self.help_window_open = False
         pygame.mixer.init()
-        self.scan_sound = pygame.mixer.Sound("Assets\\bgSound.mp3")
-    
+        self.scan_sound = pygame.mixer.Sound("Assets\\scanned_item.mp3")
         self.predicted_class_timer = QTimer()
         self.predicted_class_timer.timeout.connect(self.checkPredictedClass)
         self.predicted_class_timer.start(0) 
-
         self.local_videos = self.getLocalVideosFromFolder()
-
-        # Initialize the ObjectClassifier
         self.object_classifier = ObjectClassifier()
     
     def stop_classifier(self):
-        # Stop the classifier
         self.object_classifier.stop_classifier()
  
     def checkPredictedClass(self):
-        # Check if the predicted class file exists
         if os.path.exists("predicted_class.txt"):
-            # Read the content of the file
             with open("predicted_class.txt", "r") as file:
                 predicted_class = file.read().strip()
 
-            # Process the predicted class and update the table
             if predicted_class:
                 self.processScannedBarcode(predicted_class)
 
-            # Update the file with new details
             with open("predicted_class.txt", "w") as file:
                 file.write("new_details")
             
-            # Remove the file to avoid reprocessing the same class
             os.remove("predicted_class.txt")
 
     # Function to Call help.py
@@ -121,6 +110,7 @@ class Ui_MainWindowItemView(object):
         if current_window != "search" and self.search_window_open:
             self.window_search.close()
             self.search_window_open = False
+            
         if current_window != "shopping_list" and self.shopping_list_window_open:
             self.window_shopping_list.close()
             self.shopping_list_window_open = False
@@ -222,14 +212,14 @@ class Ui_MainWindowItemView(object):
         self.searchProductsButton.clicked.connect(self.SearchProductOption)
 
         self.productTable = QtWidgets.QTableWidget(self.centralwidget)
-        self.productTable.setGeometry(QtCore.QRect(20, 130, 740, 475))
+        self.productTable.setGeometry(QtCore.QRect(20, 130, 790, 475))
         self.productTable.setGridStyle(QtCore.Qt.SolidLine)
         self.productTable.setObjectName("productTable")
         self.productTable.setColumnCount(6)
         self.productTable.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(0, item)
-        self.productTable.setColumnWidth(0, 518)
+        self.productTable.setColumnWidth(0, 564)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(1, item)
         self.productTable.setColumnWidth(1, 0)
@@ -262,7 +252,7 @@ class Ui_MainWindowItemView(object):
         self.productTable.horizontalHeader().setStyleSheet(header_stylesheet)
 
         self.summaryFrame = QtWidgets.QFrame(self.centralwidget)
-        self.summaryFrame.setGeometry(QtCore.QRect(20, 610, 550, 100))
+        self.summaryFrame.setGeometry(QtCore.QRect(20, 610, 610, 100))
         self.summaryFrame.setStyleSheet("#summaryFrame{\n"
 "    background-color:#FEFCFC;\n"
 "    border-radius:15px;\n"
@@ -281,67 +271,52 @@ class Ui_MainWindowItemView(object):
         self.summaryLabel.setObjectName("summaryLabel")
 
         self.productsLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.productsLabel.setGeometry(QtCore.QRect(10, 45, 150, 25))
+        self.productsLabel.setGeometry(QtCore.QRect(6, 35, 250, 45))
         self.productsLabel.setStyleSheet("#productsLabel{\n"
-"    font-size:16px;\n"
+"    font-size:24px;\n"
 "    color:#A0A0A0;\n"
 "}")
         self.productsLabel.setObjectName("productsLabel")
 
-        self.grossLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.grossLabel.setGeometry(QtCore.QRect(160, 45, 125, 25))
-        self.grossLabel.setStyleSheet("#grossLabel{\n"
-"    font-size:16px;\n"
-"    color:#A0A0A0;\n"
-"}")
-        self.grossLabel.setObjectName("grossLabel")
-
         self.itemsLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.itemsLabel.setGeometry(QtCore.QRect(310, 45, 125, 25))
+        self.itemsLabel.setGeometry(QtCore.QRect(240, 35, 200, 45))
         self.itemsLabel.setStyleSheet("#itemsLabel{\n"
-"    font-size:16px;\n"
+"    font-size:24px;\n"
 "    color:#A0A0A0;\n"
 "}")
         self.itemsLabel.setObjectName("itemsLabel")
 
         self.totalLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.totalLabel.setGeometry(QtCore.QRect(455, 45, 125, 25))
+        self.totalLabel.setGeometry(QtCore.QRect(445, 35, 200, 45))
         self.totalLabel.setStyleSheet("#totalLabel{\n"
-"    font-size:16px;\n"
+"    font-size:24px;\n"
 "    color:#A0A0A0;\n"
 "}")
         self.totalLabel.setObjectName("totalLabel")
 
         self.productsOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.productsOutput.setGeometry(QtCore.QRect(10, 65, 100, 15))
+        self.productsOutput.setGeometry(QtCore.QRect(6, 65, 100, 25))
         self.productsOutput.setStyleSheet("#productsOutput{\n"
-"    font-size:16px;\n"
+"    font-size:20px;\n"
 "}")
         self.productsOutput.setObjectName("productsOutput")
 
-        self.grossOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.grossOutput.setGeometry(QtCore.QRect(160, 65, 125, 20))
-        self.grossOutput.setStyleSheet("#grossOutput{\n"
-"    font-size:16px;\n"
-"}")
-        self.grossOutput.setObjectName("grossOutput")
-
         self.itemsOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.itemsOutput.setGeometry(QtCore.QRect(310, 65, 100, 15))
+        self.itemsOutput.setGeometry(QtCore.QRect(240, 65, 100, 25))
         self.itemsOutput.setStyleSheet("#itemsOutput{\n"
-"    font-size:16px;\n"
+"    font-size:20px;\n"
 "}")
         self.itemsOutput.setObjectName("itemsOutput")
 
         self.totalOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.totalOutput.setGeometry(QtCore.QRect(455, 65, 100, 15))
+        self.totalOutput.setGeometry(QtCore.QRect(445, 65, 175, 25))
         self.totalOutput.setStyleSheet("#totalOutput{\n"
-"    font-size:16px;\n"
+"    font-size:24px;\n"
 "}")
         self.totalOutput.setObjectName("totalOutput")
 
         self.advertisementFrame = QtWidgets.QFrame(self.centralwidget)
-        self.advertisementFrame.setGeometry(QtCore.QRect(780, 130, 475, 475))
+        self.advertisementFrame.setGeometry(QtCore.QRect(820, 130, 435, 475))
         self.advertisementFrame.setStyleSheet("#advertisementFrame{\n"
 "    background-color:#FEFCFC;\n"
 "}")
@@ -356,9 +331,6 @@ class Ui_MainWindowItemView(object):
         self.video_player.setVideoOutput(self.video_widget)
         self.video_widget.setFixedSize(475, 475)
         self.video_player.mediaStatusChanged.connect(self.handleVideoStateChange)
-
-        self.local_videos = self.getLocalVideosFromFolder()
-        print("Local Videos:", self.local_videos)
 
         # Start playing the first video
         self.playNextVideo()
@@ -379,7 +351,7 @@ class Ui_MainWindowItemView(object):
         self.checkOutPushButton.clicked.connect(MainWindow.close)
 
         self.scanBarcodePushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.scanBarcodePushButton.setGeometry(QtCore.QRect(590, 610, 170, 100))
+        self.scanBarcodePushButton.setGeometry(QtCore.QRect(640, 610, 170, 100))
         self.scanBarcodePushButton.setStyleSheet("#scanBarcodePushButton{\n"
 "    background-color:#F4C430;\n"
 "    border-radius:20px;\n"
@@ -389,12 +361,8 @@ class Ui_MainWindowItemView(object):
 "}")
         self.scanBarcodePushButton.setObjectName("scanBarcodePushButton")
         # Connect the scanBarcodeButton to the scanBarcode function
-        self.scanBarcodePushButton.clicked.connect(self.scanBarcode)
+        self.scanBarcodePushButton.clicked.connect(self.openBarcodeScanner)
         MainWindow.setCentralWidget(self.centralwidget)
-
-        self.scan_timer = QTimer()
-        self.scan_timer.timeout.connect(self.closeScanner)
-        self.scan_timeout = 30000  
 
         # Call the function to populate the table with scanned products
         self.populateTableWithScannedProducts()
@@ -404,10 +372,8 @@ class Ui_MainWindowItemView(object):
     
     def getLocalVideosFromFolder(self):
         try:
-            # Retrieve local videos from the Assets folder
             local_videos_path = "Assets\\*.avi"
             local_videos = glob.glob(local_videos_path)
-            print("Local Videos:", local_videos)
             return local_videos
 
         except Exception as e:
@@ -420,7 +386,6 @@ class Ui_MainWindowItemView(object):
         try:
             if self.local_videos:
                 video_url = self.local_videos.pop(0)
-                print(f"Playing local video: {video_url}")
                 content = QMediaContent(QtCore.QUrl.fromLocalFile(video_url))
                 self.video_player.setMedia(content)
                 self.video_player.play()
@@ -435,13 +400,9 @@ class Ui_MainWindowItemView(object):
 
     def handleVideoStateChange(self, new_state):
         try:
-            print(f"Video state changed: {new_state}")
-            # Handle video playback state changes
             if new_state == QMediaPlayer.EndOfMedia:
-                # Video has ended, play the next one
                 self.playNextVideo()
             elif new_state == QMediaPlayer.Error:
-                # Error occurred during playback, handle accordingly
                 error_message = f"Error during video playback: {self.video_player.errorString()}"
                 print(error_message)
                 QtWidgets.QMessageBox.critical(None, "Error", error_message)
@@ -458,94 +419,75 @@ class Ui_MainWindowItemView(object):
         self.video_player.setMedia(QMediaContent())
         self.video_player.setVideoOutput(None)
         self.video_widget.deleteLater()
-
-    # Scan Barcode Process
-    def scanBarcode(self):
+    
+    def openBarcodeScanner(self):
         try:
             if not hasattr(self, 'cap') or not self.cap.isOpened():
-                # Stop the classifier first
-                self.object_classifier.stop_classifier()
-
-                self.scanBarcodePushButton.setText(translations[Config.current_language]['Close_Barcode_Scanner'])
-                QMessageBox.information(None, translations[Config.current_language]['Scan_Barcode_Title'],
-                            translations[Config.current_language]['Scan_Barcode_Message'])
-                
+                self.stop_classifier()
                 self.cap = cv2.VideoCapture(0)
                 if not self.cap.isOpened():
-                    raise Exception("Error opening the camera.")
+                    raise Exception("Unable to open camera.")
+                
+                self.scanBarcodePushButton.setText(translations[Config.current_language]['Close_Barcode_Scanner'])
+                QMessageBox.information(None, translations[Config.current_language]['Scan_Barcode_Title'],
+                    translations[Config.current_language]['Scan_Barcode_Message'])
 
                 self.scanning_in_progress = True
-                self.scan_timer.start(self.scan_timeout)
-                self.scanning_thread = threading.Thread(target=self.scanBarcodeThread)
-                self.scanning_thread.start()
+                last_scan_time = time.time()  # Initialize last scan time
+                while self.scanning_in_progress:
+                    ret, frame = self.cap.read()
+                    if ret:
+                        barcodes = decode(frame)
+                        if barcodes:
+                            last_scan_time = time.time()  # Update last scan time when a barcode is detected
+                            for barcode in barcodes:
+                                barcode_data = barcode.data.decode("utf-8")
+                                self.scan_sound.play()
+                                self.scan_sound.set_volume(1) 
+                                self.processScannedBarcode(barcode_data)
+                        else:
+                            if time.time() - last_scan_time > 20:
+                                self.closeBarcodeScanner()
+                                break
+
+                    QtWidgets.QApplication.processEvents()
             else:
                 self.scanning_in_progress = False
-                self.scanning_thread.join() 
-
                 self.cap.release()
                 cv2.destroyAllWindows()
-
                 self.scanBarcodePushButton.setText(translations[Config.current_language]['Scan_Barcode_Push_Button'])
-                if self.scanning_in_progress:
-                    QMessageBox.information(None, translations[Config.current_language]['Scanning_Done_Title'],
-                            translations[Config.current_language]['Scanning_Done_Message'])
-                self.scan_timer.stop()
+                QMessageBox.information(None, translations[Config.current_language]['Scanning_Done_Title'],
+                    translations[Config.current_language]['Scanning_Done_Message'])
+
                 self.object_classifier = ObjectClassifier()
 
         except Exception as e:
-            error_message = f"An unexpected error occurred during barcode scanning: {e}"
+            error_message = f"An unexpected error occurred while opening/closing barcode scanner: {e}"
             print(error_message)
             QtWidgets.QMessageBox.critical(None, "Error", error_message)
-
-    # Decode Barcode 
-    def scanBarcodeThread(self):
-        try:
-            cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-            if not cap.isOpened():
-                raise Exception("Error opening the camera.")
-
-            with concurrent.futures.ThreadPoolExecutor() as executor:
-                while self.scanning_in_progress:
-                    ret, frame = cap.read()
-                    if not ret or frame is None:
-                        break
-
-                    # Resize the frame for faster processing
-                    resized_frame = cv2.resize(frame, (640, 480))  # Adjust the size as needed
-                    # Submit frame decoding to the ThreadPoolExecutor
-                    future = executor.submit(self.decodeBarcodes, resized_frame)
-                    future.add_done_callback(self.processDecodedBarcodes)
-
-            cap.release()
-        except Exception as e:
-            error_message = f"An unexpected error occurred during barcode scanning: {e}"
-            print(error_message)
-            QtWidgets.QMessageBox.critical(None, "Error", error_message)
-            cv2.destroyAllWindows()
     
-    def decodeBarcodes(self, frame):
-        barcodes = decode(frame)
-        return barcodes
-
-    def processDecodedBarcodes(self, future):
+    def closeBarcodeScanner(self):
         try:
-            barcodes = future.result()
-            for barcode in barcodes:
-                barcode_data = barcode.data.decode('utf-8')
-                current_time = time.time()
-                if current_time - self.last_scan_time > 1:
-                    self.last_scan_time = current_time
-                    self.processScannedBarcode(barcode_data)
-
+            if hasattr(self, 'cap') and self.cap.isOpened():
+                self.cap.release()
+                cv2.destroyAllWindows()
+                self.scanBarcodePushButton.setText(translations[Config.current_language]['Scan_Barcode_Push_Button'])
+                if self.scanning_in_progress:
+                    QMessageBox.information(None, translations[Config.current_language]['Scanner_Closed_Title'],
+                            translations[Config.current_language]['Scanner_Closed_Message'])
+                self.scanning_in_progress = False
+                self.object_classifier = ObjectClassifier()
+                
         except Exception as e:
-            print(f"An error occurred while processing decoded barcodes: {e}")
+            error_message = f"An unexpected error occurred while closing the scanner: {e}"
+            print(error_message)
+            QtWidgets.QMessageBox.critical(None, "Error", error_message)
 
     # Proccess Decoded Barcode
     def processScannedBarcode(self, barcode_data):
         try:
             product_details = self.db_manager.get_product_details_by_barcode(self.cursor, barcode_data)
             if product_details:
-                    # Extract relevant information from product_details
                     product_id = product_details[0]
                     product_name = product_details[1]  
                     product_weight = product_details[6]  
@@ -592,8 +534,6 @@ class Ui_MainWindowItemView(object):
 
                     self.transaction_counter += 1
 
-                    # self.scan_sound.play()
-                    # self.scan_sound.set_volume(1) 
                     self.updateSummaryLabels()
                     print(f"Product with barcode {barcode_data} found in the database.")
             else:
@@ -614,25 +554,6 @@ class Ui_MainWindowItemView(object):
             print(f"Product with identifier {identifier} removed.")
         else:
             print("Error: Unable to retrieve transaction identifier.")
-
-    def closeScanner(self):
-        try:
-            if hasattr(self, 'cap') and self.cap.isOpened():
-                self.cap.release()
-                cv2.destroyAllWindows()
-                self.scanBarcodePushButton.setText(translations[Config.current_language]['Scan_Barcode_Push_Button'])
-                if self.scanning_in_progress:
-                    QMessageBox.information(None, translations[Config.current_language]['Scanner_Closed_Title'],
-                            translations[Config.current_language]['Scanner_Closed_Message'])
-                self.scanning_in_progress = False
-                self.scan_timer.stop()
-                self.object_classifier = ObjectClassifier()
-                
-        except Exception as e:
-            error_message = f"An unexpected error occurred while closing the scanner: {e}"
-            print(error_message)
-            QtWidgets.QMessageBox.critical(None, "Error", error_message)
-            
     
     def populateTableWithScannedProducts(self):
         identifier = f"{config.transaction_info.get('reference_number')} - {self.transaction_counter}"
@@ -649,12 +570,10 @@ class Ui_MainWindowItemView(object):
 
         if summary_data is not None:
             products_count = summary_data[1]
-            total_gross_weight = summary_data[3]
             total_items = summary_data[2]  
             total_price = summary_data[4]  
 
             QtCore.QMetaObject.invokeMethod(self.productsOutput, "setText", QtCore.Qt.QueuedConnection, QtCore.Q_ARG(str, f"{products_count} Products"))
-            QtCore.QMetaObject.invokeMethod(self.grossOutput, "setText", QtCore.Qt.QueuedConnection, QtCore.Q_ARG(str, f"¥ {total_gross_weight:.2f}"))
             QtCore.QMetaObject.invokeMethod(self.itemsOutput, "setText", QtCore.Qt.QueuedConnection, QtCore.Q_ARG(str, f"{total_items} Items"))
             QtCore.QMetaObject.invokeMethod(self.totalOutput, "setText", QtCore.Qt.QueuedConnection, QtCore.Q_ARG(str, f"¥ {total_price:.2f}"))
 
@@ -687,16 +606,13 @@ class Ui_MainWindowItemView(object):
             remove_button.clicked.connect(lambda row=rowPosition: self.removeProduct(row))
 
             QtCore.QTimer.singleShot(0, lambda: self.productTable.setCellWidget(rowPosition, 4, remove_button))
-            self.productTable.setItem(rowPosition, 5, item_transaction)
+            self.productTable.setItem(rowPosition, 5, transaction_text)
                 
     def updateSummaryLabels(self):
         unique_products = set(self.productTable.item(row, 0).text() for row in range(self.productTable.rowCount()))
         products_count = len(unique_products)
 
         self.productsOutput.setText(f"{products_count} Products")
-
-        total_gross_weight = sum(float(item.text().split()[0]) for row in range(self.productTable.rowCount()) for item in [self.productTable.item(row, 1)])
-        self.grossOutput.setText(f"{total_gross_weight:.2f} grams")
 
         total_items = self.productTable.rowCount()
         self.itemsOutput.setText(f"{total_items} Items")
@@ -730,11 +646,9 @@ class Ui_MainWindowItemView(object):
         item.setText(_translate("MainWindow", translation_dict['Remove_Label']))
         self.summaryLabel.setText(_translate("MainWindow", translation_dict['Summary_Label']))
         self.productsLabel.setText(_translate("MainWindow", translation_dict['Total_Products_Label']))
-        self.grossLabel.setText(_translate("MainWindow", translation_dict['Total_Gross_Weight']))
         self.itemsLabel.setText(_translate("MainWindow", translation_dict['Total_Items_Label']))
         self.totalLabel.setText(_translate("MainWindow", translation_dict['Total_Price_Label']))
         self.productsOutput.setText(_translate("MainWindow", translation_dict['Total_Products_Output']))
-        self.grossOutput.setText(_translate("MainWindow", translation_dict['Total_Gross_Weight_Output']))
         self.itemsOutput.setText(_translate("MainWindow", translation_dict['Total_Items_Output']))
         self.totalOutput.setText(_translate("MainWindow", translation_dict['Total_Price_Output']))
         self.checkOutPushButton.setText(_translate("MainWindow", translation_dict['Checkout_Button']))

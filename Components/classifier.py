@@ -19,7 +19,7 @@ class ObjectClassifier:
         self.image_directory = "capture"
         self.label_path = label_path
         self.frame_count = 0
-        self.cap = cv2.VideoCapture(1)
+        self.cap = cv2.VideoCapture(0)
         self.create_directory(self.image_directory)
         with open(self.label_path, 'r') as file:
             self.class_names = [line.strip() for line in file.readlines()]

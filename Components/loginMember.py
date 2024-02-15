@@ -1,18 +1,21 @@
 import config
 # Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QApplication
 from config import Config, translations
 from databaseManager import DatabaseManager, EnvironmentLoader
+from onScreenKeyboard import OnScreenKeyboard
 
 class Ui_MainWindowLogInMember(object):
     def __init__(self):
         self.db_manager = DatabaseManager(*EnvironmentLoader.load_env_variables())
         self.conn = self.db_manager.connect()
         self.cursor = self.conn.cursor()
-        
+        self.keyboard = OnScreenKeyboard()
+
     # Function to Call tutorialMember.py
     def TutorialMember(self):
+        self.hide_keyboard_on_mouse_click(None)
         from tutorialMember import Ui_MainWindowTutorialMember
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_MainWindowTutorialMember()
@@ -36,6 +39,7 @@ class Ui_MainWindowLogInMember(object):
         MainWindow.setStyleSheet("#centralwidget{\n"
 "    background-color:#00C0FF;\n"
 "}")
+        MainWindow.mousePressEvent = self.hide_keyboard_on_mouse_click
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
@@ -95,6 +99,15 @@ class Ui_MainWindowLogInMember(object):
         self.passwordLineEdit.setObjectName("passwordLineEdit")
         self.passwordLineEdit.setEchoMode(QtWidgets.QLineEdit.Password)
 
+        self.emailLineEdit.setReadOnly(True)
+        self.emailLineEdit.mousePressEvent = self.show_keyboard_for_email
+
+        self.passwordLineEdit.setReadOnly(True)
+        self.passwordLineEdit.mousePressEvent = self.show_keyboard_for_password
+
+        self.emailLineEdit.returnPressed.connect(self.move_focus_to_password)
+        self.passwordLineEdit.returnPressed.connect(self.click_login_button)
+        
         self.loginPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.loginPushButton.setGeometry(QtCore.QRect(250, 540, 400, 60))
         self.loginPushButton.setStyleSheet("#loginPushButton{\n"
@@ -179,6 +192,71 @@ class Ui_MainWindowLogInMember(object):
 
         self.loginPushButton.clicked.connect(self.authenticate_user)
         self.MainWindow = MainWindow
+
+    def show_keyboard_for_email(self, event):
+        # Hide color from previous line edit
+        self.passwordLineEdit.setStyleSheet("""
+            #passwordLineEdit {
+                border-radius: 10px;
+                font-size: 26px;
+                font-family: Montserrat;
+                padding: 10px;
+            }
+        """)
+        
+        # Show the keyboard for emailLineEdit
+        self.emailLineEdit.setStyleSheet("""
+            #emailLineEdit {
+                border: 2px solid #005A9C;
+                border-radius: 10px;
+                font-size: 26px;
+                font-family: Montserrat;
+                padding: 10px;
+            }
+        """)
+        self.keyboard.text_input = self.emailLineEdit
+        self.keyboard.raise_()
+        self.keyboard.show()
+
+    def show_keyboard_for_password(self, event):
+        # Hide color from previous line edit
+        self.emailLineEdit.setStyleSheet("""
+            #emailLineEdit {
+                border-radius: 10px;
+                font-size: 26px;
+                font-family: Montserrat;
+                padding: 10px;
+            }
+        """)
+                    
+        # Show the keyboard for passwordLineEdit
+        self.passwordLineEdit.setStyleSheet("""
+            #passwordLineEdit {
+                border: 2px solid #005A9C;
+                border-radius: 10px;
+                font-size: 26px;
+                font-family: Montserrat;
+                padding: 10px;
+            }
+        """)
+        self.keyboard.text_input = self.passwordLineEdit
+        self.keyboard.raise_()
+        self.keyboard.show()
+
+    def move_focus_to_password(self):
+        # Move focus to the password line edit
+        self.passwordLineEdit.setFocus()
+        self.show_keyboard_for_password(None)
+        
+
+    def click_login_button(self):
+        # Simulate click on login button
+        self.loginPushButton.click()
+    
+    def hide_keyboard_on_mouse_click(self, event):
+        # Hide the keyboard if it's visible
+        if self.keyboard.isVisible():
+            self.keyboard.hide()
 
     # User Authentication Function
     def authenticate_user(self):
