@@ -119,12 +119,12 @@ class DatabaseManager:
             conn.commit()
 
     # ITEMVIEW - Select Query for Save Transaction Detail
-    def saveTransactionDetail(self, item_name, item_weight, item_price, item_barcode, sales_trans, transaction_text):
+    def saveTransactionDetail(self, item_name, item_price, item_barcode, sales_trans, transaction_text):
         try:
             with self.connect() as conn, conn.cursor() as cursor:
                 cursor.execute(
-                    "{CALL sp_SaveTransDetail (?, ?, ?, ?, ?, ?)}",
-                    item_name, item_weight, item_price, item_barcode, sales_trans, transaction_text
+                    "{CALL sp_SaveTransDetail (?, ?, ?, ?, ?)}",
+                    item_name, item_price, item_barcode, sales_trans, transaction_text
                 )
                 conn.commit()
                 print(f"Transaction details for {item_name} saved successfully.")

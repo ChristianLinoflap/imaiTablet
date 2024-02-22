@@ -18,6 +18,7 @@ import config
 from classifier import ObjectClassifier
 from config import Config, translations
 from databaseManager import DatabaseManager, EnvironmentLoader
+from onScreenKeyboard import OnScreenKeyboard
 
 # Additional Imports
 import glob
@@ -43,6 +44,7 @@ class Ui_MainWindowItemView(object):
         self.predicted_class_timer.start(0) 
         self.local_videos = self.getLocalVideosFromFolder()
         self.object_classifier = ObjectClassifier()
+        self.keyboard = OnScreenKeyboard()
     
     def stop_classifier(self):
         self.object_classifier.stop_classifier()
@@ -73,6 +75,7 @@ class Ui_MainWindowItemView(object):
             self.search_window_open = True
         else:
             self.window_search.close()
+            self.ui_search.keyboard.close()
             self.search_window_open = False
 
     # Function to Call shoppingList.py
@@ -116,6 +119,7 @@ class Ui_MainWindowItemView(object):
             self.shopping_list_window_open = False
         if current_window != "help" and self.help_window_open:
             self.window_help.close()
+            self.ui_search.keyboard.close()
             self.help_window_open = False
 
     # Function to Call paymentOption.py
@@ -212,29 +216,23 @@ class Ui_MainWindowItemView(object):
         self.searchProductsButton.clicked.connect(self.SearchProductOption)
 
         self.productTable = QtWidgets.QTableWidget(self.centralwidget)
-        self.productTable.setGeometry(QtCore.QRect(20, 130, 790, 475))
-        self.productTable.setGridStyle(QtCore.Qt.SolidLine)
+        self.productTable.setGeometry(QtCore.QRect(20, 230, 490, 475))
+        self.productTable.setShowGrid(False)
         self.productTable.setObjectName("productTable")
-        self.productTable.setColumnCount(6)
+        self.productTable.setColumnCount(4)
         self.productTable.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(0, item)
-        self.productTable.setColumnWidth(0, 564)
+        self.productTable.setColumnWidth(0, 274)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(1, item)
-        self.productTable.setColumnWidth(1, 0)
+        self.productTable.setColumnWidth(1, 110)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(2, item)
         self.productTable.setColumnWidth(2, 110) 
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(3, item)
         self.productTable.setColumnWidth(3, 0) 
-        item = QtWidgets.QTableWidgetItem()
-        self.productTable.setHorizontalHeaderItem(4, item)
-        self.productTable.setColumnWidth(4, 110) 
-        item = QtWidgets.QTableWidgetItem()
-        self.productTable.setHorizontalHeaderItem(5, item)
-        self.productTable.setColumnWidth(5, 0) 
         # Set the table to read-only
         self.productTable.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
         # Make column headers not movable
@@ -252,7 +250,7 @@ class Ui_MainWindowItemView(object):
         self.productTable.horizontalHeader().setStyleSheet(header_stylesheet)
 
         self.summaryFrame = QtWidgets.QFrame(self.centralwidget)
-        self.summaryFrame.setGeometry(QtCore.QRect(20, 610, 610, 100))
+        self.summaryFrame.setGeometry(QtCore.QRect(20, 120, 240, 100))
         self.summaryFrame.setStyleSheet("#summaryFrame{\n"
 "    background-color:#FEFCFC;\n"
 "    border-radius:15px;\n"
@@ -261,62 +259,64 @@ class Ui_MainWindowItemView(object):
         self.summaryFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.summaryFrame.setObjectName("summaryFrame")
 
-        self.summaryLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.summaryLabel.setGeometry(QtCore.QRect(6, 10, 120, 30))
-        self.summaryLabel.setStyleSheet("#summaryLabel{\n"
-"    font-size:24px;\n"
-"    font-family:Montserrat;\n"
-"    font-weight:bold;\n"
-"}")
-        self.summaryLabel.setObjectName("summaryLabel")
-
-        self.productsLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.productsLabel.setGeometry(QtCore.QRect(6, 35, 250, 45))
-        self.productsLabel.setStyleSheet("#productsLabel{\n"
-"    font-size:24px;\n"
-"    color:#A0A0A0;\n"
-"}")
-        self.productsLabel.setObjectName("productsLabel")
-
-        self.itemsLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.itemsLabel.setGeometry(QtCore.QRect(240, 35, 200, 45))
-        self.itemsLabel.setStyleSheet("#itemsLabel{\n"
-"    font-size:24px;\n"
-"    color:#A0A0A0;\n"
-"}")
-        self.itemsLabel.setObjectName("itemsLabel")
-
         self.totalLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.totalLabel.setGeometry(QtCore.QRect(445, 35, 200, 45))
+        self.totalLabel.setGeometry(QtCore.QRect(10, 5, 200, 35))
         self.totalLabel.setStyleSheet("#totalLabel{\n"
-"    font-size:24px;\n"
+"    font-size:16px;\n"
 "    color:#A0A0A0;\n"
 "}")
         self.totalLabel.setObjectName("totalLabel")
 
-        self.productsOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.productsOutput.setGeometry(QtCore.QRect(6, 65, 100, 25))
-        self.productsOutput.setStyleSheet("#productsOutput{\n"
-"    font-size:20px;\n"
-"}")
-        self.productsOutput.setObjectName("productsOutput")
-
-        self.itemsOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.itemsOutput.setGeometry(QtCore.QRect(240, 65, 100, 25))
-        self.itemsOutput.setStyleSheet("#itemsOutput{\n"
-"    font-size:20px;\n"
-"}")
-        self.itemsOutput.setObjectName("itemsOutput")
-
         self.totalOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.totalOutput.setGeometry(QtCore.QRect(445, 65, 175, 25))
+        self.totalOutput.setGeometry(QtCore.QRect(10, 45, 175, 25))
         self.totalOutput.setStyleSheet("#totalOutput{\n"
-"    font-size:24px;\n"
+"    font-size:32px;\n"
 "}")
         self.totalOutput.setObjectName("totalOutput")
 
+        self.paymentName = QtWidgets.QLabel(self.summaryFrame)
+        self.paymentName.setGeometry(QtCore.QRect(10, 70, 200, 25))
+        self.paymentName.setStyleSheet("#paymentName{\n"
+        "    font-size:12px;\n"
+        "    color:#A0A0A0;\n"
+        "}")
+        self.paymentName.setObjectName("paymentName")
+
+        self.discountFrame = QtWidgets.QFrame(self.centralwidget)
+        self.discountFrame.setGeometry(QtCore.QRect(270, 120, 240, 100))
+        self.discountFrame.setStyleSheet("#discountFrame{\n"
+        "    background-color:#FEFCFC;\n"
+        "    border-radius:15px;\n"
+        "}")
+        self.discountFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.discountFrame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.discountFrame.setObjectName("discountFrame")
+
+        self.discountLabel = QtWidgets.QLabel(self.discountFrame)
+        self.discountLabel.setGeometry(QtCore.QRect(10, 5, 200, 35))
+        self.discountLabel.setStyleSheet("#discountLabel{\n"
+        "    font-size:16px;\n"
+        "    color:#A0A0A0;\n"
+        "}")
+        self.discountLabel.setObjectName("discountLabel")
+        
+        self.discountOutput = QtWidgets.QLabel(self.discountFrame)
+        self.discountOutput.setGeometry(QtCore.QRect(10, 45, 175, 25))
+        self.discountOutput.setStyleSheet("#discountOutput{\n"
+        "    font-size:32px;\n"
+        "}")
+        self.discountOutput.setObjectName("discountOutput")
+
+        self.discountName = QtWidgets.QLabel(self.discountFrame)
+        self.discountName.setGeometry(QtCore.QRect(10, 70, 200, 25))
+        self.discountName.setStyleSheet("#discountName{\n"
+        "    font-size:12px;\n"
+        "    color:#A0A0A0;\n"
+        "}")
+        self.discountName.setObjectName("discountName")
+
         self.advertisementFrame = QtWidgets.QFrame(self.centralwidget)
-        self.advertisementFrame.setGeometry(QtCore.QRect(820, 130, 435, 475))
+        self.advertisementFrame.setGeometry(QtCore.QRect(530, 120, 720, 475))
         self.advertisementFrame.setStyleSheet("#advertisementFrame{\n"
 "    background-color:#FEFCFC;\n"
 "}")
@@ -329,7 +329,7 @@ class Ui_MainWindowItemView(object):
         self.video_player.setVolume(10)  
         self.video_widget = QVideoWidget(self.advertisementFrame)
         self.video_player.setVideoOutput(self.video_widget)
-        self.video_widget.setFixedSize(475, 475)
+        self.video_widget.setFixedSize(720, 475)
         self.video_player.mediaStatusChanged.connect(self.handleVideoStateChange)
 
         # Start playing the first video
@@ -338,11 +338,12 @@ class Ui_MainWindowItemView(object):
         self.checkOutPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.checkOutPushButton.setGeometry(QtCore.QRect(1085, 610, 170, 100))
         self.checkOutPushButton.setStyleSheet("#checkOutPushButton{\n"
-"    background-color:#0000AF;\n"
-"    border-radius:15px;\n"
 "    font-size:14px;\n"
 "    font-family:Montserrat;\n"
 "    color:#fff;\n"
+"    border-radius: 10px;\n"
+"    border: 2px solid #0000AF;\n"
+"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
 "}")
         self.checkOutPushButton.setObjectName("checkOutPushButton")
         # To call the function PaymentOption to open the page and close the main window
@@ -351,13 +352,15 @@ class Ui_MainWindowItemView(object):
         self.checkOutPushButton.clicked.connect(MainWindow.close)
 
         self.scanBarcodePushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.scanBarcodePushButton.setGeometry(QtCore.QRect(640, 610, 170, 100))
+        self.scanBarcodePushButton.setGeometry(QtCore.QRect(900, 610, 170, 100))
         self.scanBarcodePushButton.setStyleSheet("#scanBarcodePushButton{\n"
-"    background-color:#F4C430;\n"
-"    border-radius:20px;\n"
-"    font-size:14px;\n"
+"    border-radius:10px;\n"
 "    font-family:Montserrat;\n"
+"    font-size:14px;\n"
 "    color:#000;\n"
+"    border: 2px solid #FFD700;\n"
+"    border-radius: 9px;\n"
+"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #FFD700, stop:0.2 #FFD700, stop:1 #f6f7fa);\n"
 "}")
         self.scanBarcodePushButton.setObjectName("scanBarcodePushButton")
         # Connect the scanBarcodeButton to the scanBarcode function
@@ -490,7 +493,6 @@ class Ui_MainWindowItemView(object):
             if product_details:
                     product_id = product_details[0]
                     product_name = product_details[1]  
-                    product_weight = product_details[6]  
                     product_price = product_details[-1] 
 
                     identifier = f"{config.transaction_info.get('reference_number')} - {self.transaction_counter}"
@@ -506,18 +508,14 @@ class Ui_MainWindowItemView(object):
                     rowPosition = 0
                     self.productTable.insertRow(0)
 
-                    item_name = QtWidgets.QTableWidgetItem(product_name)
-                    item_weight = QtWidgets.QTableWidgetItem(f"{product_weight} g")       
+                    item_name = QtWidgets.QTableWidgetItem(product_name)     
                     item_price = QtWidgets.QTableWidgetItem(f"¥ {product_price:.2f}")
-                    item_barcode = QtWidgets.QTableWidgetItem(barcode_data)
                     item_transaction = QtWidgets.QTableWidgetItem(str(identifier))
                     transaction_text = item_transaction.text()
-                    self.db_manager.saveTransactionDetail(product_name, product_weight, product_price, barcode_data, sales_trans, transaction_text)
+                    self.db_manager.saveTransactionDetail(product_name, product_price, barcode_data, sales_trans, transaction_text)
 
                     self.productTable.setItem(0, 0, item_name)  
-                    self.productTable.setItem(0, 1, item_weight)
-                    self.productTable.setItem(0, 2, item_price) 
-                    self.productTable.setItem(0, 3, item_barcode) 
+                    self.productTable.setItem(0, 1, item_price) 
 
                     remove_button = QtWidgets.QPushButton()
                     remove_icon = QtGui.QIcon('Assets\\remove.png')
@@ -528,9 +526,9 @@ class Ui_MainWindowItemView(object):
                     remove_button.clicked.connect(lambda row=0: self.removeProduct(row))
 
                     print(f"Creating remove_button for row {rowPosition}")
-                    QtCore.QTimer.singleShot(0, lambda: self.productTable.setCellWidget(0, 4, remove_button))
+                    QtCore.QTimer.singleShot(0, lambda: self.productTable.setCellWidget(0, 2, remove_button))
                     self.productTable.repaint()
-                    self.productTable.setItem(0, 5, item_transaction)
+                    self.productTable.setItem(0, 3, item_transaction)
 
                     self.transaction_counter += 1
 
@@ -544,7 +542,7 @@ class Ui_MainWindowItemView(object):
             QtWidgets.QMessageBox.critical(None, "Error", error_message)
 
     def removeProduct(self, row_position):
-        item_transaction = self.productTable.item(row_position, 5)
+        item_transaction = self.productTable.item(row_position, 3)
         if item_transaction:
             identifier = item_transaction.text()
             self.db_manager.deleteTransactionDetail(identifier)
@@ -569,34 +567,23 @@ class Ui_MainWindowItemView(object):
         summary_data = self.cursor.fetchone()
 
         if summary_data is not None:
-            products_count = summary_data[1]
-            total_items = summary_data[2]  
             total_price = summary_data[4]  
-
-            QtCore.QMetaObject.invokeMethod(self.productsOutput, "setText", QtCore.Qt.QueuedConnection, QtCore.Q_ARG(str, f"{products_count} Products"))
-            QtCore.QMetaObject.invokeMethod(self.itemsOutput, "setText", QtCore.Qt.QueuedConnection, QtCore.Q_ARG(str, f"{total_items} Items"))
             QtCore.QMetaObject.invokeMethod(self.totalOutput, "setText", QtCore.Qt.QueuedConnection, QtCore.Q_ARG(str, f"¥ {total_price:.2f}"))
 
         for product in scanned_products:
             product_name = product[7]
-            product_weight = product[11]
             product_price = product[12]
-            barcode_data = product[13]
 
             rowPosition = self.productTable.rowCount()
             self.productTable.insertRow(rowPosition)
 
             item_name = QtWidgets.QTableWidgetItem(product_name)
-            item_weight = QtWidgets.QTableWidgetItem(f"{product_weight} g")
             item_price = QtWidgets.QTableWidgetItem(f"¥ {product_price:.2f}")
-            item_barcode = QtWidgets.QTableWidgetItem(barcode_data)
             item_transaction = QtWidgets.QTableWidgetItem(str(identifier))
             transaction_text = item_transaction.text()
 
             self.productTable.setItem(rowPosition, 0, item_name)
-            self.productTable.setItem(rowPosition, 1, item_weight)
-            self.productTable.setItem(rowPosition, 2, item_price)
-            self.productTable.setItem(rowPosition, 3, item_barcode)
+            self.productTable.setItem(rowPosition, 1, item_price)
 
             remove_button = QtWidgets.QPushButton()
             remove_icon = QtGui.QIcon('Assets\\remove.png')
@@ -605,19 +592,11 @@ class Ui_MainWindowItemView(object):
             remove_button.setIcon(remove_icon)
             remove_button.clicked.connect(lambda row=rowPosition: self.removeProduct(row))
 
-            QtCore.QTimer.singleShot(0, lambda: self.productTable.setCellWidget(rowPosition, 4, remove_button))
-            self.productTable.setItem(rowPosition, 5, transaction_text)
+            QtCore.QTimer.singleShot(0, lambda: self.productTable.setCellWidget(rowPosition, 2, remove_button))
+            self.productTable.setItem(rowPosition, 3, item_transaction)
                 
     def updateSummaryLabels(self):
-        unique_products = set(self.productTable.item(row, 0).text() for row in range(self.productTable.rowCount()))
-        products_count = len(unique_products)
-
-        self.productsOutput.setText(f"{products_count} Products")
-
-        total_items = self.productTable.rowCount()
-        self.itemsOutput.setText(f"{total_items} Items")
-
-        total_price = sum(float(item.text().split()[1]) for row in range(self.productTable.rowCount()) for item in [self.productTable.item(row, 2)])
+        total_price = sum(float(item.text().split()[1]) for row in range(self.productTable.rowCount()) for item in [self.productTable.item(row, 1)])
         self.totalOutput.setText(f"¥ {total_price:.2f}")
 
     def retranslateUi(self, MainWindow):
@@ -635,23 +614,17 @@ class Ui_MainWindowItemView(object):
         item = self.productTable.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", translation_dict['Product_Label']))
         item = self.productTable.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", translation_dict['Detail_Label']))
-        item = self.productTable.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", translation_dict['Price_Label']))
+        item = self.productTable.horizontalHeaderItem(2)
+        item.setText(_translate("MainWindow", translation_dict['Remove_Label']))
         item = self.productTable.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", translation_dict['Barcode_Label']))
-        item = self.productTable.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", translation_dict['Remove_Label']))
-        item = self.productTable.horizontalHeaderItem(5)
-        item.setText(_translate("MainWindow", translation_dict['Remove_Label']))
-        self.summaryLabel.setText(_translate("MainWindow", translation_dict['Summary_Label']))
-        self.productsLabel.setText(_translate("MainWindow", translation_dict['Total_Products_Label']))
-        self.itemsLabel.setText(_translate("MainWindow", translation_dict['Total_Items_Label']))
         self.totalLabel.setText(_translate("MainWindow", translation_dict['Total_Price_Label']))
-        self.productsOutput.setText(_translate("MainWindow", translation_dict['Total_Products_Output']))
-        self.itemsOutput.setText(_translate("MainWindow", translation_dict['Total_Items_Output']))
         self.totalOutput.setText(_translate("MainWindow", translation_dict['Total_Price_Output']))
-        self.checkOutPushButton.setText(_translate("MainWindow", translation_dict['Checkout_Button']))
+        self.paymentName.setText(_translate("MainWindow", translation_dict['Card_Payment']))
+        self.discountLabel.setText(_translate("MainWindow", translation_dict['Discount_Label']))
+        self.discountOutput.setText(_translate("MainWindow", translation_dict['Discount_Output']))
+        self.discountName.setText(_translate("MainWindow", translation_dict['Discount_Name']))
         self.checkOutPushButton.setText(_translate("MainWindow", translation_dict['Payment_Button']))
         self.scanBarcodePushButton.setText(_translate("MainWindow", translation_dict['Scan_Barcode_Push_Button']))
 

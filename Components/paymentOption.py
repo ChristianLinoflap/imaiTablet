@@ -79,7 +79,7 @@ class Ui_MainWindowPaymentOption(object):
         self.nameOutput.setGeometry(QtCore.QRect(20, 20, 920, 55))
         self.nameOutput.setStyleSheet("#nameOutput{\n"
 "    font-weight:bold;\n"
-"    font-size:42px;\n"
+"    font-size:28px;\n"
 "    color:#fff;\n"
 "}")
         self.nameOutput.setObjectName("nameOutput")
@@ -176,7 +176,7 @@ class Ui_MainWindowPaymentOption(object):
         self.cashPushButton.clicked.connect(MainWindow.close)
 
         self.cardLabel = QtWidgets.QLabel(self.helpViewFrame)
-        self.cardLabel.setGeometry(QtCore.QRect(130, 190, 91, 31))
+        self.cardLabel.setGeometry(QtCore.QRect(110, 190, 135, 35))
         self.cardLabel.setStyleSheet("#cardLabel{\n"
 "    font-size:24px;\n"
 "    font-family:Montserrat;\n"
@@ -184,7 +184,7 @@ class Ui_MainWindowPaymentOption(object):
         self.cardLabel.setObjectName("cardLabel")
 
         self.eWalletLabel = QtWidgets.QLabel(self.helpViewFrame)
-        self.eWalletLabel.setGeometry(QtCore.QRect(510, 190, 121, 31))
+        self.eWalletLabel.setGeometry(QtCore.QRect(490, 190, 135, 31))
         self.eWalletLabel.setStyleSheet("#cardLabel{\n"
 "    font-size:24px;\n"
 "    font-family:Montserrat;\n"
@@ -192,7 +192,7 @@ class Ui_MainWindowPaymentOption(object):
         self.eWalletLabel.setObjectName("eWalletLabel")
 
         self.cashLabel = QtWidgets.QLabel(self.helpViewFrame)
-        self.cashLabel.setGeometry(QtCore.QRect(910, 190, 121, 31))
+        self.cashLabel.setGeometry(QtCore.QRect(900, 190, 135, 31))
         self.cashLabel.setStyleSheet("#cardLabel{\n"
 "    font-size:24px;\n"
 "    font-family:Montserrat;\n"
