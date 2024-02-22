@@ -1,8 +1,11 @@
 # Third Pary Library Imports
 from PyQt5 import QtCore, QtGui, QtWidgets
 from config import Config, translations
-import config 
+import config
 from databaseManager import DatabaseManager, EnvironmentLoader
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+from PyQt5.QtMultimediaWidgets import QVideoWidget
+import glob
 
 class Ui_MainWindowEWalletPaymentOption(object):
     # Initializations
@@ -11,9 +14,11 @@ class Ui_MainWindowEWalletPaymentOption(object):
         self.db_manager = DatabaseManager(*EnvironmentLoader.load_env_variables())
         self.conn = self.db_manager.connect()
         self.cursor = self.conn.cursor()
+        self.local_videos = self.getLocalVideosFromFolder()
 
     # Function to Call paymentOption.py
     def PaymentOption (self):
+        self.stopVideosAndCheckout()
         from paymentOption import Ui_MainWindowPaymentOption
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_MainWindowPaymentOption()
@@ -22,6 +27,7 @@ class Ui_MainWindowEWalletPaymentOption(object):
 
     # Function to Call feedback.py
     def FeedBack (self):
+        self.stopVideosAndCheckout()
         from feedback import Ui_MainWindowFeedback
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_MainWindowFeedback()
@@ -98,29 +104,17 @@ class Ui_MainWindowEWalletPaymentOption(object):
         self.helpPushButton.clicked.connect(self.HelpOption)
 
         self.productTable = QtWidgets.QTableWidget(self.centralwidget)
-        self.productTable.setGeometry(QtCore.QRect(20, 130, 790, 475))
-        self.productTable.setGridStyle(QtCore.Qt.SolidLine)
+        self.productTable.setGeometry(QtCore.QRect(20, 230, 490, 475))
+        self.productTable.setShowGrid(False)
         self.productTable.setObjectName("productTable")
-        self.productTable.setColumnCount(6)
+        self.productTable.setColumnCount(2)
         self.productTable.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(0, item)
-        self.productTable.setColumnWidth(0, 564)
+        self.productTable.setColumnWidth(0, 374)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(1, item)
-        self.productTable.setColumnWidth(1, 0)
-        item = QtWidgets.QTableWidgetItem()
-        self.productTable.setHorizontalHeaderItem(2, item)
-        self.productTable.setColumnWidth(2, 110) 
-        item = QtWidgets.QTableWidgetItem()
-        self.productTable.setHorizontalHeaderItem(3, item)
-        self.productTable.setColumnWidth(3, 0) 
-        item = QtWidgets.QTableWidgetItem()
-        self.productTable.setHorizontalHeaderItem(4, item)
-        self.productTable.setColumnWidth(4, 110) 
-        item = QtWidgets.QTableWidgetItem()
-        self.productTable.setHorizontalHeaderItem(5, item)
-        self.productTable.setColumnWidth(5, 0) 
+        self.productTable.setColumnWidth(1, 110)
         # Set the table to read-only
         self.productTable.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
         # Make column headers not movable
@@ -134,11 +128,11 @@ class Ui_MainWindowEWalletPaymentOption(object):
         data_font.setPointSize(16)
         header_font.setPointSize(16)
         self.productTable.setFont(data_font)
-        header_stylesheet = "QHeaderView::section { font-size: 14px; }"
+        header_stylesheet = "QHeaderView::section { color: #0000AF; font-size: 14px;}"
         self.productTable.horizontalHeader().setStyleSheet(header_stylesheet)
 
         self.summaryFrame = QtWidgets.QFrame(self.centralwidget)
-        self.summaryFrame.setGeometry(QtCore.QRect(20, 610, 610, 100))
+        self.summaryFrame.setGeometry(QtCore.QRect(20, 120, 240, 100))
         self.summaryFrame.setStyleSheet("#summaryFrame{\n"
 "    background-color:#FEFCFC;\n"
 "    border-radius:15px;\n"
@@ -147,62 +141,64 @@ class Ui_MainWindowEWalletPaymentOption(object):
         self.summaryFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.summaryFrame.setObjectName("summaryFrame")
 
-        self.summaryLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.summaryLabel.setGeometry(QtCore.QRect(6, 10, 120, 30))
-        self.summaryLabel.setStyleSheet("#summaryLabel{\n"
-"    font-size:24px;\n"
-"    font-family:Montserrat;\n"
-"    font-weight:bold;\n"
-"}")
-        self.summaryLabel.setObjectName("summaryLabel")
-
-        self.productsLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.productsLabel.setGeometry(QtCore.QRect(6, 35, 250, 45))
-        self.productsLabel.setStyleSheet("#productsLabel{\n"
-"    font-size:24px;\n"
-"    color:#A0A0A0;\n"
-"}")
-        self.productsLabel.setObjectName("productsLabel")
-
-        self.itemsLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.itemsLabel.setGeometry(QtCore.QRect(240, 35, 200, 45))
-        self.itemsLabel.setStyleSheet("#itemsLabel{\n"
-"    font-size:24px;\n"
-"    color:#A0A0A0;\n"
-"}")
-        self.itemsLabel.setObjectName("itemsLabel")
-
         self.totalLabel = QtWidgets.QLabel(self.summaryFrame)
-        self.totalLabel.setGeometry(QtCore.QRect(445, 35, 200, 45))
+        self.totalLabel.setGeometry(QtCore.QRect(10, 5, 200, 35))
         self.totalLabel.setStyleSheet("#totalLabel{\n"
-"    font-size:24px;\n"
+"    font-size:16px;\n"
 "    color:#A0A0A0;\n"
 "}")
         self.totalLabel.setObjectName("totalLabel")
 
-        self.productsOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.productsOutput.setGeometry(QtCore.QRect(6, 65, 100, 25))
-        self.productsOutput.setStyleSheet("#productsOutput{\n"
-"    font-size:20px;\n"
-"}")
-        self.productsOutput.setObjectName("productsOutput")
-
-        self.itemsOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.itemsOutput.setGeometry(QtCore.QRect(240, 65, 100, 25))
-        self.itemsOutput.setStyleSheet("#itemsOutput{\n"
-"    font-size:20px;\n"
-"}")
-        self.itemsOutput.setObjectName("itemsOutput")
-
         self.totalOutput = QtWidgets.QLabel(self.summaryFrame)
-        self.totalOutput.setGeometry(QtCore.QRect(445, 65, 175, 25))
+        self.totalOutput.setGeometry(QtCore.QRect(10, 45, 175, 25))
         self.totalOutput.setStyleSheet("#totalOutput{\n"
-"    font-size:24px;\n"
+"    font-size:32px;\n"
 "}")
         self.totalOutput.setObjectName("totalOutput")
 
+        self.paymentName = QtWidgets.QLabel(self.summaryFrame)
+        self.paymentName.setGeometry(QtCore.QRect(10, 70, 200, 25))
+        self.paymentName.setStyleSheet("#paymentName{\n"
+        "    font-size:12px;\n"
+        "    color:#A0A0A0;\n"
+        "}")
+        self.paymentName.setObjectName("paymentName")
+
+        self.discountFrame = QtWidgets.QFrame(self.centralwidget)
+        self.discountFrame.setGeometry(QtCore.QRect(270, 120, 240, 100))
+        self.discountFrame.setStyleSheet("#discountFrame{\n"
+        "    background-color:#FEFCFC;\n"
+        "    border-radius:15px;\n"
+        "}")
+        self.discountFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.discountFrame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.discountFrame.setObjectName("discountFrame")
+
+        self.discountLabel = QtWidgets.QLabel(self.discountFrame)
+        self.discountLabel.setGeometry(QtCore.QRect(10, 5, 200, 35))
+        self.discountLabel.setStyleSheet("#discountLabel{\n"
+        "    font-size:16px;\n"
+        "    color:#A0A0A0;\n"
+        "}")
+        self.discountLabel.setObjectName("discountLabel")
+        
+        self.discountOutput = QtWidgets.QLabel(self.discountFrame)
+        self.discountOutput.setGeometry(QtCore.QRect(10, 45, 175, 25))
+        self.discountOutput.setStyleSheet("#discountOutput{\n"
+        "    font-size:32px;\n"
+        "}")
+        self.discountOutput.setObjectName("discountOutput")
+
+        self.discountName = QtWidgets.QLabel(self.discountFrame)
+        self.discountName.setGeometry(QtCore.QRect(10, 70, 200, 25))
+        self.discountName.setStyleSheet("#discountName{\n"
+        "    font-size:12px;\n"
+        "    color:#A0A0A0;\n"
+        "}")
+        self.discountName.setObjectName("discountName")
+
         self.PaymentFrame = QtWidgets.QFrame(self.centralwidget)
-        self.PaymentFrame.setGeometry(QtCore.QRect(820, 130, 435, 475))
+        self.PaymentFrame.setGeometry(QtCore.QRect(530, 120, 720, 475))
         self.PaymentFrame.setStyleSheet("#PaymentFrame{\n"
 "    background-color:#FEFCFC;\n"
 "    border-radius:15px;\n"
@@ -210,27 +206,37 @@ class Ui_MainWindowEWalletPaymentOption(object):
         self.PaymentFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.PaymentFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.PaymentFrame.setObjectName("PaymentFrame")
-        
-        self.shoppingListLabel = QtWidgets.QLabel(self.PaymentFrame)
-        self.shoppingListLabel.setGeometry(QtCore.QRect(20, 10, 151, 31))
-        self.shoppingListLabel.setStyleSheet("#shoppingListLabel{\n"
-"    font-size:18px;\n"
-"    font-weight:bold;\n"
-"    font-family:Montserrat;\n"
-"}")
-        self.shoppingListLabel.setObjectName("shoppingListLabel")
 
+        # Initialize video player and video widget
+        self.video_player = QMediaPlayer()
+        self.video_player.setVolume(10)  
+
+        # Create a frame to contain the video widget
+        self.video_frame = QtWidgets.QFrame(self.PaymentFrame)
+        self.video_frame.setGeometry(QtCore.QRect(0, 0, 720, 475))
+
+        self.video_widget = QVideoWidget(self.video_frame)
+        self.video_widget.setGeometry(QtCore.QRect(0, 0, 720, 475))
+        self.video_player.setVideoOutput(self.video_widget)
+
+        self.video_player.mediaStatusChanged.connect(self.handleVideoStateChange)
+
+        # Start playing the first video
+        self.playNextVideo()
+        
         self.backPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.backPushButton.setGeometry(QtCore.QRect(640, 610, 170, 100))
+        self.backPushButton.setGeometry(QtCore.QRect(900, 610, 170, 100))
         self.backPushButton.setStyleSheet("#backPushButton{\n"
-"    background-color:none;\n"
-"    border:4px solid #0000AF;\n"
-"    border-radius:20px;\n"
+"    border-radius:10px;\n"
 "    font-family:Montserrat;\n"
-"    font-size:14px;\n"
-"    color:#fff;\n"
+"    font-size:20px;\n"
+"    color:#000;\n"
+"    border: 2px solid #FFD700;\n"
+"    border-radius: 9px;\n"
+"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #FFD700, stop:0.2 #FFD700, stop:1 #f6f7fa);\n"
 "}")
         self.backPushButton.setObjectName("backPushButton")
+        
          # To call the function PaymentOption to open the page and close the main window
         self.backPushButton.clicked.connect(self.PaymentOption)
         self.backPushButton.clicked.connect(MainWindow.close)
@@ -238,11 +244,12 @@ class Ui_MainWindowEWalletPaymentOption(object):
         self.checkOutPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.checkOutPushButton.setGeometry(QtCore.QRect(1085, 610, 170, 100))
         self.checkOutPushButton.setStyleSheet("#checkOutPushButton{\n"
-"    background-color:#0000AF;\n"
-"    border-radius:15px;\n"
-"    font-size:14px;\n"
+"    font-size:16px;\n"
 "    font-family:Montserrat;\n"
 "    color:#fff;\n"
+"    border-radius: 10px;\n"
+"    border: 2px solid #0000AF;\n"
+"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
 "}")
         self.checkOutPushButton.setObjectName("checkOutPushButton")
          # To call the function FeedBack to open the page and close the main window
@@ -255,6 +262,55 @@ class Ui_MainWindowEWalletPaymentOption(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def getLocalVideosFromFolder(self):
+        try:
+            local_videos_path = "Assets\\*.avi"
+            local_videos = glob.glob(local_videos_path)
+            return local_videos
+
+        except Exception as e:
+            error_message = f"An unexpected error occurred while retrieving local videos: {e}"
+            print(error_message)
+            QtWidgets.QMessageBox.critical(None, "Error", error_message)
+            return []
+
+    def playNextVideo(self):
+        try:
+            if self.local_videos:
+                video_url = self.local_videos.pop(0)
+                content = QMediaContent(QtCore.QUrl.fromLocalFile(video_url))
+                self.video_player.setMedia(content)
+                self.video_player.play()
+                self.local_videos.append(video_url)
+            else:
+                print("No videos available.")
+
+        except Exception as e:
+            error_message = f"An unexpected error occurred during video playback: {e}"
+            print(error_message)
+            QtWidgets.QMessageBox.critical(None, "Error", error_message)
+
+    def handleVideoStateChange(self, new_state):
+        try:
+            if new_state == QMediaPlayer.EndOfMedia:
+                self.playNextVideo()
+            elif new_state == QMediaPlayer.Error:
+                error_message = f"Error during video playback: {self.video_player.errorString()}"
+                print(error_message)
+                QtWidgets.QMessageBox.critical(None, "Error", error_message)
+
+        except Exception as e:
+            error_message = f"An unexpected error occurred while handling video state change: {e}"
+            print(error_message)
+            QtWidgets.QMessageBox.critical(None, "Error", error_message)
+        
+    def stopVideosAndCheckout(self):
+        self.video_player.stop()
+        self.video_player.mediaStatusChanged.disconnect(self.handleVideoStateChange)
+        self.video_player.setMedia(QMediaContent())
+        self.video_player.setVideoOutput(None)
+        self.video_widget.deleteLater()
 
     def populateTableWithScannedProducts(self):
         # Get the reference number associated with the logged-in user
@@ -274,35 +330,23 @@ class Ui_MainWindowEWalletPaymentOption(object):
 
         # Check if summary_data is not None before accessing its values
         if summary_data is not None:
-            # Update UI elements with summary information
-            products_count = summary_data[1]
-            total_items = summary_data[2]  
             total_price = summary_data[4]  
 
-            # Use a lambda function to update the UI on the main thread
-            QtCore.QMetaObject.invokeMethod(self.productsOutput, "setText", QtCore.Qt.QueuedConnection, QtCore.Q_ARG(str, f"{products_count} Products"))
-            QtCore.QMetaObject.invokeMethod(self.itemsOutput, "setText", QtCore.Qt.QueuedConnection, QtCore.Q_ARG(str, f"{total_items} Items"))
             QtCore.QMetaObject.invokeMethod(self.totalOutput, "setText", QtCore.Qt.QueuedConnection, QtCore.Q_ARG(str, f"¥ {total_price:.2f}"))
 
         # Populate the table with scanned products
         for product in scanned_products:
             product_name = product[7]
-            product_weight = product[11]
             product_price = product[12]
-            barcode_data = product[13]
 
             rowPosition = self.productTable.rowCount()
             self.productTable.insertRow(rowPosition)
 
             item_name = QtWidgets.QTableWidgetItem(product_name)
-            item_weight = QtWidgets.QTableWidgetItem(f"{product_weight} g")
             item_price = QtWidgets.QTableWidgetItem(f"¥ {product_price:.2f}")
-            item_barcode = QtWidgets.QTableWidgetItem(barcode_data)
 
             self.productTable.setItem(rowPosition, 0, item_name)
-            self.productTable.setItem(rowPosition, 1, item_weight)
-            self.productTable.setItem(rowPosition, 2, item_price)
-            self.productTable.setItem(rowPosition, 3, item_barcode)
+            self.productTable.setItem(rowPosition, 1, item_price)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -319,19 +363,13 @@ class Ui_MainWindowEWalletPaymentOption(object):
         item = self.productTable.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", translation_dict['Product_Label']))
         item = self.productTable.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", translation_dict['Detail_Label']))
-        item = self.productTable.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", translation_dict['Price_Label']))
-        item = self.productTable.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", translation_dict['Barcode_Label']))
-        self.summaryLabel.setText(_translate("MainWindow", translation_dict['Summary_Label']))
-        self.productsLabel.setText(_translate("MainWindow", translation_dict['Total_Products_Label']))
-        self.itemsLabel.setText(_translate("MainWindow", translation_dict['Total_Items_Label']))
         self.totalLabel.setText(_translate("MainWindow", translation_dict['Total_Price_Label']))
-        self.productsOutput.setText(_translate("MainWindow", translation_dict['Total_Products_Output']))
-        self.itemsOutput.setText(_translate("MainWindow", translation_dict['Total_Items_Output']))
         self.totalOutput.setText(_translate("MainWindow", translation_dict['Total_Price_Output']))
-        self.shoppingListLabel.setText(_translate("MainWindow", translation_dict['ShoppingList_Label']))
+        self.paymentName.setText(_translate("MainWindow", translation_dict['E_Wallet_Payment']))
+        self.discountLabel.setText(_translate("MainWindow", translation_dict['Discount_Label']))
+        self.discountOutput.setText(_translate("MainWindow", translation_dict['Discount_Output']))
+        self.discountName.setText(_translate("MainWindow", translation_dict['Discount_Name']))
         self.backPushButton.setText(_translate("MainWindow", translation_dict['Back_Button']))
         self.checkOutPushButton.setText(_translate("MainWindow", translation_dict['Checkout_Button']))
 
