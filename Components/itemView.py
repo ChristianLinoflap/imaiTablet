@@ -16,6 +16,7 @@ import pygame
 # Module Imports
 import config
 from classifier import ObjectClassifier
+from weightSensor import WeightSensor
 from config import Config, translations
 from databaseManager import DatabaseManager, EnvironmentLoader
 from onScreenKeyboard import OnScreenKeyboard
@@ -44,23 +45,37 @@ class Ui_MainWindowItemView(object):
         self.predicted_class_timer.start(0) 
         self.local_videos = self.getLocalVideosFromFolder()
         self.object_classifier = ObjectClassifier()
+
+        self.weight_sensor = WeightSensor()
+        self.weight_thread = threading.Thread(target=self.weight_sensor.monitor_serial)
+        self.weight_thread.daemon = True
+        self.weight_thread.start()
+
+
         self.keyboard = OnScreenKeyboard()
     
     def stop_classifier(self):
         self.object_classifier.stop_classifier()
- 
+        
     def checkPredictedClass(self):
         if os.path.exists("predicted_class.txt"):
             with open("predicted_class.txt", "r") as file:
                 predicted_class = file.read().strip()
-
-            if predicted_class:
-                self.processScannedBarcode(predicted_class)
-
-            with open("predicted_class.txt", "w") as file:
-                file.write("new_details")
             
-            os.remove("predicted_class.txt")
+            if predicted_class: 
+                self.object_classifier.pause_scanning()
+                if self.weight_sensor.is_item_added():  
+                    self.processScannedBarcode(predicted_class)
+                    with open("predicted_class.txt", "w") as file:
+                        file.write("new_details")
+                    os.remove("predicted_class.txt")
+                    self.object_classifier.resume_scanning()
+        
+        if self.weight_sensor.is_item_removed():     
+            print('Item is Removed in the table.')
+
+                    
+                    
 
     # Function to Call help.py
     def SearchProductOption(self):
@@ -541,18 +556,15 @@ class Ui_MainWindowItemView(object):
             print(error_message)
             QtWidgets.QMessageBox.critical(None, "Error", error_message)
 
-    def removeProduct(self, row_position):
-        item_transaction = self.productTable.item(row_position, 3)
-        if item_transaction:
-            identifier = item_transaction.text()
+    def removeProduct(self, identifier):
+        try:
             self.db_manager.deleteTransactionDetail(identifier)
-            self.productTable.removeRow(row_position)
-            self.updateSummaryLabels()
-
             print(f"Product with identifier {identifier} removed.")
-        else:
-            print("Error: Unable to retrieve transaction identifier.")
-    
+        except Exception as e:
+            error_message = f"An unexpected error occurred while removing product: {e}"
+            print(error_message)
+            QtWidgets.QMessageBox.critical(None, "Error", error_message)
+
     def populateTableWithScannedProducts(self):
         identifier = f"{config.transaction_info.get('reference_number')} - {self.transaction_counter}"
         sales_trans = config.transaction_info.get('reference_number')
