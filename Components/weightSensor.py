@@ -22,14 +22,14 @@ class WeightSensor:
                     if initial_weight > self.prev_weight:
                         self.put_item = True
                         self.remove_item = False
-                        # hello = self.is_item_added()
-                        # print("added", hello)
+                        hello = self.is_item_added()
+                        print("added", hello)
                         self.last_print_time = time.time()
                     elif initial_weight < self.prev_weight:
                         self.remove_item = True
                         self.put_item = False
-                        # hello = self.is_item_removed()
-                        # print("removed", hello)
+                        hello = self.is_item_removed()
+                        print("removed", hello)
                         self.last_print_time = time.time()
                     else:
                         self.put_item = False

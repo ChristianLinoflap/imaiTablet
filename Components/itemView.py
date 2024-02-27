@@ -41,41 +41,60 @@ class Ui_MainWindowItemView(object):
         pygame.mixer.init()
         self.scan_sound = pygame.mixer.Sound("Assets\\scanned_item.mp3")
         self.predicted_class_timer = QTimer()
-        self.predicted_class_timer.timeout.connect(self.checkPredictedClass)
+        self.predicted_class_timer.timeout.connect(self.checkItemStatus)
         self.predicted_class_timer.start(0) 
         self.local_videos = self.getLocalVideosFromFolder()
         self.object_classifier = ObjectClassifier()
-
+        # self.remove_classifier = RemoveClassifier()
         self.weight_sensor = WeightSensor()
         self.weight_thread = threading.Thread(target=self.weight_sensor.monitor_serial)
         self.weight_thread.daemon = True
         self.weight_thread.start()
-
-
         self.keyboard = OnScreenKeyboard()
     
     def stop_classifier(self):
         self.object_classifier.stop_classifier()
-        
-    def checkPredictedClass(self):
-        if os.path.exists("predicted_class.txt"):
-            with open("predicted_class.txt", "r") as file:
-                predicted_class = file.read().strip()
-            
-            if predicted_class: 
-                self.object_classifier.pause_scanning()
-                if self.weight_sensor.is_item_added():  
+
+    def resumeScanningMessage(self):
+        if not os.path.exists("predicted_class.txt"):
+            self.object_classifier.resume_scanning()
+            if os.path.exists("predicted_class.txt"):
+                self.object_classifier.pause_scanning() 
+                print('removed: classifier paused - 2')
+                with open("predicted_class.txt", "r") as file:
+                    predicted_class = file.read().strip()
+                if predicted_class: 
+                        barcode = predicted_class
+                        print('received', barcode)
+                        reference_number = config.transaction_info.get('reference_number')
+                        self.removeProduct(reference_number, barcode)
+                        os.remove("predicted_class.txt")
+                        self.resumeScanningMessage() 
+                        
+    def checkItemStatus(self):
+        if os.path.exists("predicted_class.txt") and not self.weight_sensor.is_item_removed():
+            self.object_classifier.pause_scanning() 
+            if self.weight_sensor.is_item_added():
+                with open("predicted_class.txt", "r") as file:
+                    predicted_class = file.read().strip()
+                if predicted_class: 
                     self.processScannedBarcode(predicted_class)
                     with open("predicted_class.txt", "w") as file:
-                        file.write("new_details")
+                        file.write('')
                     os.remove("predicted_class.txt")
-                    self.object_classifier.resume_scanning()
-        
-        if self.weight_sensor.is_item_removed():     
-            print('Item is Removed in the table.')
+                    self.resumeScanningMessage() 
+            
+        elif self.weight_sensor.is_item_removed() :
+            self.object_classifier.pause_scanning()
+            print('removed: classifier paused')
+            message_box = QMessageBox()
+            message_box.setWindowTitle("Item Removed")
+            message_box.setText("An item has been removed. Please place the item in front of the camera.")
+            message_box.setStandardButtons(QMessageBox.Ok)
+            message_box.buttonClicked.connect(self.resumeScanningMessage)
+            message_box.exec_()
 
-                    
-                    
+             
 
     # Function to Call help.py
     def SearchProductOption(self):
@@ -234,20 +253,17 @@ class Ui_MainWindowItemView(object):
         self.productTable.setGeometry(QtCore.QRect(20, 230, 490, 475))
         self.productTable.setShowGrid(False)
         self.productTable.setObjectName("productTable")
-        self.productTable.setColumnCount(4)
+        self.productTable.setColumnCount(3)
         self.productTable.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(0, item)
-        self.productTable.setColumnWidth(0, 274)
+        self.productTable.setColumnWidth(0, 384)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(1, item)
         self.productTable.setColumnWidth(1, 110)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(2, item)
-        self.productTable.setColumnWidth(2, 110) 
-        item = QtWidgets.QTableWidgetItem()
-        self.productTable.setHorizontalHeaderItem(3, item)
-        self.productTable.setColumnWidth(3, 0) 
+        self.productTable.setColumnWidth(2, 0) 
         # Set the table to read-only
         self.productTable.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
         # Make column headers not movable
@@ -525,27 +541,15 @@ class Ui_MainWindowItemView(object):
 
                     item_name = QtWidgets.QTableWidgetItem(product_name)     
                     item_price = QtWidgets.QTableWidgetItem(f"¥ {product_price:.2f}")
+                    item_barcode = QtWidgets.QTableWidgetItem(str(barcode_data))
                     item_transaction = QtWidgets.QTableWidgetItem(str(identifier))
                     transaction_text = item_transaction.text()
                     self.db_manager.saveTransactionDetail(product_name, product_price, barcode_data, sales_trans, transaction_text)
 
                     self.productTable.setItem(0, 0, item_name)  
                     self.productTable.setItem(0, 1, item_price) 
+                    self.productTable.setItem(0, 2, item_barcode)
 
-                    remove_button = QtWidgets.QPushButton()
-                    remove_icon = QtGui.QIcon('Assets\\remove.png')
-                    button_size = QtCore.QSize(110, 30)
-                    remove_button.setFixedSize(button_size)
-                    remove_button.setIcon(remove_icon)
-
-                    remove_button.clicked.connect(lambda row=0: self.removeProduct(row))
-
-                    print(f"Creating remove_button for row {rowPosition}")
-                    QtCore.QTimer.singleShot(0, lambda: self.productTable.setCellWidget(0, 2, remove_button))
-                    self.productTable.repaint()
-                    self.productTable.setItem(0, 3, item_transaction)
-
-                    self.transaction_counter += 1
 
                     self.updateSummaryLabels()
                     print(f"Product with barcode {barcode_data} found in the database.")
@@ -556,17 +560,26 @@ class Ui_MainWindowItemView(object):
             print(error_message)
             QtWidgets.QMessageBox.critical(None, "Error", error_message)
 
-    def removeProduct(self, identifier):
+    def removeProduct(self, reference_number, barcode):
         try:
-            self.db_manager.deleteTransactionDetail(identifier)
-            print(f"Product with identifier {identifier} removed.")
+            # Delete the product from the database
+            self.db_manager.deleteTransactionDetail(reference_number, barcode)
+            print(f"Product with ReferenceNumber {reference_number} and Barcode {barcode} removed.")
+
+            # Remove the corresponding row from the table
+            for row in range(self.productTable.rowCount()):
+                item = self.productTable.item(row, 2)  # Assuming the barcode is stored in the fourth column
+                if item and item.text() == barcode:
+                    self.productTable.removeRow(row)
+                    print(f"Row corresponding to Barcode {barcode} removed from the table.")
+                    break  # Exit loop after the first occurrence is removed
         except Exception as e:
             error_message = f"An unexpected error occurred while removing product: {e}"
             print(error_message)
             QtWidgets.QMessageBox.critical(None, "Error", error_message)
 
+
     def populateTableWithScannedProducts(self):
-        identifier = f"{config.transaction_info.get('reference_number')} - {self.transaction_counter}"
         sales_trans = config.transaction_info.get('reference_number')
 
         query = f"SELECT * FROM dbo.Fn_TransactionReference('{sales_trans}')"
@@ -585,27 +598,18 @@ class Ui_MainWindowItemView(object):
         for product in scanned_products:
             product_name = product[7]
             product_price = product[12]
+            barcode_data = product[13]
 
             rowPosition = self.productTable.rowCount()
             self.productTable.insertRow(rowPosition)
 
             item_name = QtWidgets.QTableWidgetItem(product_name)
             item_price = QtWidgets.QTableWidgetItem(f"¥ {product_price:.2f}")
-            item_transaction = QtWidgets.QTableWidgetItem(str(identifier))
-            transaction_text = item_transaction.text()
+            
 
             self.productTable.setItem(rowPosition, 0, item_name)
             self.productTable.setItem(rowPosition, 1, item_price)
-
-            remove_button = QtWidgets.QPushButton()
-            remove_icon = QtGui.QIcon('Assets\\remove.png')
-            button_size = QtCore.QSize(130, 30)
-            remove_button.setFixedSize(button_size)
-            remove_button.setIcon(remove_icon)
-            remove_button.clicked.connect(lambda row=rowPosition: self.removeProduct(row))
-
-            QtCore.QTimer.singleShot(0, lambda: self.productTable.setCellWidget(rowPosition, 2, remove_button))
-            self.productTable.setItem(rowPosition, 3, item_transaction)
+            self.productTable.setItem(rowPosition, 2, barcode_data)
                 
     def updateSummaryLabels(self):
         total_price = sum(float(item.text().split()[1]) for row in range(self.productTable.rowCount()) for item in [self.productTable.item(row, 1)])
@@ -628,9 +632,7 @@ class Ui_MainWindowItemView(object):
         item = self.productTable.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", translation_dict['Price_Label']))
         item = self.productTable.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", translation_dict['Remove_Label']))
-        item = self.productTable.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", translation_dict['Remove_Label']))
+        item.setText(_translate("MainWindow", translation_dict['Barcode_Label']))
         self.totalLabel.setText(_translate("MainWindow", translation_dict['Total_Price_Label']))
         self.totalOutput.setText(_translate("MainWindow", translation_dict['Total_Price_Output']))
         self.paymentName.setText(_translate("MainWindow", translation_dict['Card_Payment']))
