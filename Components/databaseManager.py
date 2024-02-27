@@ -136,22 +136,22 @@ class DatabaseManager:
             conn.rollback()
 
     # ITEMVIEW - Delete Query for Transaction Detail
-    def deleteTransactionDetail(self, identifier):
+    def deleteTransactionDetail(self, reference_number, barcode):
         try:
-            query = "EXEC sp_DeleteTransDetail @Identifier = ?"
+            query = "EXEC sp_DeleteTransDetailV2 @ReferenceNumber = ?, @BarcodeNumber = ?"
             with self.connect() as conn, conn.cursor() as cursor:
-                cursor.execute(query, identifier)
+                cursor.execute(query, reference_number, barcode)
                 conn.commit()
-                print(f"Transaction detail with identifier {identifier} deleted successfully.")
+                print(f"Transaction detail with ReferenceNumber {reference_number} and Barcode {barcode} deleted successfully.")
         except pyodbc.Error as e:
             logging.error(f"Error executing the stored procedure to delete transaction detail: {e}")
             conn.rollback()
-            raise  # Re-raise the exception for higher-level error handling
+            raise 
         except Exception as e:
             logging.error(f"An unexpected error occurred while deleting transaction detail: {e}")
             conn.rollback()
             raise
-        
+
     # SHOPPINGLIST - Populate Shopping List
     def populate_shopping_list(self, cursor, user_client_id):
         query = f"SELECT Name, Quantity, CartQuantity FROM dbo.vw_ProductShoppingListDetail WHERE UserClientID = {user_client_id}"

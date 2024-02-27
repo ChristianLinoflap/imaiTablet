@@ -9,21 +9,20 @@ import threading
 from PyQt5 import QtWidgets
 from collections import Counter
 
-class ObjectClassifier:
+class RemoveClassifier:
     def __init__(self, model_path='Components\\model.tflite', label_path='Components\\label.txt'):
         pygame.mixer.init()
         self.interpreter = tf.lite.Interpreter(model_path=model_path)
         self.classify_lite = self.interpreter.get_signature_runner('serving_default')
         self.fgbg = cv2.createBackgroundSubtractorMOG2()
-        self.image_directory = "capture"
+        self.image_directory = "captureRemove"
         self.label_path = label_path
         self.frame_count = 0
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
         self.create_directory(self.image_directory)
         with open(self.label_path, 'r') as file:
             self.class_names = [line.strip() for line in file.readlines()]
         self.stop_event = threading.Event()
-        threading.Thread(target=self.run_classifier).start()
 
     def create_directory(self, directory):
         if not os.path.exists(directory):
@@ -59,7 +58,7 @@ class ObjectClassifier:
             ret, frame = self.cap.read()
             if frame is None:
                 print("Failed to capture frame from the camera.")
-                continue 
+                break
             cropped_frame = frame[150:1000, 90:500]
             fgmask = self.fgbg.apply(cropped_frame)
             _, fgmask = cv2.threshold(fgmask, 120, 255, cv2.THRESH_BINARY)
@@ -87,10 +86,10 @@ class ObjectClassifier:
                                 # print("Confidence:", 100 * np.max(scores_lite[i]))
                         class_counts = Counter(predicted_classes)
                         if any(count >= 19 for count in class_counts.values()):
-                            print("It is accurate!")
+                            print("Removed. It is accurate!")
                             for predicted_class, count in class_counts.items():
                                 # print(f"{predicted_class}: {count} times")
-                                with open("predicted_class.txt", "w") as file:
+                                with open("removed_class.txt", "w") as file:
                                     file.write(predicted_class)
                             predicted_classes = []
                             self.frame_count = 0
@@ -99,12 +98,12 @@ class ObjectClassifier:
                             for file in os.listdir(self.image_directory):
                                 os.remove(os.path.join(self.image_directory, file))
                         else:
-                            print("It is not accurate. Try again!")
+                            print("Removed. It is not accurate. Try again!")
                     else:
                         saturated_frame = self.saturate_image(cropped_frame)
                         cv2.imwrite(f"{self.image_directory}/frame_{self.frame_count}.png", saturated_frame)
-            # cv2.imshow('Original Frames', cropped_frame)
-            # cv2.imshow('Original Frame', fgmask)
+            cv2.imshow('Removed Original Frames', cropped_frame)
+            cv2.imshow('Removed Original Frame', fgmask)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 self.stop_classifier()
@@ -112,13 +111,13 @@ class ObjectClassifier:
 
     def pause_scanning(self):
         self.stop_event.set()
-        print("Pausing started.")
+        print("Removed Pausing started.")
         
     def resume_scanning(self):
         self.stop_event.clear()
         threading.Thread(target=self.run_classifier).start()
-        print("Scanning started.")
-        
+        print("Removed Scanning started.")
+
     def stop_classifier(self):
         try:
             self.stop_event.set()
@@ -131,7 +130,7 @@ class ObjectClassifier:
             QtWidgets.QMessageBox.critical(None, "Error", error_message)
 
 def main():
-    classifier = ObjectClassifier()
+    classifier = RemoveClassifier()
     classifier.run_classifier()
 
 if __name__ == "__main__":
