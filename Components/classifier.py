@@ -8,7 +8,6 @@ import tensorflow as tf
 import threading
 from PyQt5 import QtWidgets
 from collections import Counter
-
 class ObjectClassifier:
     def __init__(self, model_path='Components\\model.tflite', label_path='Components\\label.txt'):
         pygame.mixer.init()
@@ -55,56 +54,47 @@ class ObjectClassifier:
         time.sleep(2)
 
     def run_classifier(self):
+        self.predicted_classes = []
         while not self.stop_event.is_set():
             ret, frame = self.cap.read()
-            if frame is None:
-                print("Failed to capture frame from the camera.")
-                continue 
             cropped_frame = frame[150:1000, 90:500]
             fgmask = self.fgbg.apply(cropped_frame)
             _, fgmask = cv2.threshold(fgmask, 120, 255, cv2.THRESH_BINARY)
             contours, _ = cv2.findContours(fgmask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            if self.frame_count > 19:
-                self.frame_count = 0
-            else:
-                self.frame_count += 1
             for contour in contours:
                 area = cv2.contourArea(contour)
-                if area >= 10000:
+                if area >= 22000:
+                    cropped_frame = frame[100:1000, 50:470]
+                    # Kuha image
+                    saturated_frame = self.saturate_image(cropped_frame)
+                    cv2.imwrite(f"capture/frame.png", saturated_frame)
+                    image_directory = "capture"
+                    image_paths = [os.path.join(image_directory, filename) for filename in os.listdir(image_directory)]
+
+                    preprocessed_images = [self.load_and_preprocess_image(image_path) for image_path in image_paths]
+                    preprocessed_images_array = np.vstack(preprocessed_images)
+                    predictions_lite = self.classify_lite(sequential_1_input=preprocessed_images_array)['outputs']
+                    scores_lite = tf.nn.softmax(predictions_lite)
+                    if 100 * np.max(scores_lite[0]) >= 90:
+                        predicted_class = self.class_names[np.argmax(scores_lite[0])]
+                        self.predicted_classes.append(predicted_class)
+                    class_counts = Counter(self.predicted_classes)
+                    if any(count >= 15 for count in class_counts.values()):
+                        print("It is accurate!", Counter(self.predicted_classes), self.frame_count)
+                        for predicted_class, count in class_counts.items():
+                            print(f"{predicted_class}: {count} times")
+                            with open("predicted_class.txt", "w") as file:
+                                file.write(predicted_class)
+
+                        self.play_sound('Assets\\scanned_item.mp3')
                     if self.frame_count >= 20:
-                        image_paths = [os.path.join(self.image_directory, filename) for filename in
-                                        os.listdir(self.image_directory)]
-                        preprocessed_images = [self.load_and_preprocess_image(image_path) for image_path in image_paths]
-                        preprocessed_images_array = np.vstack(preprocessed_images)
-                        predictions_lite = self.classify_lite(sequential_1_input=preprocessed_images_array)['outputs']
-                        scores_lite = tf.nn.softmax(predictions_lite)
-                        predicted_classes = []
-                        for i, image_path in enumerate(image_paths):
-                            if 100 * np.max(scores_lite[i]) >= 90:
-                                predicted_class = self.class_names[np.argmax(scores_lite[i])]
-                                predicted_classes.append(predicted_class)
-                                # print("Predicted class:", predicted_class)
-                                # print("Confidence:", 100 * np.max(scores_lite[i]))
-                        class_counts = Counter(predicted_classes)
-                        if any(count >= 19 for count in class_counts.values()):
-                            print("It is accurate!")
-                            for predicted_class, count in class_counts.items():
-                                # print(f"{predicted_class}: {count} times")
-                                with open("predicted_class.txt", "w") as file:
-                                    file.write(predicted_class)
-                            predicted_classes = []
-                            self.frame_count = 0
-                            self.play_sound('Assets\\scanned_item.mp3')
-                            # Clear all images after accurate scanning
-                            for file in os.listdir(self.image_directory):
-                                os.remove(os.path.join(self.image_directory, file))
-                        else:
-                            print("It is not accurate. Try again!")
+                        self.frame_count = 0
+                        self.predicted_classes = []
                     else:
-                        saturated_frame = self.saturate_image(cropped_frame)
-                        cv2.imwrite(f"{self.image_directory}/frame_{self.frame_count}.png", saturated_frame)
-            # cv2.imshow('Original Frames', cropped_frame)
-            # cv2.imshow('Original Frame', fgmask)
+                        self.frame_count += 1
+
+            cv2.imshow('Original Frame', frame)
+            cv2.imshow('Motion Detection', fgmask)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 self.stop_classifier()
@@ -113,12 +103,12 @@ class ObjectClassifier:
     def pause_scanning(self):
         self.stop_event.set()
         print("Pausing started.")
-        
+
     def resume_scanning(self):
         self.stop_event.clear()
         threading.Thread(target=self.run_classifier).start()
         print("Scanning started.")
-        
+
     def stop_classifier(self):
         try:
             self.stop_event.set()
@@ -130,9 +120,22 @@ class ObjectClassifier:
             print(error_message)
             QtWidgets.QMessageBox.critical(None, "Error", error_message)
 
+    def stop_classifier(self):
+        try:
+            self.stop_event.set()
+            if hasattr(self, 'cap') and self.cap.isOpened():
+                self.cap.release()
+            cv2.destroyAllWindows()
+        except Exception as e:
+            error_message = f"An unexpected error occurred while stopping the classifier: {e}"
+            print(error_message)
+            QtWidgets.QMessageBox.critical(None, "Error", error_message)
+
+
 def main():
     classifier = ObjectClassifier()
     classifier.run_classifier()
+
 
 if __name__ == "__main__":
     main()
