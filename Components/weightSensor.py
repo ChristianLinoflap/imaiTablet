@@ -39,8 +39,6 @@ class WeightSensor:
             else:
                 if time.time() - self.last_print_time > 2:
                     time.sleep(0.1)
-
-    # Getter methods for put_item and remove_item attributes
     def is_item_added(self):
         return self.put_item
     

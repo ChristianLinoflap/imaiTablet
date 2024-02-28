@@ -8,6 +8,8 @@ import tensorflow as tf
 import threading
 from PyQt5 import QtWidgets
 from collections import Counter
+import requests
+import re
 class ObjectClassifier:
     def __init__(self, model_path='Components\\model.tflite', label_path='Components\\label.txt'):
         pygame.mixer.init()
@@ -61,37 +63,66 @@ class ObjectClassifier:
             fgmask = self.fgbg.apply(cropped_frame)
             _, fgmask = cv2.threshold(fgmask, 120, 255, cv2.THRESH_BINARY)
             contours, _ = cv2.findContours(fgmask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            files = []
             for contour in contours:
                 area = cv2.contourArea(contour)
                 if area >= 22000:
-                    cropped_frame = frame[100:1000, 50:470]
-                    # Kuha image
+                    # cropped_frame = frame[100:1000, 50:470]
                     saturated_frame = self.saturate_image(cropped_frame)
                     cv2.imwrite(f"capture/frame.png", saturated_frame)
-                    image_directory = "capture"
-                    image_paths = [os.path.join(image_directory, filename) for filename in os.listdir(image_directory)]
+                    url = 'http://127.0.0.1:5000/upload2'
+                    image_paths = [os.path.join("capture", filename) for filename in os.listdir("capture")]
+                    for image_file in image_paths:
+                        if os.path.exists(image_file):
+                            with open(image_file, 'rb') as f:
+                                file_data = f.read()
+                                files.append(('files[]', (os.path.basename(image_file), file_data, 'image/jpeg')))
+                        else:
+                            print(f"File not found: {image_file}")
+                    start_time = time.perf_counter()
+                    print
+                    if not os.path.exists("predicted_class.txt"):
+                        if files:
+                            try:
+                                response = requests.post(url, files=files)
+                                print(response.text)
+                                if '<' in response.text or 'pass' in response.text:
+                                    print("'< found in response text.")
+                                else:
+                                    with open("predicted_class.txt", "w") as file:
+                                        file.write(response.text)
+                            except Exception as e:
+                                print(f"Error occurred: {e}")
+                        else:
+                            print("No files to upload.")
+                        end_time = time.perf_counter()
+                        elapsed_time = end_time - start_time
+                        print("Elapsed time: ", elapsed_time)
 
-                    preprocessed_images = [self.load_and_preprocess_image(image_path) for image_path in image_paths]
-                    preprocessed_images_array = np.vstack(preprocessed_images)
-                    predictions_lite = self.classify_lite(sequential_1_input=preprocessed_images_array)['outputs']
-                    scores_lite = tf.nn.softmax(predictions_lite)
-                    if 100 * np.max(scores_lite[0]) >= 90:
-                        predicted_class = self.class_names[np.argmax(scores_lite[0])]
-                        self.predicted_classes.append(predicted_class)
-                    class_counts = Counter(self.predicted_classes)
-                    if any(count >= 15 for count in class_counts.values()):
-                        print("It is accurate!", Counter(self.predicted_classes), self.frame_count)
-                        for predicted_class, count in class_counts.items():
-                            print(f"{predicted_class}: {count} times")
-                            with open("predicted_class.txt", "w") as file:
-                                file.write(predicted_class)
+                    # image_directory = "capture"
+                    # image_paths = [os.path.join(image_directory, filename) for filename in os.listdir(image_directory)]
 
-                        self.play_sound('Assets\\scanned_item.mp3')
-                    if self.frame_count >= 20:
-                        self.frame_count = 0
-                        self.predicted_classes = []
-                    else:
-                        self.frame_count += 1
+                    # preprocessed_images = [self.load_and_preprocess_image(image_path) for image_path in image_paths]
+                    # preprocessed_images_array = np.vstack(preprocessed_images)
+                    # predictions_lite = self.classify_lite(sequential_1_input=preprocessed_images_array)['outputs']
+                    # scores_lite = tf.nn.softmax(predictions_lite)
+                    # if 100 * np.max(scores_lite[0]) >= 90:
+                    #     predicted_class = self.class_names[np.argmax(scores_lite[0])]
+                    #     self.predicted_classes.append(predicted_class)
+                    # class_counts = Counter(self.predicted_classes)
+                    # if any(count >= 15 for count in class_counts.values()):
+                    #     print("It is accurate!", Counter(self.predicted_classes), self.frame_count)
+                    #     for predicted_class, count in class_counts.items():
+                    #         print(f"{predicted_class}: {count} times")
+                    #         with open("predicted_class.txt", "w") as file:
+                    #             file.write(predicted_class)
+
+                    #     self.play_sound('Assets\\scanned_item.mp3')
+                    # if self.frame_count >= 20:
+                    #     self.frame_count = 0
+                    #     self.predicted_classes = []
+                    # else:
+                    #     self.frame_count += 1
 
             cv2.imshow('Original Frame', frame)
             cv2.imshow('Motion Detection', fgmask)

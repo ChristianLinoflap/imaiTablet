@@ -40,13 +40,12 @@ class Ui_MainWindowItemView(object):
         # self.remove_classifier = RemoveClassifier()
         self.weight_sensor = WeightSensor()
         try:
-            self.weight_thread = threading.Thread(target=self.weight_sensor.monitor_serial, args=('COM3', 9600, 1))
+            self.weight_thread = threading.Thread(target=self.weight_sensor.monitor_serial, args=('COM5', 9600, 1))
         except Exception as e:
             pass
         self.weight_thread.daemon = True
         self.weight_thread.start()
         self.keyboard = OnScreenKeyboard()
-
     def stop_classifier(self):
         self.object_classifier.stop_classifier()
 
