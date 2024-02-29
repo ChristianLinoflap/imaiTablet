@@ -1,9 +1,7 @@
-# Standard Python Library Imports
 import threading
 import os
 import time
-
-# Third-Party Library Imports
+import serial
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QTimer
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
@@ -12,19 +10,13 @@ from PyQt5.QtWidgets import QMessageBox
 import cv2
 from pyzbar.pyzbar import decode
 import pygame
-
-# Module Imports
 import config
 from classifier import ObjectClassifier
 from weightSensor import WeightSensor
 from config import Config, translations
 from databaseManager import DatabaseManager, EnvironmentLoader
 from onScreenKeyboard import OnScreenKeyboard
-
-# Additional Imports
 import glob
-     
-# UI Mainwindow Management
 class Ui_MainWindowItemView(object):
     # Initializations
     def __init__(self):
@@ -47,11 +39,13 @@ class Ui_MainWindowItemView(object):
         self.object_classifier = ObjectClassifier()
         # self.remove_classifier = RemoveClassifier()
         self.weight_sensor = WeightSensor()
-        self.weight_thread = threading.Thread(target=self.weight_sensor.monitor_serial)
+        try:
+            self.weight_thread = threading.Thread(target=self.weight_sensor.monitor_serial, args=('COM5', 9600, 1))
+        except Exception as e:
+            pass
         self.weight_thread.daemon = True
         self.weight_thread.start()
         self.keyboard = OnScreenKeyboard()
-    
     def stop_classifier(self):
         self.object_classifier.stop_classifier()
 
@@ -59,32 +53,33 @@ class Ui_MainWindowItemView(object):
         if not os.path.exists("predicted_class.txt"):
             self.object_classifier.resume_scanning()
             if os.path.exists("predicted_class.txt"):
-                self.object_classifier.pause_scanning() 
+                self.object_classifier.pause_scanning()
                 print('removed: classifier paused - 2')
                 with open("predicted_class.txt", "r") as file:
                     predicted_class = file.read().strip()
-                if predicted_class: 
+                if predicted_class:
                         barcode = predicted_class
                         print('received', barcode)
                         reference_number = config.transaction_info.get('reference_number')
                         self.removeProduct(reference_number, barcode)
                         os.remove("predicted_class.txt")
-                        self.resumeScanningMessage() 
+                        self.resumeScanningMessage()
                         
     def checkItemStatus(self):
-        if os.path.exists("predicted_class.txt") and not self.weight_sensor.is_item_removed():
-            self.object_classifier.pause_scanning() 
+        if os.path.exists("predicted_class.txt") and self.weight_sensor.put_item:
+            self.object_classifier.pause_scanning()
             if self.weight_sensor.is_item_added():
                 with open("predicted_class.txt", "r") as file:
                     predicted_class = file.read().strip()
-                if predicted_class: 
+                if predicted_class:
                     self.processScannedBarcode(predicted_class)
                     with open("predicted_class.txt", "w") as file:
                         file.write('')
                     os.remove("predicted_class.txt")
-                    self.resumeScanningMessage() 
-            
-        elif self.weight_sensor.is_item_removed() :
+                    self.weight_sensor.put_item = False
+                    self.resumeScanningMessage()
+
+        elif os.path.exists("predicted_class.txt") and self.weight_sensor.remove_item:
             self.object_classifier.pause_scanning()
             print('removed: classifier paused')
             message_box = QMessageBox()
@@ -93,10 +88,19 @@ class Ui_MainWindowItemView(object):
             message_box.setStandardButtons(QMessageBox.Ok)
             message_box.buttonClicked.connect(self.resumeScanningMessage)
             message_box.exec_()
-
-             
-
-    # Function to Call help.py
+            print('removed: classifier paused - 2')
+            with open("predicted_class.txt", "r") as file:
+                predicted_class = file.read().strip()
+            if predicted_class:
+                barcode = predicted_class
+                print('received', barcode)
+                reference_number = config.transaction_info.get('reference_number')
+                self.removeProduct(reference_number, barcode)
+                with open("predicted_class.txt", "w") as file:
+                    file.write('')
+                os.remove("predicted_class.txt")
+                self.weight_sensor.remove_item = False
+                self.resumeScanningMessage()
     def SearchProductOption(self):
         self.close_other_windows("search")
 

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c3a93744-bffb-4438-adf6-daa3917e6844" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Assets/1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Assets/1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/2.png" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Assets/2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/3.png" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Assets/3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/4.png" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Assets/4.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Fita.avi" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Assets/Fita.avi" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Japanese commercials 30 Second.avi" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Assets/Japanese commercials 30 Second.avi" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Milo.avi" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Assets/Milo.avi" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/bgSound.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Assets/bgSound.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/icon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Assets/icon.ico" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/loading.gif" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Assets/loading.gif" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/remove.png" beforeDir="false" afterPath="$PROJECT_DIR$/Components/Assets/remove.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/classifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/Components/classifier.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/label.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Components/label.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/model.tflite" beforeDir="false" afterPath="$PROJECT_DIR$/Components/model.tflite" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Components/predicted_class.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Components/predicted_class.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/capture/frame_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/capture/frame_10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/capture/frame_11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/capture/frame_12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/capture/frame_13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/capture/frame_14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/capture/frame_15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/capture/frame_16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/capture/frame_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/capture/frame_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/capture/frame_4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/capture/frame_5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/capture/frame_6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/capture/frame_7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/capture/frame_8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/capture/frame_9.png" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2bzPHxAMRp6lXqkSlmaFBW2VfNm" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Aquilino/IM.AI/Tablet&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Linoflaptech/Documents/GitHub/imaiTablet&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Linoflaptech\Documents\GitHub\imaiTablet\Components" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c3a93744-bffb-4438-adf6-daa3917e6844" name="Changes" comment="" />
+      <created>1707214849871</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1707214849871</updated>
+    </task>
+    <servers />
+  </component>
+</project>
