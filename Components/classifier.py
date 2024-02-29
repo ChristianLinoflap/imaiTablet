@@ -3,41 +3,25 @@ import pygame
 import cv2
 import numpy as np
 import os
-from keras.preprocessing import image
-import tensorflow as tf
 import threading
 from PyQt5 import QtWidgets
-from collections import Counter
+import requests
 
 class ObjectClassifier:
-    def __init__(self, model_path='Components\\model.tflite', label_path='Components\\label.txt'):
+    def __init__(self):
         pygame.mixer.init()
-        self.interpreter = tf.lite.Interpreter(model_path=model_path)
-        self.classify_lite = self.interpreter.get_signature_runner('serving_default')
+        pygame.display.set_caption('')
         self.fgbg = cv2.createBackgroundSubtractorMOG2()
         self.image_directory = "capture"
-        self.label_path = label_path
         self.frame_count = 0
         self.cap = cv2.VideoCapture(0)
         self.create_directory(self.image_directory)
-        with open(self.label_path, 'r') as file:
-            self.class_names = [line.strip() for line in file.readlines()]
         self.stop_event = threading.Event()
         threading.Thread(target=self.run_classifier).start()
 
     def create_directory(self, directory):
         if not os.path.exists(directory):
             os.makedirs(directory)
-
-    def load_and_preprocess_image(self, image_path):
-        try:
-            img = tf.keras.preprocessing.image.load_img(image_path, target_size=(256, 256))
-            img_array = tf.keras.preprocessing.image.img_to_array(img)
-            img_array = np.expand_dims(img_array, axis=0)
-            return img_array
-        except Exception as e:
-            print(f"Error loading image at {image_path}: {e}")
-            return None
 
     def saturate_image(self, frame):
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -55,56 +39,49 @@ class ObjectClassifier:
         time.sleep(2)
 
     def run_classifier(self):
+        self.predicted_classes = []
         while not self.stop_event.is_set():
             ret, frame = self.cap.read()
-            if frame is None:
-                print("Failed to capture frame from the camera.")
-                continue 
             cropped_frame = frame[150:1000, 90:500]
             fgmask = self.fgbg.apply(cropped_frame)
             _, fgmask = cv2.threshold(fgmask, 120, 255, cv2.THRESH_BINARY)
             contours, _ = cv2.findContours(fgmask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            if self.frame_count > 19:
-                self.frame_count = 0
-            else:
-                self.frame_count += 1
-            for contour in contours:
-                area = cv2.contourArea(contour)
-                if area >= 10000:
-                    if self.frame_count >= 20:
-                        image_paths = [os.path.join(self.image_directory, filename) for filename in
-                                        os.listdir(self.image_directory)]
-                        preprocessed_images = [self.load_and_preprocess_image(image_path) for image_path in image_paths]
-                        preprocessed_images_array = np.vstack(preprocessed_images)
-                        predictions_lite = self.classify_lite(sequential_1_input=preprocessed_images_array)['outputs']
-                        scores_lite = tf.nn.softmax(predictions_lite)
-                        predicted_classes = []
-                        for i, image_path in enumerate(image_paths):
-                            if 100 * np.max(scores_lite[i]) >= 90:
-                                predicted_class = self.class_names[np.argmax(scores_lite[i])]
-                                predicted_classes.append(predicted_class)
-                                # print("Predicted class:", predicted_class)
-                                # print("Confidence:", 100 * np.max(scores_lite[i]))
-                        class_counts = Counter(predicted_classes)
-                        if any(count >= 19 for count in class_counts.values()):
-                            print("It is accurate!")
-                            for predicted_class, count in class_counts.items():
-                                # print(f"{predicted_class}: {count} times")
-                                with open("predicted_class.txt", "w") as file:
-                                    file.write(predicted_class)
-                            predicted_classes = []
-                            self.frame_count = 0
-                            self.play_sound('Assets\\scanned_item.mp3')
-                            # Clear all images after accurate scanning
-                            for file in os.listdir(self.image_directory):
-                                os.remove(os.path.join(self.image_directory, file))
+            files = []
+
+            saturated_frame = self.saturate_image(cropped_frame)
+            cv2.imwrite(f"capture/frame.png", saturated_frame)
+            url = 'http://192.168.254.124:5000/upload2'
+            image_paths = [os.path.join("capture", filename) for filename in os.listdir("capture")]
+            for image_file in image_paths:
+
+                if os.path.exists(image_file):
+                    with open(image_file, 'rb') as f:
+                        file_data = f.read()
+                        files.append(('files[]', (os.path.basename(image_file), file_data, 'image/png')))
+                else:
+                    print(f"File not found: {image_file}")
+            start_time = time.perf_counter()
+
+            if not os.path.exists("predicted_class.txt"):
+                if files:
+                    try:
+                        response = requests.post(url, files=files)
+                        print(response.text)
+                        if '<' in response.text or 'pass' in response.text:
+                            print("'< found in response text.")
                         else:
-                            print("It is not accurate. Try again!")
-                    else:
-                        saturated_frame = self.saturate_image(cropped_frame)
-                        cv2.imwrite(f"{self.image_directory}/frame_{self.frame_count}.png", saturated_frame)
-            # cv2.imshow('Original Frames', cropped_frame)
-            # cv2.imshow('Original Frame', fgmask)
+                            with open("predicted_class.txt", "w") as file:
+                                file.write(response.text)
+                    except Exception as e:
+                        print(f"Error occurred: {e}")
+                else:
+                    print("No files to upload.")
+                end_time = time.perf_counter()
+                elapsed_time = end_time - start_time
+                print("Elapsed time: ", elapsed_time)
+
+            cv2.imshow('Original Frame', frame)
+            cv2.imshow('Motion Detection', fgmask)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 self.stop_classifier()
@@ -113,12 +90,12 @@ class ObjectClassifier:
     def pause_scanning(self):
         self.stop_event.set()
         print("Pausing started.")
-        
+
     def resume_scanning(self):
         self.stop_event.clear()
         threading.Thread(target=self.run_classifier).start()
         print("Scanning started.")
-        
+
     def stop_classifier(self):
         try:
             self.stop_event.set()

@@ -1,9 +1,7 @@
-# Standard Python Library Imports
 import threading
 import os
 import time
-
-# Third-Party Library Imports
+import serial
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QTimer
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
@@ -12,19 +10,14 @@ from PyQt5.QtWidgets import QMessageBox
 import cv2
 from pyzbar.pyzbar import decode
 import pygame
-
-# Module Imports
 import config
 from classifier import ObjectClassifier
 from weightSensor import WeightSensor
 from config import Config, translations
 from databaseManager import DatabaseManager, EnvironmentLoader
 from onScreenKeyboard import OnScreenKeyboard
-
-# Additional Imports
 import glob
-     
-# UI Mainwindow Management
+
 class Ui_MainWindowItemView(object):
     # Initializations
     def __init__(self):
@@ -39,19 +32,21 @@ class Ui_MainWindowItemView(object):
         self.shopping_list_window_open = False
         self.help_window_open = False
         pygame.mixer.init()
+        pygame.display.set_caption('')
         self.scan_sound = pygame.mixer.Sound("Assets\\scanned_item.mp3")
         self.predicted_class_timer = QTimer()
         self.predicted_class_timer.timeout.connect(self.checkItemStatus)
         self.predicted_class_timer.start(0) 
         self.local_videos = self.getLocalVideosFromFolder()
         self.object_classifier = ObjectClassifier()
-        # self.remove_classifier = RemoveClassifier()
         self.weight_sensor = WeightSensor()
-        self.weight_thread = threading.Thread(target=self.weight_sensor.monitor_serial)
+        try:
+            self.weight_thread = threading.Thread(target=self.weight_sensor.monitor_serial, args=('COM5', 9600, 1))
+        except Exception as e:
+            pass
         self.weight_thread.daemon = True
         self.weight_thread.start()
         self.keyboard = OnScreenKeyboard()
-    
     def stop_classifier(self):
         self.object_classifier.stop_classifier()
 
@@ -59,32 +54,33 @@ class Ui_MainWindowItemView(object):
         if not os.path.exists("predicted_class.txt"):
             self.object_classifier.resume_scanning()
             if os.path.exists("predicted_class.txt"):
-                self.object_classifier.pause_scanning() 
+                self.object_classifier.pause_scanning()
                 print('removed: classifier paused - 2')
                 with open("predicted_class.txt", "r") as file:
                     predicted_class = file.read().strip()
-                if predicted_class: 
+                if predicted_class:
                         barcode = predicted_class
                         print('received', barcode)
                         reference_number = config.transaction_info.get('reference_number')
                         self.removeProduct(reference_number, barcode)
                         os.remove("predicted_class.txt")
-                        self.resumeScanningMessage() 
+                        self.resumeScanningMessage()
                         
     def checkItemStatus(self):
-        if os.path.exists("predicted_class.txt") and not self.weight_sensor.is_item_removed():
-            self.object_classifier.pause_scanning() 
+        if os.path.exists("predicted_class.txt") and self.weight_sensor.put_item:
+            self.object_classifier.pause_scanning()
             if self.weight_sensor.is_item_added():
                 with open("predicted_class.txt", "r") as file:
                     predicted_class = file.read().strip()
-                if predicted_class: 
+                if predicted_class:
                     self.processScannedBarcode(predicted_class)
                     with open("predicted_class.txt", "w") as file:
                         file.write('')
                     os.remove("predicted_class.txt")
-                    self.resumeScanningMessage() 
-            
-        elif self.weight_sensor.is_item_removed() :
+                    self.weight_sensor.put_item = False
+                    self.resumeScanningMessage()
+
+        elif os.path.exists("predicted_class.txt") and self.weight_sensor.remove_item:
             self.object_classifier.pause_scanning()
             print('removed: classifier paused')
             message_box = QMessageBox()
@@ -93,10 +89,20 @@ class Ui_MainWindowItemView(object):
             message_box.setStandardButtons(QMessageBox.Ok)
             message_box.buttonClicked.connect(self.resumeScanningMessage)
             message_box.exec_()
+            print('removed: classifier paused - 2')
+            with open("predicted_class.txt", "r") as file:
+                predicted_class = file.read().strip()
+            if predicted_class:
+                barcode = predicted_class
+                print('received', barcode)
+                reference_number = config.transaction_info.get('reference_number')
+                self.removeProduct(reference_number, barcode)
+                with open("predicted_class.txt", "w") as file:
+                    file.write('')
+                os.remove("predicted_class.txt")
+                self.weight_sensor.remove_item = False
+                self.resumeScanningMessage()
 
-             
-
-    # Function to Call help.py
     def SearchProductOption(self):
         self.close_other_windows("search")
 
@@ -550,7 +556,6 @@ class Ui_MainWindowItemView(object):
                     self.productTable.setItem(0, 1, item_price) 
                     self.productTable.setItem(0, 2, item_barcode)
 
-
                     self.updateSummaryLabels()
                     print(f"Product with barcode {barcode_data} found in the database.")
             else:
@@ -572,12 +577,12 @@ class Ui_MainWindowItemView(object):
                 if item and item.text() == barcode:
                     self.productTable.removeRow(row)
                     print(f"Row corresponding to Barcode {barcode} removed from the table.")
-                    break  # Exit loop after the first occurrence is removed
+                    break 
+            self.updateSummaryLabels()
         except Exception as e:
             error_message = f"An unexpected error occurred while removing product: {e}"
             print(error_message)
             QtWidgets.QMessageBox.critical(None, "Error", error_message)
-
 
     def populateTableWithScannedProducts(self):
         sales_trans = config.transaction_info.get('reference_number')
@@ -606,7 +611,6 @@ class Ui_MainWindowItemView(object):
             item_name = QtWidgets.QTableWidgetItem(product_name)
             item_price = QtWidgets.QTableWidgetItem(f"¥ {product_price:.2f}")
             
-
             self.productTable.setItem(rowPosition, 0, item_name)
             self.productTable.setItem(rowPosition, 1, item_price)
             self.productTable.setItem(rowPosition, 2, barcode_data)
