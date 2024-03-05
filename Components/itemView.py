@@ -27,6 +27,7 @@ class Ui_MainWindowItemView(object):
         self.scanning_in_progress = False
         self.scanning_thread = None
         self.last_scan_time = 0
+        self.iterate = 0
         self.transaction_counter = 1
         self.search_window_open = False
         self.shopping_list_window_open = False
@@ -34,6 +35,8 @@ class Ui_MainWindowItemView(object):
         pygame.mixer.init()
         pygame.display.set_caption('')
         self.scan_sound = pygame.mixer.Sound("Assets\\scanned_item.mp3")
+        self.added_sound = pygame.mixer.Sound("Assets\\added_item.mp3")
+        self.removed_sound = pygame.mixer.Sound("Assets\\removed_item.mp3")
         self.predicted_class_timer = QTimer()
         self.predicted_class_timer.timeout.connect(self.checkItemStatus)
         self.predicted_class_timer.start(0) 
@@ -65,8 +68,15 @@ class Ui_MainWindowItemView(object):
                         self.removeProduct(reference_number, barcode)
                         os.remove("predicted_class.txt")
                         self.resumeScanningMessage()
-                        
+
     def checkItemStatus(self):
+        if self.weight_sensor.remove_item:
+            self.iterate =+ 1
+            if self.iterate == 1:
+                self.removed_sound.set_volume(.1)
+                self.removed_sound.play()
+            else:
+                pass
         if os.path.exists("predicted_class.txt") and self.weight_sensor.put_item:
             self.object_classifier.pause_scanning()
             if self.weight_sensor.is_item_added():
@@ -74,6 +84,8 @@ class Ui_MainWindowItemView(object):
                     predicted_class = file.read().strip()
                 if predicted_class:
                     self.processScannedBarcode(predicted_class)
+                    self.added_sound.play()
+                    self.added_sound.set_volume(1)
                     with open("predicted_class.txt", "w") as file:
                         file.write('')
                     os.remove("predicted_class.txt")
@@ -82,13 +94,6 @@ class Ui_MainWindowItemView(object):
 
         elif os.path.exists("predicted_class.txt") and self.weight_sensor.remove_item:
             self.object_classifier.pause_scanning()
-            print('removed: classifier paused')
-            message_box = QMessageBox()
-            message_box.setWindowTitle("Item Removed")
-            message_box.setText("An item has been removed. Please place the item in front of the camera.")
-            message_box.setStandardButtons(QMessageBox.Ok)
-            message_box.buttonClicked.connect(self.resumeScanningMessage)
-            message_box.exec_()
             print('removed: classifier paused - 2')
             with open("predicted_class.txt", "r") as file:
                 predicted_class = file.read().strip()
@@ -97,11 +102,19 @@ class Ui_MainWindowItemView(object):
                 print('received', barcode)
                 reference_number = config.transaction_info.get('reference_number')
                 self.removeProduct(reference_number, barcode)
+                # message_box = QMessageBox()
+                # message_box.setWindowTitle("Item Removed")
+                # message_box.setText("An item has been removed. Please place the item in front of the camera.")
+                # message_box.setStandardButtons(QMessageBox.Ok)
+                # message_box.buttonClicked.connect(self.resumeScanningMessage)
+                # message_box.exec_()
+                
                 with open("predicted_class.txt", "w") as file:
                     file.write('')
                 os.remove("predicted_class.txt")
                 self.weight_sensor.remove_item = False
                 self.resumeScanningMessage()
+                self.iterate = 0
 
     def SearchProductOption(self):
         self.close_other_windows("search")
@@ -412,7 +425,7 @@ class Ui_MainWindowItemView(object):
     
     def getLocalVideosFromFolder(self):
         try:
-            local_videos_path = "Assets\\*.avi"
+            local_videos_path = "Assets\\"
             local_videos = glob.glob(local_videos_path)
             return local_videos
 

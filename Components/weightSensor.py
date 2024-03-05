@@ -4,15 +4,15 @@ import re
 
 class WeightSensor:
     def __init__(self):
-        # self.port = 'COM3'
+        # self.port = 'COM5'
         # self.baudrate = 9600
         # self.timeout = 1
-
+        # self.ser = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
         self.prev_weight = 0
         self.last_print_time = time.time()
         self.put_item = False
         self.remove_item = False
-
+    # def monitor_serial(self):
     def monitor_serial(self, port, baudrate, timeout):
         self.ser = serial.Serial(port, baudrate, timeout=timeout)
         while True:
@@ -25,14 +25,15 @@ class WeightSensor:
                         self.put_item = True
                         self.remove_item = False
                         hello = self.is_item_added()
-                        print("added", hello)
+                        print("added", initial_weight)
                         self.last_print_time = time.time()
+                        time.sleep(1)
                     elif initial_weight < self.prev_weight:
                         self.remove_item = True
                         self.put_item = False
-                        print("removed", self.remove_item)
-                        hello = self.is_item_removed()
+                        print("removed", initial_weight)
                         self.last_print_time = time.time()
+                        time.sleep(1)
                     self.prev_weight = initial_weight
                 except ValueError:
                     print("Calibrating")
