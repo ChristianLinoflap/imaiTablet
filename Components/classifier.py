@@ -50,7 +50,7 @@ class ObjectClassifier:
 
             saturated_frame = self.saturate_image(cropped_frame)
             cv2.imwrite(f"capture/frame.png", saturated_frame)
-            url = 'http://192.168.254.124:5000/upload2'
+            url = 'http://192.168.254.102:5000/upload2'
             image_paths = [os.path.join("capture", filename) for filename in os.listdir("capture")]
             for image_file in image_paths:
 

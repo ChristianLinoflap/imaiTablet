@@ -141,5 +141,6 @@ if __name__ == "__main__":
     ui = Ui_MainWindowSearchProduct()
     ui.setupUiSearchProduct(MainWindow)
     MainWindow.close = ui.hide_keyboard_on_mouse_click
+    ui.show_keyboard_for_search(None) 
     MainWindow.show()
     sys.exit(app.exec_())

@@ -1,9 +1,8 @@
 # Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
 from config import Config, translations
-from PyQt5.QtWidgets import QMessageBox, QStackedWidget, QDialog, QVBoxLayout, QLabel, QProgressBar
+from PyQt5.QtWidgets import QMessageBox, QStackedWidget
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtCore import Qt, QTimer
 
 class Ui_MainWindowTutorialMember(object):
     def __init__(self):
@@ -26,7 +25,6 @@ class Ui_MainWindowTutorialMember(object):
             self.showTutorialCompletionMessage()
             self.current_step = 0
             self.ItemView()
-
 
     def setupTutorialSteps(self):
         image_paths = [
