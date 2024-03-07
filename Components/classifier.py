@@ -90,7 +90,7 @@ class ObjectClassifier:
                 elapsed_time = end_time - start_time
                 print("Elapsed time: ", elapsed_time)
 
-            cv2.imshow('Original Frame', cropped_frame)
+            # cv2.imshow('Original Frame', cropped_frame)
             # cv2.imshow('Motion Detection', fgmask)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
