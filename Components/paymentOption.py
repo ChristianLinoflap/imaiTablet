@@ -1,14 +1,11 @@
-# Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
 from config import Config, translations
 import config 
 
 class Ui_MainWindowPaymentOption(object):
-    # Initializations
     def __init__(self):
         self.help_window_open = False
 
-    # Function to Call help.py
     def HelpOption(self):
         if not self.help_window_open:
             from help import Ui_MainWindowHelp
@@ -16,15 +13,11 @@ class Ui_MainWindowPaymentOption(object):
             self.ui_help = Ui_MainWindowHelp()
             self.ui_help.setupUiHelp(self.window_help)
             self.window_help.show()
-            # Set the flag to indicate that the window is open
             self.help_window_open = True
         else:
-            # Close the window if it's open
             self.window_help.close()
-            # Set the flag to indicate that the window is closed
             self.help_window_open = False
 
-    # Function to Call ItemView.py
     def ItemView(self):
         from itemView import Ui_MainWindowItemView
         self.window = QtWidgets.QMainWindow()
@@ -32,7 +25,6 @@ class Ui_MainWindowPaymentOption(object):
         self.ui.setupUiItemView(self.window)
         self.window.show() 
 
-    # Function to Call cardPaymentOption.py
     def CardPaymentOption(self):
         from cardPaymentOption import Ui_MainWindowCardPaymentOption
         self.window = QtWidgets.QMainWindow()
@@ -40,7 +32,6 @@ class Ui_MainWindowPaymentOption(object):
         self.ui.setupUiCardPaymentOption(self.window)
         self.window.show() 
 
-    # Function to Call eWalletPaymentOption.py
     def EWalletPaymentOption(self):
         from eWalletPaymentOption import Ui_MainWindowEWalletPaymentOption
         self.window = QtWidgets.QMainWindow()
@@ -48,7 +39,6 @@ class Ui_MainWindowPaymentOption(object):
         self.ui.setupUiEWalletPaymentOption(self.window)
         self.window.show() 
 
-    # Function to Call cashPaymentOption.py
     def CashPaymentOption(self):
         from cashPaymentOption import Ui_MainWindowCashPaymentOption
         self.window = QtWidgets.QMainWindow()
@@ -56,17 +46,18 @@ class Ui_MainWindowPaymentOption(object):
         self.ui.setupUiCashPaymentOption(self.window)
         self.window.show() 
  
-    # Function to Set Up paymentOption.py 
     def setupUiPaymentOption(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.showFullScreen()
-        MainWindow.setStyleSheet("#centralwidget{\n"
-"    background-color:#00C0FF;\n"
-"}")
-        # Remove Navigation Tools in Main Window
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+
         self.centralwidget = QtWidgets.QWidget(MainWindow)
+        gradient = QtGui.QLinearGradient(0, 0, self.centralwidget.width(), self.centralwidget.height())
+        gradient.setColorAt(0, QtGui.QColor("#1D7CBA"))
+        gradient.setColorAt(1, QtGui.QColor("#0D3854"))
+        self.centralwidget.setStyleSheet("#centralwidget { background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1D7CBA, stop: 1 #0D3854); }")
         self.centralwidget.setObjectName("centralwidget")
+
         self.navigationFrame = QtWidgets.QFrame(self.centralwidget)
         self.navigationFrame.setGeometry(QtCore.QRect(0, 0, MainWindow.width(), 110))
         self.navigationFrame.setStyleSheet("#navigationFrame{\n"
@@ -83,7 +74,6 @@ class Ui_MainWindowPaymentOption(object):
 "    color:#fff;\n"
 "}")
         self.nameOutput.setObjectName("nameOutput")
-        # Translate the welcome message and user's name
         welcome_message = translations[Config.current_language].get('Welcome_User', 'Welcome')
         first_name = config.user_info.get('first_name', '')
         last_name = config.user_info.get('last_name', '')
@@ -106,20 +96,19 @@ class Ui_MainWindowPaymentOption(object):
 "    font-size:24px;\n"
 "}")
         self.helpPushButton.setObjectName("helpPushButton")
-        # To call the function HelpOption to open the page and close the main window
         self.helpPushButton.clicked.connect(self.HelpOption)
 
         self.checkOutPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.checkOutPushButton.setGeometry(QtCore.QRect(1030, 615, 215, 75))
+        self.checkOutPushButton.setGeometry(QtCore.QRect(1035, 615, 215, 75))
         self.checkOutPushButton.setStyleSheet("#checkOutPushButton{\n"
-"    background-color:#0000AF;\n"
-"    border-radius:15px;\n"
-"    font-size:24px;\n"
+"    font-size:18px;\n"
 "    font-family:Montserrat;\n"
 "    color:#fff;\n"
+"    border-radius: 10px;\n"
+"    border: 2px solid #0000AF;\n"
+"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
 "}")
         self.checkOutPushButton.setObjectName("checkOutPushButton")
-        # To call the function ItemView to open the page and close the main window
         self.checkOutPushButton.clicked.connect(self.ItemView)
         self.checkOutPushButton.clicked.connect(MainWindow.close)
 
@@ -148,30 +137,27 @@ class Ui_MainWindowPaymentOption(object):
 "}")
         self.cardPushButton.setText("")
         self.cardPushButton.setObjectName("cardPushButton")
-        # To call the function CardPaymentOption to open the page and close the main window
         self.cardPushButton.clicked.connect(self.CardPaymentOption)
         self.cardPushButton.clicked.connect(MainWindow.close)
         self.eWalletPushButton = QtWidgets.QPushButton(self.helpViewFrame)
-        self.eWalletPushButton.setGeometry(QtCore.QRect(410, 60, 310, 175))
+        self.eWalletPushButton.setGeometry(QtCore.QRect(435, 60, 310, 175))
         self.eWalletPushButton.setStyleSheet("#eWalletPushButton{\n"
 "    border-radius:15px;\n"
 "    background-color:#D9D9D9;\n"
 "}")
         self.eWalletPushButton.setText("")
         self.eWalletPushButton.setObjectName("eWalletPushButton")
-        # To call the function EWalletOption to open the page and close the main window
         self.eWalletPushButton.clicked.connect(self.EWalletPaymentOption)
         self.eWalletPushButton.clicked.connect(MainWindow.close)
 
         self.cashPushButton = QtWidgets.QPushButton(self.helpViewFrame)
-        self.cashPushButton.setGeometry(QtCore.QRect(810, 60, 310, 175))
+        self.cashPushButton.setGeometry(QtCore.QRect(865, 60, 310, 175))
         self.cashPushButton.setStyleSheet("#cashPushButton{\n"
 "    border-radius:15px;\n"
 "    background-color:#D9D9D9;\n"
 "}")
         self.cashPushButton.setText("")
         self.cashPushButton.setObjectName("cashPushButton")
-        # To call the function CashPaymentOption to open the page and close the main window
         self.cashPushButton.clicked.connect(self.CashPaymentOption)
         self.cashPushButton.clicked.connect(MainWindow.close)
 
@@ -184,7 +170,7 @@ class Ui_MainWindowPaymentOption(object):
         self.cardLabel.setObjectName("cardLabel")
 
         self.eWalletLabel = QtWidgets.QLabel(self.helpViewFrame)
-        self.eWalletLabel.setGeometry(QtCore.QRect(490, 190, 135, 31))
+        self.eWalletLabel.setGeometry(QtCore.QRect(520, 190, 135, 31))
         self.eWalletLabel.setStyleSheet("#cardLabel{\n"
 "    font-size:24px;\n"
 "    font-family:Montserrat;\n"
@@ -192,7 +178,7 @@ class Ui_MainWindowPaymentOption(object):
         self.eWalletLabel.setObjectName("eWalletLabel")
 
         self.cashLabel = QtWidgets.QLabel(self.helpViewFrame)
-        self.cashLabel.setGeometry(QtCore.QRect(900, 190, 135, 31))
+        self.cashLabel.setGeometry(QtCore.QRect(960, 190, 135, 31))
         self.cashLabel.setStyleSheet("#cardLabel{\n"
 "    font-size:24px;\n"
 "    font-family:Montserrat;\n"
@@ -223,11 +209,9 @@ class Ui_MainWindowPaymentOption(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 
-        # Use the stored language from Config
         language = Config.current_language
         translation_dict = translations.get(language, translations['English'])
 
-        # Translate texts using the stored language
         self.roleOutput.setText(_translate("MainWindow", translation_dict['Role_Output']))
         self.helpPushButton.setText(_translate("MainWindow", translation_dict['Help_Button']))
         self.checkOutPushButton.setText(_translate("MainWindow", translation_dict['Back_Button']))

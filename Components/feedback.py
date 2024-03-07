@@ -12,6 +12,15 @@ class Ui_MainWindowFeedback(object):
         self.ui.setupUiFeedbackQuestions(self.window)
         self.window.show()
 
+    def IndexPage (self):
+        # config.user_info.clear()
+        # config.transaction_info.clear()
+        from indexPage import Ui_MainWindow
+        self.window = QtWidgets.QMainWindow()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self.window)
+        self.window.show()
+
     # Function to Set Up feedback.py
     def setupUiFeedback(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -60,23 +69,27 @@ class Ui_MainWindowFeedback(object):
         self.finishPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.finishPushButton.setGeometry(QtCore.QRect(700, 515, 275, 100))
         self.finishPushButton.setStyleSheet("#finishPushButton{\n"
-"    background-color:none;\n"
-"    border:4px solid #0000AF;\n"
-"    border-radius:20px;\n"
+"    font-size:20px;\n"
 "    font-family:Montserrat;\n"
-"    font-size:24px;\n"
-"    color:#0000AF;\n"
+"    color:#fff;\n"
+"    border-radius: 10px;\n"
+"    border: 2px solid #0000AF;\n"
+"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
 "}")
         self.finishPushButton.setObjectName("finishPushButton")
+        self.finishPushButton.clicked.connect(self.IndexPage)
+        self.finishPushButton.clicked.connect(MainWindow.close)
 
         self.feedBackPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.feedBackPushButton.setGeometry(QtCore.QRect(390, 515, 275, 100))
         self.feedBackPushButton.setStyleSheet("#feedBackPushButton{\n"
-"    background-color:#0000AF;\n"
-"    border-radius:15px;\n"
-"    font-size:24px;\n"
+"    border-radius:10px;\n"
 "    font-family:Montserrat;\n"
-"    color:#fff;\n"
+"    font-size:20px;\n"
+"    color:#000;\n"
+"    border: 2px solid #FFD700;\n"
+"    border-radius: 9px;\n"
+"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #FFD700, stop:0.2 #FFD700, stop:1 #f6f7fa);\n"
 "}")
         self.feedBackPushButton.setObjectName("feedBackPushButton")
         # To call the function feedbackQuesitons to open the page and close the main window
@@ -84,7 +97,7 @@ class Ui_MainWindowFeedback(object):
         self.feedBackPushButton.clicked.connect(MainWindow.close)
 
         self.qrFrame = QtWidgets.QFrame(self.centralwidget)
-        self.qrFrame.setGeometry(QtCore.QRect(300, 190, 760, 300))
+        self.qrFrame.setGeometry(QtCore.QRect(280, 190, 760, 300))
         self.qrFrame.setStyleSheet("#qrFrame{\n"
 "    background-color:#FEFCFC;\n"
 "    border-radius:25px;\n"
@@ -105,7 +118,7 @@ class Ui_MainWindowFeedback(object):
         self.feedbackParagraph = QtWidgets.QTextEdit(self.qrFrame)
         self.feedbackParagraph.setGeometry(QtCore.QRect(90, 130, 611, 110))
         self.feedbackParagraph.setStyleSheet("#feedbackParagraph{\n"
-"    font-size:24px;\n"
+"    font-size:16px;\n"
 "    font-family:Montserrat;\n"
 "    border:none;\n"
 "    \n"

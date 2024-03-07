@@ -13,7 +13,7 @@ transaction_info = {
 
 class Config:
     # Default language
-    DEFAULT_LANGUAGE = "English"
+    DEFAULT_LANGUAGE = "日本語"
 
     # Variable to store the current language
     current_language = DEFAULT_LANGUAGE
@@ -42,8 +42,10 @@ translations = {
         'CompanyLabel_Text': '<html><head/><body><p><span style="font-size:12pt;">Powered by </span><span style="font-size:12pt; font-weight:600;">Linoflap Technologies Philippines Inc.</span></p></body></html>',
         'ComboBox_English': 'English',
         'ComboBox_Japanese': '日本語',
+        'Welcome_Title': 'Welcome!',
+        'Welcome_Message': 'Making your shopping convenient and hassle-free.',
         # Login Option
-        'Welcome': 'Welcome! Are you already a member?',
+        'Welcome': 'Are you already a member?',
         'Member': 'Yes, I am a member',
         'Non_Member': 'No, I am not a member',
         # Login Member
@@ -128,6 +130,8 @@ p, li { white-space: pre-wrap; }
         'CompanyLabel_Text': '<html><head/><body><p><span style="font-size:12pt;">提供元 </span><span style="font-size:12pt; font-weight:600;">Linoflap Technologies Philippines Inc.</span></p></body></html>',
         'ComboBox_English': 'English',
         'ComboBox_Japanese': '日本語',
+        'Welcome_Title': 'ようこそ！',
+        'Welcome_Message': 'お買い物を便利でストレスフリーにするために。',
         # Login Option
         'Welcome': 'ようこそ！もうメンバーですか？',
         'Member': 'はい、メンバーです。',

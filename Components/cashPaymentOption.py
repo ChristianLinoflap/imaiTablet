@@ -1,4 +1,3 @@
-# Third Pary Library Imports
 from PyQt5 import QtCore, QtGui, QtWidgets
 from config import Config, translations
 import config
@@ -8,7 +7,6 @@ from PyQt5.QtMultimediaWidgets import QVideoWidget
 import glob
 
 class Ui_MainWindowCashPaymentOption(object):
-    # Initializations
     def __init__(self):
         self.help_window_open = False
         self.db_manager = DatabaseManager(*EnvironmentLoader.load_env_variables())
@@ -16,7 +14,6 @@ class Ui_MainWindowCashPaymentOption(object):
         self.cursor = self.conn.cursor()
         self.local_videos = self.getLocalVideosFromFolder()
 
-    # Function to Call paymentOption.py
     def PaymentOption (self):
         self.stopVideosAndCheckout()
         from paymentOption import Ui_MainWindowPaymentOption
@@ -25,7 +22,6 @@ class Ui_MainWindowCashPaymentOption(object):
         self.ui.setupUiPaymentOption(self.window)
         self.window.show()
 
-    # Function to Call feedback.py
     def FeedBack (self):
         self.stopVideosAndCheckout()
         from feedback import Ui_MainWindowFeedback
@@ -34,7 +30,6 @@ class Ui_MainWindowCashPaymentOption(object):
         self.ui.setupUiFeedback(self.window)
         self.window.show()
 
-    # Function to Call help.py
     def HelpOption(self):
         if not self.help_window_open:
             from help import Ui_MainWindowHelp
@@ -42,24 +37,21 @@ class Ui_MainWindowCashPaymentOption(object):
             self.ui_help = Ui_MainWindowHelp()
             self.ui_help.setupUiHelp(self.window_help)
             self.window_help.show()
-            # Set the flag to indicate that the window is open
             self.help_window_open = True
         else:
-            # Close the window if it's open
             self.window_help.close()
-            # Set the flag to indicate that the window is closed
             self.help_window_open = False
 
-    # Function to Set Up cardPaymentOption.py
     def setupUiCashPaymentOption(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.showFullScreen() 
-        MainWindow.setStyleSheet("#centralwidget{\n"
-"    background-color:#00C0FF;\n"
-"}")
-        # Remove Navigation Tools in Main Window
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+
         self.centralwidget = QtWidgets.QWidget(MainWindow)
+        gradient = QtGui.QLinearGradient(0, 0, self.centralwidget.width(), self.centralwidget.height())
+        gradient.setColorAt(0, QtGui.QColor("#1D7CBA"))
+        gradient.setColorAt(1, QtGui.QColor("#0D3854"))
+        self.centralwidget.setStyleSheet("#centralwidget { background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1D7CBA, stop: 1 #0D3854); }")
         self.centralwidget.setObjectName("centralwidget")
 
         self.navigationFrame = QtWidgets.QFrame(self.centralwidget)
@@ -79,7 +71,6 @@ class Ui_MainWindowCashPaymentOption(object):
 "    color:#fff;\n"
 "}")
         self.nameOutput.setObjectName("nameOutput")
-        # Translate the welcome message and user's name
         welcome_message = translations[Config.current_language].get('Welcome_User', 'Welcome')
         first_name = config.user_info.get('first_name', '')
         last_name = config.user_info.get('last_name', '')
@@ -118,11 +109,8 @@ class Ui_MainWindowCashPaymentOption(object):
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(1, item)
         self.productTable.setColumnWidth(1, 110)
-        # Set the table to read-only
         self.productTable.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
-        # Make column headers not movable
         self.productTable.horizontalHeader().setSectionsMovable(False)
-        # Set column width and row height to be fixed
         self.productTable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         self.productTable.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         self.productTable.verticalHeader().setVisible(False)
@@ -209,22 +197,14 @@ class Ui_MainWindowCashPaymentOption(object):
         self.PaymentFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.PaymentFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.PaymentFrame.setObjectName("PaymentFrame")
-
-        # Initialize video player and video widget
         self.video_player = QMediaPlayer()
         self.video_player.setVolume(10)  
-
-        # Create a frame to contain the video widget
         self.video_frame = QtWidgets.QFrame(self.PaymentFrame)
         self.video_frame.setGeometry(QtCore.QRect(0, 0, 720, 475))
-
         self.video_widget = QVideoWidget(self.video_frame)
         self.video_widget.setGeometry(QtCore.QRect(0, 0, 720, 475))
         self.video_player.setVideoOutput(self.video_widget)
-
         self.video_player.mediaStatusChanged.connect(self.handleVideoStateChange)
-
-        # Start playing the first video
         self.playNextVideo()
         
         self.backPushButton = QtWidgets.QPushButton(self.centralwidget)
@@ -239,8 +219,6 @@ class Ui_MainWindowCashPaymentOption(object):
 "    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #FFD700, stop:0.2 #FFD700, stop:1 #f6f7fa);\n"
 "}")
         self.backPushButton.setObjectName("backPushButton")
-        
-         # To call the function PaymentOption to open the page and close the main window
         self.backPushButton.clicked.connect(self.PaymentOption)
         self.backPushButton.clicked.connect(MainWindow.close)
 
@@ -255,12 +233,10 @@ class Ui_MainWindowCashPaymentOption(object):
 "    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
 "}")
         self.checkOutPushButton.setObjectName("checkOutPushButton")
-         # To call the function FeedBack to open the page and close the main window
         self.checkOutPushButton.clicked.connect(self.FeedBack)
         self.checkOutPushButton.clicked.connect(MainWindow.close)
         MainWindow.setCentralWidget(self.centralwidget)
 
-        # Call the function to populate the table with scanned products
         self.populateTableWithScannedProducts()
 
         self.retranslateUi(MainWindow)
@@ -316,28 +292,22 @@ class Ui_MainWindowCashPaymentOption(object):
         self.video_widget.deleteLater()
 
     def populateTableWithScannedProducts(self):
-        # Get the reference number associated with the logged-in user
         sales_trans = config.transaction_info.get('reference_number')
 
-        # Use the reference number to retrieve scanned products and summary from the database
         query = f"SELECT * FROM dbo.Fn_TransactionReference('{sales_trans}')"
         self.cursor.execute(query)
         scanned_products = self.cursor.fetchall()
 
-        # Retrieve summary information using Fn_TransactionSummary
         summary_data_query = f"SELECT * FROM dbo.Fn_TransactionSummary('{sales_trans}')"
         self.cursor.execute(summary_data_query)
 
-        # Fetch one row, since the summary query is expected to return only one row
         summary_data = self.cursor.fetchone()
 
-        # Check if summary_data is not None before accessing its values
         if summary_data is not None:
             total_price = summary_data[4]  
 
             QtCore.QMetaObject.invokeMethod(self.totalOutput, "setText", QtCore.Qt.QueuedConnection, QtCore.Q_ARG(str, f"¥ {total_price:.2f}"))
 
-        # Populate the table with scanned products
         for product in scanned_products:
             product_name = product[7]
             product_price = product[12]
@@ -355,11 +325,9 @@ class Ui_MainWindowCashPaymentOption(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 
-        # Use the stored language from Config
         language = Config.current_language
         translation_dict = translations.get(language, translations['English'])
 
-        # Translate texts using the stored language
         self.roleOutput.setText(_translate("MainWindow", translation_dict['Role_Output']))
         self.helpPushButton.setText(_translate("MainWindow", translation_dict['Help_Button']))
         self.checkOutPushButton.setText(_translate("MainWindow", translation_dict['Back_Button']))

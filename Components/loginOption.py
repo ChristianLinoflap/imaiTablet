@@ -16,13 +16,56 @@ class Ui_MainWindowLogInOption(object):
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setStyleSheet("#centralwidget{\n"
-"    background-color:#00C0FF;\n"
-"}")
+        gradient = QtGui.QLinearGradient(0, 0, self.centralwidget.width(), self.centralwidget.height())
+        gradient.setColorAt(0, QtGui.QColor("#1D7CBA"))
+        gradient.setColorAt(1, QtGui.QColor("#0D3854"))
+        self.centralwidget.setStyleSheet("#centralwidget { background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1D7CBA, stop: 1 #0D3854); }")
         self.centralwidget.setObjectName("centralwidget")
 
+        self.backgroundFrameRight = QtWidgets.QFrame(self.centralwidget)
+        self.backgroundFrameRight.setGeometry(QtCore.QRect(480, 85, 700, 550))  
+        self.backgroundFrameRight.setStyleSheet("#backgroundFrameRight{\n"
+"    background-color: #fff; /* Example color */\n"
+"    border-top-right-radius: 25px;\n"
+"    border-bottom-right-radius: 25px;\n"
+"}")
+        self.backgroundFrameRight.setObjectName("backgroundFrameRight")
+
+        self.backgroundFrameLeft = QtWidgets.QFrame(self.centralwidget)
+        self.backgroundFrameLeft.setGeometry(QtCore.QRect(85, 85, 395, 550))  
+        self.backgroundFrameLeft.setStyleSheet("#backgroundFrameLeft{\n"
+"    background-color: #0000AF;\n"
+"    border-top-left-radius: 25px;\n"
+"    border-bottom-left-radius: 25px;\n"
+"}")
+        self.backgroundFrameLeft.setObjectName("backgroundFrameLeft")
+
+        self.bgShape = QtWidgets.QLabel(self.centralwidget)  
+        self.bgShape.setGeometry(QtCore.QRect(130, 250, 300, 300))
+        self.bgShape.setStyleSheet("#bgShape{\n"
+        "    background-color:#FEFCFC;\n"
+        "    border-radius:150px;\n"
+        "}")
+        self.bgShape.setScaledContents(True) 
+        self.bgShape.setObjectName("bgShape")
+
+        # image_path = "Assets\\IM.AI" 
+        # pixmap = QtGui.QPixmap(image_path)
+        # self.bgShape.setPixmap(pixmap)
+
+        self.productLabel = QtWidgets.QLabel(self.centralwidget)
+        self.productLabel.setGeometry(QtCore.QRect(135, 165, 300, 60))
+        self.productLabel.setStyleSheet("#productLabel{\n"
+"    font-size:48px;\n"
+"    font-weight:bold;\n"
+"    font-family: 'Poppins', sans-serif;\n"
+"    color:#fff;\n"
+"}")
+        self.productLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.productLabel.setObjectName("productLabel")
+
         self.titleLabel = QtWidgets.QLabel(self.centralwidget)
-        self.titleLabel.setGeometry(QtCore.QRect(120, 115, 1050, 65))
+        self.titleLabel.setGeometry(QtCore.QRect(310, 200, 1050, 65))
         self.titleLabel.setStyleSheet("#titleLabel{\n"
 "    font-family:Montserrat;\n"
 "    font-size:48px;\n"
@@ -31,7 +74,7 @@ class Ui_MainWindowLogInOption(object):
         self.titleLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.memberPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.memberPushButton.setGeometry(QtCore.QRect(230, 275, 335, 275))
+        self.memberPushButton.setGeometry(QtCore.QRect(500, 290, 300, 220))
         self.memberPushButton.setStyleSheet("#memberPushButton{\n"
 "    border-radius:25px;\n"
 "    background-color:#0000AF;\n"
@@ -42,9 +85,9 @@ class Ui_MainWindowLogInOption(object):
         self.memberPushButton.clicked.connect(MainWindow.close)
 
         self.memberLabel = QtWidgets.QLabel(self.centralwidget)
-        self.memberLabel.setGeometry(QtCore.QRect(150, 500, 500, 50))
+        self.memberLabel.setGeometry(QtCore.QRect(400, 440, 500, 50))
         self.memberLabel.setStyleSheet("#memberLabel{\n"
-"    font-size:26px;\n" 
+"    font-size:20px;\n" 
 "    font-family:Montserrat;\n"
 "    color:#fff;\n"
 "}")
@@ -52,9 +95,9 @@ class Ui_MainWindowLogInOption(object):
         self.memberLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.nonMemberLabel = QtWidgets.QLabel(self.centralwidget)
-        self.nonMemberLabel.setGeometry(QtCore.QRect(630, 500, 500, 50))
+        self.nonMemberLabel.setGeometry(QtCore.QRect(765, 440, 500, 50))
         self.nonMemberLabel.setStyleSheet("#nonMemberLabel{\n"
-"    font-size:26px;\n"
+"    font-size:20px;\n"
 "    font-family:Montserrat;\n"
 "    color:#fff;\n"
 "}")
@@ -62,7 +105,7 @@ class Ui_MainWindowLogInOption(object):
         self.nonMemberLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.nonMemberPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.nonMemberPushButton.setGeometry(QtCore.QRect(710, 275, 335, 275))
+        self.nonMemberPushButton.setGeometry(QtCore.QRect(860, 290, 300, 220))
         self.nonMemberPushButton.setStyleSheet("#nonMemberPushButton{\n"
 "    border-radius:25px;\n"
 "    background-color:#0000AF;\n"
@@ -92,6 +135,7 @@ class Ui_MainWindowLogInOption(object):
         self.titleLabel.setText(_translate("MainWindow", translation_dict['Welcome']))
         self.memberLabel.setText(_translate("MainWindow", translation_dict['Member']))
         self.nonMemberLabel.setText(_translate("MainWindow", translation_dict['Non_Member']))
+        self.productLabel.setText(_translate("MainWindow", translation_dict['ProductLabel_Text']))
 
 if __name__ == "__main__":
     import sys

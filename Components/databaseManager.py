@@ -3,7 +3,7 @@ import logging
 import os
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore
 
 class EnvironmentLoader:
     @staticmethod
@@ -43,6 +43,19 @@ class DatabaseManager:
         query = "SELECT UserClientId, FirstName, LastName FROM [dbo].[UserClient] WHERE Email = ? AND Password = ?"
         cursor.execute(query, username, password)
         return cursor.fetchone()
+
+    # LOGINMEMBER - Generate Reference Number
+    def generate_reference_number(self):
+        year_month = QtCore.QDateTime.currentDateTime().toString("yyyyMM")
+        query = f"SELECT MAX(CONVERT(INT, SUBSTRING(ReferenceNumber, 9, 6))) FROM [dbo].[Transaction] WHERE ReferenceNumber LIKE '{year_month}%';"
+        with self.connect() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(query)
+                max_sequence = cursor.fetchone()[0]
+                sequence_number = 1 if max_sequence is None else max_sequence + 1
+
+        reference_number = f"{year_month}{sequence_number:06d}"
+        return reference_number
     
     # LOGINMEMBER - Get transaction id
     def get_transaction_id(self, user_client_id, reference_number):
@@ -60,7 +73,7 @@ class DatabaseManager:
     def insert_transaction(self, user_client_id, reference_number):
         try:
             japan_time = datetime.utcnow() + timedelta(hours=9)
-            query = "INSERT INTO [dbo].[Transaction] (UserClientId, CreatedAt, UpdatedAt, TransactionStatus, ReferenceNumber) VALUES (?, ?, ?, 'On-going', ?);"
+            query = "INSERT INTO [dbo].[Transaction] (UserClientId, CreatedAt, UpdatedAt, TransactionStatus, ReferenceNumber) VALUES (?, ?, ?, 'Success', ?);"
             with self.connect() as conn:
                 with conn.cursor() as cursor:
                     cursor.execute(query, user_client_id, japan_time, japan_time, reference_number)

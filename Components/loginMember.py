@@ -36,11 +36,13 @@ class Ui_MainWindowLogInMember(object):
         MainWindow.showFullScreen()
         # Remove Navigation Tools in Main Window
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint) 
-        MainWindow.setStyleSheet("#centralwidget{\n"
-"    background-color:#00C0FF;\n"
-"}")
+       
         MainWindow.mousePressEvent = self.hide_keyboard_on_mouse_click
         self.centralwidget = QtWidgets.QWidget(MainWindow)
+        gradient = QtGui.QLinearGradient(0, 0, self.centralwidget.width(), self.centralwidget.height())
+        gradient.setColorAt(0, QtGui.QColor("#1D7CBA"))
+        gradient.setColorAt(1, QtGui.QColor("#0D3854"))
+        self.centralwidget.setStyleSheet("#centralwidget { background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1D7CBA, stop: 1 #0D3854); }")
         self.centralwidget.setObjectName("centralwidget")
 
         self.welcomeLabel = QtWidgets.QLabel(self.centralwidget)
@@ -48,16 +50,18 @@ class Ui_MainWindowLogInMember(object):
         self.welcomeLabel.setStyleSheet("#welcomeLabel{\n"
 "    font-size:48px;\n"
 "    font-family:Montserrat;\n"
+"    color: #fff;\n"
 "    \n"
 "}")
         self.welcomeLabel.setObjectName("welcomeLabel")
         self.welcomeLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.secondaryLabel = QtWidgets.QLabel(self.centralwidget)
-        self.secondaryLabel.setGeometry(QtCore.QRect(400, 120, 500, 70))
+        self.secondaryLabel.setGeometry(QtCore.QRect(400, 100, 500, 70))
         self.secondaryLabel.setStyleSheet("#secondaryLabel{\n"
 "    font-size:36px;\n"
 "    font-family:Montserrat;\n"
+"    color: #fff;\n"
 "}")
         self.secondaryLabel.setObjectName("secondaryLabel")
         self.secondaryLabel.setAlignment(QtCore.Qt.AlignCenter)
@@ -67,6 +71,7 @@ class Ui_MainWindowLogInMember(object):
         self.emailLabel.setStyleSheet("#emailLabel{\n"
 "    font-size:26px;\n"
 "    font-family:Montserrat;\n"
+"    color: #fff;\n"
 "}")
         self.emailLabel.setObjectName("emailLabel")
 
@@ -75,6 +80,7 @@ class Ui_MainWindowLogInMember(object):
         self.passwordLabel.setStyleSheet("#passwordLabel{\n"
 "    font-size:26px;\n"
 "    font-family:Montserrat;\n"
+"    color: #fff;\n"
 "}")
         self.passwordLabel.setObjectName("passwordLabel")
 
@@ -111,23 +117,25 @@ class Ui_MainWindowLogInMember(object):
         self.loginPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.loginPushButton.setGeometry(QtCore.QRect(250, 540, 400, 60))
         self.loginPushButton.setStyleSheet("#loginPushButton{\n"
-"    background-color:#0000AF;\n"
-"    border-radius:20px;\n"
+"    font-size:18px;\n"
 "    font-family:Montserrat;\n"
-"    font-size:26px;\n"
-"    color:#fff\n"
+"    color:#fff;\n"
+"    border-radius: 10px;\n"
+"    border: 2px solid #0000AF;\n"
+"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
 "}")
         self.loginPushButton.setObjectName("loginPushButton")
 
         self.backPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.backPushButton.setGeometry(QtCore.QRect(250, 620, 400, 60))
         self.backPushButton.setStyleSheet("#backPushButton{\n"
-"    background-color:none;\n"
-"    border:6px solid #0000AF;\n"
-"    border-radius:20px;\n"
+"    border-radius:10px;\n"
 "    font-family:Montserrat;\n"
-"    font-size:26px;\n"
-"    color:#fff;\n"
+"    font-size:18px;\n"
+"    color:#000;\n"
+"    border: 2px solid #FFD700;\n"
+"    border-radius: 9px;\n"
+"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #FFD700, stop:0.2 #FFD700, stop:1 #f6f7fa);\n"
 "}")
         self.backPushButton.setObjectName("backPushButton")
         self.backPushButton.clicked.connect(self.LogInOption)
@@ -149,6 +157,7 @@ class Ui_MainWindowLogInMember(object):
         self.qrLabel.setStyleSheet("#qrLabel{\n"
 "    font-size:36px;\n"
 "    font-family:Montserrat;\n"
+"    color:#fff;\n"
 "}")
         self.qrLabel.setObjectName("qrLabel")
         self.qrLabel.setAlignment(QtCore.Qt.AlignCenter)
@@ -166,6 +175,7 @@ class Ui_MainWindowLogInMember(object):
         self.scanLabel.setStyleSheet("#scanLabel{\n"
 "    font-size:26px;\n"
 "    font-family:Montserrat;\n"
+"    color:#fff;\n"
 "}")
         self.scanLabel.setObjectName("scanLabel")
         self.verticalLayout.addWidget(self.scanLabel)
@@ -173,6 +183,7 @@ class Ui_MainWindowLogInMember(object):
         self.scanLabel_2.setStyleSheet("#scanLabel_2{\n"
 "    font-size:26px;\n"
 "    font-family:Montserrat;\n"
+"    color:#fff;\n"
 "}")
         self.scanLabel_2.setObjectName("scanLabel_2")
         self.verticalLayout.addWidget(self.scanLabel_2)
@@ -194,7 +205,6 @@ class Ui_MainWindowLogInMember(object):
         self.MainWindow = MainWindow
 
     def show_keyboard_for_email(self, event):
-        # Hide color from previous line edit
         self.passwordLineEdit.setStyleSheet("""
             #passwordLineEdit {
                 border-radius: 10px;
@@ -204,10 +214,9 @@ class Ui_MainWindowLogInMember(object):
             }
         """)
         
-        # Show the keyboard for emailLineEdit
         self.emailLineEdit.setStyleSheet("""
             #emailLineEdit {
-                border: 2px solid #005A9C;
+                border: 2px solid #FFD700;
                 border-radius: 10px;
                 font-size: 26px;
                 font-family: Montserrat;
@@ -219,7 +228,6 @@ class Ui_MainWindowLogInMember(object):
         self.keyboard.show()
 
     def show_keyboard_for_password(self, event):
-        # Hide color from previous line edit
         self.emailLineEdit.setStyleSheet("""
             #emailLineEdit {
                 border-radius: 10px;
@@ -229,10 +237,9 @@ class Ui_MainWindowLogInMember(object):
             }
         """)
                     
-        # Show the keyboard for passwordLineEdit
         self.passwordLineEdit.setStyleSheet("""
             #passwordLineEdit {
-                border: 2px solid #005A9C;
+                border: 2px solid #FFD700;
                 border-radius: 10px;
                 font-size: 26px;
                 font-family: Montserrat;
@@ -244,17 +251,17 @@ class Ui_MainWindowLogInMember(object):
         self.keyboard.show()
 
     def move_focus_to_password(self):
-        # Move focus to the password line edit
         self.passwordLineEdit.setFocus()
         self.show_keyboard_for_password(None)
+    
+    def move_focus_to_email(self):
+        self.emailLineEdit.setFocus()
+        self.show_keyboard_for_email(None)
         
-
     def click_login_button(self):
-        # Simulate click on login button
         self.loginPushButton.click()
     
     def hide_keyboard_on_mouse_click(self, event):
-        # Hide the keyboard if it's visible
         if self.keyboard.isVisible():
             self.keyboard.hide()
 
@@ -273,42 +280,24 @@ class Ui_MainWindowLogInMember(object):
                 config.user_info['last_name'] = last_name
                 config.user_info['user_client_id'] = user_client_id
 
-                reference_number = self.generate_reference_number()
+                reference_number = self.db_manager.generate_reference_number()  
                 config.transaction_info['reference_number'] = reference_number
-                
-                # Insert new transaction
                 self.db_manager.insert_transaction(user_client_id, reference_number)
-                print("Reference Number:", reference_number)
 
-                # Retrieve TransactionId
                 transaction_id = self.db_manager.get_transaction_id(user_client_id, reference_number)
                 if transaction_id is not None:
                     config.transaction_info['transaction_id'] = transaction_id
 
-                # Update transaction details
                 self.db_manager.update_transaction(user_client_id, reference_number)
 
-                print("Login successful!")
                 self.MainWindow.close()
                 self.TutorialMember()
             else:
-                print("Invalid username or password.")
                 self.show_invalid_login_alert()
+                self.move_focus_to_email()
         else:
             self.show_input_required_alert()
-
-    def generate_reference_number(self):
-        # Generate a unique reference number based on year, month, and a series of numbers
-        year_month = QtCore.QDateTime.currentDateTime().toString("yyyyMM")
-        query = f"SELECT MAX(CONVERT(INT, SUBSTRING(ReferenceNumber, 9, 6))) FROM [dbo].[Transaction] WHERE ReferenceNumber LIKE '{year_month}%';"
-        with self.db_manager.connect() as conn:
-            with conn.cursor() as cursor:
-                cursor.execute(query)
-                max_sequence = cursor.fetchone()[0]
-                sequence_number = 1 if max_sequence is None else max_sequence + 1
-
-        reference_number = f"{year_month}{sequence_number:06d}"
-        return reference_number
+            self.move_focus_to_email()
 
     # Closes the Database Connection
     def closeEvent(self, event):

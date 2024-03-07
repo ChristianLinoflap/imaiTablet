@@ -1,19 +1,19 @@
-# Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
 import config 
 
 class Ui_MainWindowFeedbackQuestions(object):
-    # Function to Set Up feedbackQuestions.py
     def setupUiFeedbackQuestions(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1280, 720)
-        MainWindow.setStyleSheet("#centralwidget{\n"
-"    background-color:#00C0FF;\n"
-"}")
-        # Remove Navigation Tools in Main Window
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        
         self.centralwidget = QtWidgets.QWidget(MainWindow)
+        gradient = QtGui.QLinearGradient(0, 0, self.centralwidget.width(), self.centralwidget.height())
+        gradient.setColorAt(0, QtGui.QColor("#1D7CBA"))
+        gradient.setColorAt(1, QtGui.QColor("#0D3854"))
+        self.centralwidget.setStyleSheet("#centralwidget { background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1D7CBA, stop: 1 #0D3854); }")
         self.centralwidget.setObjectName("centralwidget")
+
         self.navigationFrame = QtWidgets.QFrame(self.centralwidget)
         self.navigationFrame.setGeometry(QtCore.QRect(0, 0, MainWindow.width(), 100))
         self.navigationFrame.setStyleSheet("#navigationFrame{\n"
@@ -32,9 +32,7 @@ class Ui_MainWindowFeedbackQuestions(object):
         self.nameOutput.setObjectName("nameOutput")
         first_name = config.user_info.get('first_name', '')
         last_name = config.user_info.get('last_name', '')
-        # Set the text in the nameOutput label
         self.nameOutput.setText(f"Welcome, {first_name} {last_name}")
-        print(f"Debug - First Name: {first_name}, Last Name: {last_name}")
         self.roleOutput = QtWidgets.QLabel(self.navigationFrame)
         self.roleOutput.setGeometry(QtCore.QRect(20, 51, 95, 25))
         self.roleOutput.setStyleSheet("#roleOutput{\n"
@@ -315,7 +313,6 @@ class Ui_MainWindowFeedbackQuestions(object):
         self.surveyFourVeryDis_3.setText(_translate("MainWindow", "Slightly likely"))
         self.surveyFourVeryDis_2.setText(_translate("MainWindow", "Not likely at all"))
         self.surveyFourVeryDis_5.setText(_translate("MainWindow", "Very likely"))
-
 
 if __name__ == "__main__":
     import sys
