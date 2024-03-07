@@ -1,7 +1,6 @@
 import config
-# Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox, QApplication
+from PyQt5.QtWidgets import QMessageBox
 from config import Config, translations
 from databaseManager import DatabaseManager, EnvironmentLoader
 from onScreenKeyboard import OnScreenKeyboard
@@ -13,7 +12,6 @@ class Ui_MainWindowLogInMember(object):
         self.cursor = self.conn.cursor()
         self.keyboard = OnScreenKeyboard()
 
-    # Function to Call tutorialMember.py
     def TutorialMember(self):
         self.hide_keyboard_on_mouse_click(None)
         from tutorialMember import Ui_MainWindowTutorialMember
@@ -22,7 +20,6 @@ class Ui_MainWindowLogInMember(object):
         self.ui.setupUiTutorialMember(self.window)
         self.window.show()  
 
-    # Function to Call loginOption.py
     def LogInOption (self):
         from loginOption import Ui_MainWindowLogInOption
         self.window = QtWidgets.QMainWindow()
@@ -30,11 +27,9 @@ class Ui_MainWindowLogInMember(object):
         self.ui.setupUiLogInOption(self.window)
         self.window.show()  
 
-    # Function to Set Up loginMember.py
     def setupUiLogInMember(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.showFullScreen()
-        # Remove Navigation Tools in Main Window
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint) 
        
         MainWindow.mousePressEvent = self.hide_keyboard_on_mouse_click
@@ -235,8 +230,7 @@ class Ui_MainWindowLogInMember(object):
                 font-family: Montserrat;
                 padding: 10px;
             }
-        """)
-                    
+        """)           
         self.passwordLineEdit.setStyleSheet("""
             #passwordLineEdit {
                 border: 2px solid #FFD700;
@@ -264,6 +258,22 @@ class Ui_MainWindowLogInMember(object):
     def hide_keyboard_on_mouse_click(self, event):
         if self.keyboard.isVisible():
             self.keyboard.hide()
+            self.emailLineEdit.setStyleSheet("""
+                #emailLineEdit {
+                    border-radius: 10px;
+                    font-size: 26px;
+                    font-family: Montserrat;
+                    padding: 10px;
+                }
+            """)
+            self.passwordLineEdit.setStyleSheet("""
+                #passwordLineEdit {
+                    border-radius: 10px;
+                    font-size: 26px;
+                    font-family: Montserrat;
+                    padding: 10px;
+                }
+            """)
 
     # User Authentication Function
     def authenticate_user(self):
@@ -299,13 +309,11 @@ class Ui_MainWindowLogInMember(object):
             self.show_input_required_alert()
             self.move_focus_to_email()
 
-    # Closes the Database Connection
     def closeEvent(self, event):
         super().closeEvent(event)
         self.cursor.close()
         self.conn.close()
 
-    # Error Validation
     def show_invalid_login_alert(self):
         message = translations[Config.current_language]['Invalid_Login_Message']
         title = translations[Config.current_language]['Invalid_Login_Title']
@@ -334,11 +342,9 @@ class Ui_MainWindowLogInMember(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 
-        # Use the stored language from Config
         language = Config.current_language
         translation_dict = translations.get(language, translations['English'])
 
-        # Translate texts using the stored language
         self.welcomeLabel.setText(_translate("MainWindow", translation_dict['Welcome_Label']))
         self.secondaryLabel.setText(_translate("MainWindow", translation_dict['Secondary_Label']))
         self.emailLabel.setText(_translate("MainWindow", translation_dict['Email_Label']))

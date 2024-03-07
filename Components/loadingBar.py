@@ -16,17 +16,15 @@ class LoadingBar(QMainWindow):
         self.progressBar = QProgressBar(self)
         self.progressBar.setGeometry(30, 30, 500, 40)
 
-        # Set the progress bar properties
-        self.progressBar.setRange(0, 0)  # Infinite progress
+        self.progressBar.setRange(0, 0)  
         self.progressBar.setTextVisible(False)
 
         # Create and start the timer
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.updateProgressBar)
-        self.timer.start(50)  # Update interval in milliseconds
+        self.timer.start(50)  
 
     def updateProgressBar(self):
-        # Simulate progress by rotating the value
         value = self.progressBar.value()
         if value == 10000:
             value = 0

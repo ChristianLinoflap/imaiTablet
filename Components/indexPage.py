@@ -50,15 +50,12 @@ class Ui_MainWindow(object):
         "    border-radius: 15px;\n"
         "}\n")
         self.imageFrame.setObjectName("imageFrame")
-
         self.imageFrame.setScaledContents(True)
 
-        image_path = "Assets\\itemViewAssets.jpg"  # Replace with the path to your image
+        image_path = "Assets\\indexPageAsset_2.jpg" 
         pixmap = QtGui.QPixmap(image_path)
-
-        target_size = QtCore.QSize(1200, 900)
+        target_size = QtCore.QSize(900, 600)
         pixmap_resized = pixmap.scaled(target_size, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
-
         mask = QtGui.QBitmap(pixmap_resized.size())
         mask.fill(QtCore.Qt.white)
         painter = QtGui.QPainter(mask)
@@ -66,10 +63,7 @@ class Ui_MainWindow(object):
         painter.setBrush(QtGui.QColor(QtCore.Qt.black))
         painter.drawRoundedRect(mask.rect(), 15, 15)
         painter.end()
-
-        # Apply the mask to the pixmap
         pixmap_resized.setMask(mask)
-
         self.imageFrame.setPixmap(pixmap_resized)
         self.imageFrame.setAlignment(QtCore.Qt.AlignCenter)
     
@@ -133,23 +127,23 @@ class Ui_MainWindow(object):
         self.companyLabel.setObjectName("companyLabel")
         
         self.bgShape = QtWidgets.QLabel(self.centralwidget)  
-        self.bgShape.setGeometry(QtCore.QRect(30, 160, 105, 105))
+        self.bgShape.setGeometry(QtCore.QRect(30, 160, 106, 106))
         self.bgShape.setStyleSheet("#bgShape{\n"
         "    background-color:#FEFCFC;\n"
-        "    border-radius:52px;\n"
+        "    border-radius:53px;\n"
         "}")
         self.bgShape.setScaledContents(True) 
         self.bgShape.setObjectName("bgShape")
 
-        # image_path = "Assets\\IM.AI" 
-        # pixmap = QtGui.QPixmap(image_path)
-        # self.bgShape.setPixmap(pixmap)
+        image_path = "Assets\\indexPageAsset_1.png" 
+        pixmap = QtGui.QPixmap(image_path)
+        self.bgShape.setPixmap(pixmap)
 
         self.translationComboBox = QtWidgets.QComboBox(self.centralwidget)
         self.translationComboBox.setGeometry(QtCore.QRect(1095, 40, 150, 75))
         self.translationComboBox.setStyleSheet("#translationComboBox {\n"
 "    font-family: Montserrat;\n"
-"    font-size: 24px;\n"
+"    font-size: 20px;\n"
 "    color: #fff;\n"
 "    border-radius: 10px;\n"
 "    background-color: #0000AF;\n"

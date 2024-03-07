@@ -49,9 +49,10 @@ class Ui_MainWindowLogInOption(object):
         self.bgShape.setScaledContents(True) 
         self.bgShape.setObjectName("bgShape")
 
-        # image_path = "Assets\\IM.AI" 
-        # pixmap = QtGui.QPixmap(image_path)
-        # self.bgShape.setPixmap(pixmap)
+        image_path = "Assets\\loginOptionAsset_1.png" 
+        pixmap = QtGui.QPixmap(image_path)
+        self.bgShape.setPixmap(pixmap)
+        self.bgShape.setAlignment(QtCore.Qt.AlignCenter)
 
         self.productLabel = QtWidgets.QLabel(self.centralwidget)
         self.productLabel.setGeometry(QtCore.QRect(135, 165, 300, 60))

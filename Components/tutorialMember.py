@@ -13,7 +13,7 @@ class Ui_MainWindowTutorialMember(object):
             None, "Tutorial Completed", "You are now ready to shop!", QMessageBox.Ok
         )
 
-    def handleLoginButtonClick(self, MainWindow):
+    def handleLoginButtonClick(self):
         print("Current Step:", self.current_step)
         if self.current_step < len(self.tutorial_steps):
             print("Displaying Step:", self.current_step)
@@ -24,7 +24,7 @@ class Ui_MainWindowTutorialMember(object):
             self.showTutorialCompletionMessage()
             self.current_step = 0
             self.ItemView()
-
+            
     def setupTutorialSteps(self):
         image_paths = [
             "Assets\\1.png",
@@ -72,6 +72,7 @@ class Ui_MainWindowTutorialMember(object):
                                         "}")
         self.backPushButton.setObjectName("backPushButton")
         self.backPushButton.clicked.connect(self.ItemView)
+        self.backPushButton.clicked.connect(MainWindow.close)
 
         self.loginPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.loginPushButton.setGeometry(QtCore.QRect(430, 600, 200, 60))
