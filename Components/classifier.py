@@ -76,7 +76,8 @@ class ObjectClassifier:
                     try:
                         response = requests.post(url, files=files)
                         if '<' in response.text or 'pass' in response.text:
-                            print("'< found in response text.")
+                            # print("'< found in response text.")
+                            pass
                         else:
                             with open("predicted_class.txt", "w") as file:
                                 file.write(response.text)
