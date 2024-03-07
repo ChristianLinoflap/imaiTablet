@@ -44,7 +44,7 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
 
         self.imageFrame = QtWidgets.QLabel(self.centralwidget)
-        self.imageFrame.setGeometry(QtCore.QRect(695, 160, 550, 415))
+        self.imageFrame.setGeometry(QtCore.QRect(655, 145, 550, 450))
         self.imageFrame.setStyleSheet("#imageFrame{\n"
         "    background-color: #FEFCFC;\n"
         "    border-radius: 15px;\n"
@@ -68,7 +68,7 @@ class Ui_MainWindow(object):
         self.imageFrame.setAlignment(QtCore.Qt.AlignCenter)
     
         self.welcomeTitle = QtWidgets.QLabel(self.centralwidget)
-        self.welcomeTitle.setGeometry(QtCore.QRect(30, 310, 300, 50))
+        self.welcomeTitle.setGeometry(QtCore.QRect(100, 310, 300, 50))
         self.welcomeTitle.setStyleSheet("#welcomeTitle{\n"
 "    font-size: 48px;\n"
 "    font-weight: bold;\n"
@@ -77,7 +77,7 @@ class Ui_MainWindow(object):
         self.welcomeTitle.setObjectName("welcomeTitle")
 
         self.welcomeMessage = QtWidgets.QLabel(self.centralwidget)
-        self.welcomeMessage.setGeometry(QtCore.QRect(30, 360, 400, 50))
+        self.welcomeMessage.setGeometry(QtCore.QRect(100, 360, 400, 50))
         self.welcomeMessage.setStyleSheet("#welcomeMessage{\n"
 "    font-size: 18px;\n"
 "    color: #fff;\n"
@@ -85,53 +85,47 @@ class Ui_MainWindow(object):
         self.welcomeMessage.setObjectName("welcomeMessage")
 
         self.startButton = QtWidgets.QPushButton(self.centralwidget)
-        self.startButton.setGeometry(QtCore.QRect(30, 470, 255, 100))
+        self.startButton.setGeometry(QtCore.QRect(100, 470, 255, 100))
         self.startButton.setStyleSheet("#startButton{\n"
-"    font-size:20px;\n"
-"    font-family:Montserrat;\n"
-"    color:#fff;\n"
-"    border-radius: 10px;\n"
-"    border: 2px solid #0000AF;\n"
-"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
-"}\n"
-"#startButton::menu-indicator{\n"
-"    image: url(Assets\\trolley.png);\n" 
-"    subcontrol-origin: padding;\n"
-"    subcontrol-position: right center;\n"
-"    width: 20px;\n" 
-"    height: 20px;\n"  
-"}")
+                                        "    font-size: 24px;\n"
+                                        "    font-family: Montserrat;\n"
+                                        "    color: #fff;\n"
+                                        "    border-radius: 10px;\n"
+                                        "    border: 2px solid #0000AF;\n"
+                                        "    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
+                                        "}")
         self.startButton.setObjectName("startButton")
         self.startButton.clicked.connect(self.LogInOption)
         self.startButton.clicked.connect(MainWindow.close)
 
+
         self.productLabel = QtWidgets.QLabel(self.centralwidget)
-        self.productLabel.setGeometry(QtCore.QRect(125, 185, 300, 60))
+        self.productLabel.setGeometry(QtCore.QRect(195, 185, 300, 60))
         self.productLabel.setStyleSheet("#productLabel{\n"
-"    font-size:48px;\n"
-"    font-weight:bold;\n"
-"    font-family: 'Poppins', sans-serif;\n"
-"    color:#fff;\n"
-"}")
+                                        "    font-size:48px;\n"
+                                        "    font-weight:bold;\n"
+                                        "    font-family: 'Poppins', sans-serif;\n"
+                                        "    color:#fff;\n"
+                                        "}")
         self.productLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.productLabel.setObjectName("productLabel")
 
         self.companyLabel = QtWidgets.QLabel(self.centralwidget)
-        self.companyLabel.setGeometry(QtCore.QRect(30, 655, 405, 30))
+        self.companyLabel.setGeometry(QtCore.QRect(100, 605, 405, 30))
         self.companyLabel.setStyleSheet("#companyLabel{\n"
-"    font-size:24px;\n"
-"    font-family: 'Montserrat', sans-serif;\n"
-"    font-family: 'Poppins', sans-serif;\n"
-"    color:#fff;\n"
-"}")
+                                        "    font-size:24px;\n"
+                                        "    font-family: 'Montserrat', sans-serif;\n"
+                                        "    font-family: 'Poppins', sans-serif;\n"
+                                        "    color:#fff;\n"
+                                        "}")
         self.companyLabel.setObjectName("companyLabel")
         
         self.bgShape = QtWidgets.QLabel(self.centralwidget)  
-        self.bgShape.setGeometry(QtCore.QRect(30, 160, 106, 106))
+        self.bgShape.setGeometry(QtCore.QRect(100, 160, 106, 106))
         self.bgShape.setStyleSheet("#bgShape{\n"
-        "    background-color:#FEFCFC;\n"
-        "    border-radius:53px;\n"
-        "}")
+                                    "    background-color:#FEFCFC;\n"
+                                    "    border-radius:53px;\n"
+                                    "}")
         self.bgShape.setScaledContents(True) 
         self.bgShape.setObjectName("bgShape")
 
@@ -140,39 +134,39 @@ class Ui_MainWindow(object):
         self.bgShape.setPixmap(pixmap)
 
         self.translationComboBox = QtWidgets.QComboBox(self.centralwidget)
-        self.translationComboBox.setGeometry(QtCore.QRect(1095, 40, 150, 75))
+        self.translationComboBox.setGeometry(QtCore.QRect(1055, 40, 150, 75))
         self.translationComboBox.setStyleSheet("#translationComboBox {\n"
-"    font-family: Montserrat;\n"
-"    font-size: 20px;\n"
-"    color: #fff;\n"
-"    border-radius: 10px;\n"
-"    background-color: #0000AF;\n"
-"    padding-left: 15px;\n"
-"}\n"
-"\n"
-"#translationComboBox QAbstractItemView {\n"
-"    border: 1px solid #0000AF;\n"
-"    selection-background-color: #0000AF;\n"
-"}\n"
-"\n"
-"#translationComboBox QAbstractItemView::item {\n"
-"    padding: 24px;\n"
-"}\n"
-"\n"
-"#translationComboBox QAbstractItemView::item:selected {\n"
-"    background-color: #0000AF;\n"
-"}\n"
-"\n"
-"#translationComboBox::drop-down {\n"
-"    border-top-right-radius: 10px;\n"
-"    border-bottom-right-radius: 10px;\n"
-"    background-color: #fff; \n"
-"    subcontrol-origin: padding;\n"
-"    subcontrol-position: right center;\n"
-"    width: 30px; /* Adjust the width as needed */\n"
-"    height: 75px; /* Adjust the height as needed */\n"
-"}\n"
-"")
+                                                "    font-family: Montserrat;\n"
+                                                "    font-size: 20px;\n"
+                                                "    color: #fff;\n"
+                                                "    border-radius: 10px;\n"
+                                                "    background-color: #0000AF;\n"
+                                                "    padding-left: 15px;\n"
+                                                "}\n"
+                                                "\n"
+                                                "#translationComboBox QAbstractItemView {\n"
+                                                "    border: 1px solid #0000AF;\n"
+                                                "    selection-background-color: #0000AF;\n"
+                                                "}\n"
+                                                "\n"
+                                                "#translationComboBox QAbstractItemView::item {\n"
+                                                "    padding: 24px;\n"
+                                                "}\n"
+                                                "\n"
+                                                "#translationComboBox QAbstractItemView::item:selected {\n"
+                                                "    background-color: #0000AF;\n"
+                                                "}\n"
+                                                "\n"
+                                                "#translationComboBox::drop-down {\n"
+                                                "    border-top-right-radius: 10px;\n"
+                                                "    border-bottom-right-radius: 10px;\n"
+                                                "    background-color: #fff; \n"
+                                                "    subcontrol-origin: padding;\n"
+                                                "    subcontrol-position: right center;\n"
+                                                "    width: 30px; /* Adjust the width as needed */\n"
+                                                "    height: 75px; /* Adjust the height as needed */\n"
+                                                "}\n"
+                                                "")
         self.translationComboBox.setObjectName("translationComboBox")
         self.translationComboBox.addItem("")
         self.translationComboBox.addItem("")

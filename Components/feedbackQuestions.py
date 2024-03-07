@@ -1,10 +1,31 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import config 
+from config import Config, translations
+from databaseManager import DatabaseManager, EnvironmentLoader
 
 class Ui_MainWindowFeedbackQuestions(object):
+    def __init__(self):
+        self.db_manager = DatabaseManager(*EnvironmentLoader.load_env_variables())
+        self.conn = self.db_manager.connect()
+        self.cursor = self.conn.cursor()
+        self.answer_one = None
+        self.answer_two = None
+        self.answer_three = None
+        self.answer_four = None
+        self.answer_five = None
+        
+    def IndexPage (self):
+        # config.user_info.clear()
+        # config.transaction_info.clear()
+        from indexPage import Ui_MainWindow
+        self.window = QtWidgets.QMainWindow()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self.window)
+        self.window.show()
+
     def setupUiFeedbackQuestions(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1280, 720)
+        MainWindow.showFullScreen()
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -30,9 +51,11 @@ class Ui_MainWindowFeedbackQuestions(object):
 "    color:#fff;\n"
 "}")
         self.nameOutput.setObjectName("nameOutput")
+        welcome_message = translations[Config.current_language].get('Welcome_User', 'Welcome')
         first_name = config.user_info.get('first_name', '')
         last_name = config.user_info.get('last_name', '')
-        self.nameOutput.setText(f"Welcome, {first_name} {last_name}")
+        translated_welcome_message = f"{welcome_message}, {first_name} {last_name}"
+        self.nameOutput.setText(translated_welcome_message)
         self.roleOutput = QtWidgets.QLabel(self.navigationFrame)
         self.roleOutput.setGeometry(QtCore.QRect(20, 51, 95, 25))
         self.roleOutput.setStyleSheet("#roleOutput{\n"
@@ -42,28 +65,31 @@ class Ui_MainWindowFeedbackQuestions(object):
 "}")
         self.roleOutput.setObjectName("roleOutput")
         self.finishPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.finishPushButton.setGeometry(QtCore.QRect(1020, 630, 231, 51))
+        self.finishPushButton.setGeometry(QtCore.QRect(1030, 600, 231, 100))
         self.finishPushButton.setStyleSheet("#finishPushButton{\n"
-"    background-color:none;\n"
-"    border:4px solid #0000AF;\n"
-"    border-radius:20px;\n"
-"    font-family:Montserrat;\n"
 "    font-size:16px;\n"
-"    font-weight:bold;\n"
-"    color:#0000AF;\n"
+"    font-family:Montserrat;\n"
+"    color:#fff;\n"
+"    border-radius: 10px;\n"
+"    border: 2px solid #0000AF;\n"
+"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
 "}")
         self.finishPushButton.setObjectName("finishPushButton")
+        self.finishPushButton.clicked.connect(self.IndexPage)
+        self.finishPushButton.clicked.connect(lambda: self.tallyAnswers(config.user_info.get('user_client_id')))
+        self.finishPushButton.clicked.connect(MainWindow.close)
+        
         self.surveyFrame = QtWidgets.QFrame(self.centralwidget)
-        self.surveyFrame.setGeometry(QtCore.QRect(20, 140, 1230, 471))
+        self.surveyFrame.setGeometry(QtCore.QRect(20, 115, 1240, 471))
         self.surveyFrame.setStyleSheet("#surveyFrame{\n"
 "    background-color:#FEFCFC;\n"
-"    border-radius:25px;\n"
+"    border-radius:15px;\n"
 "}")
         self.surveyFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.surveyFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.surveyFrame.setObjectName("surveyFrame")
         self.surveyOne = QtWidgets.QLabel(self.surveyFrame)
-        self.surveyOne.setGeometry(QtCore.QRect(20, 20, 481, 21))
+        self.surveyOne.setGeometry(QtCore.QRect(20, 20, 500, 21))
         self.surveyOne.setStyleSheet("#surveyOne{\n"
 "    font-style:Montserrat;\n"
 "    font-size:14px;\n"
@@ -277,42 +303,120 @@ class Ui_MainWindowFeedbackQuestions(object):
         self.surveyFourVeryDis_5.setFont(font)
         self.surveyFourVeryDis_5.setObjectName("surveyFourVeryDis_5")
         MainWindow.setCentralWidget(self.centralwidget)
-
+        
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def answerOne(self):
+        if self.surveyOneExcellent.isChecked():
+            self.answer_one = "Excellent"
+            print('Excellent')
+        elif self.surveyOneVeryPoor.isChecked():
+            self.answer_one = "Very Poor"
+        elif self.surveyOneGood.isChecked():
+            self.answer_one = "Good"
+        elif self.surveyOnePoor.isChecked():
+            self.answer_one = "Poor"
+        elif self.surveyOneNeutral.isChecked():
+            self.answer_one = "Neutral"
+
+    def answerTwo(self):
+        if self.surveyTwoExtreme.isChecked():
+            self.answer_two = "Extremely user-friendly"
+        elif self.surveyTwoNotAtAll.isChecked():
+            self.answer_two = "Not at all user-friendly"
+        elif self.surveyTwoVery.isChecked():
+            self.answer_two = "Very user-friendly"
+        elif self.surveyTwoSlightly.isChecked():
+            self.answer_two = "Slightly user-friendly"
+        elif self.surveyTwoModerate.isChecked():
+            self.answer_two = "Moderately user-friendly"
+
+    def answerThree(self):
+        if self.surveyThreeYes.isChecked():
+            self.answer_three = "Yes"  
+        elif self.surveyThreeNo.isChecked():
+            self.answer_three = "No"
+        
+    def answerFour(self):
+        if self.surveyFourVerySat.isChecked():
+            self.answer_four = "Very satisfied" 
+        elif self.surveyFourDis.isChecked():
+            self.answer_four = "Dissatisfied"
+        elif self.surveyFourVeryDis.isChecked():
+            self.answer_four = "Extremely dissatisfied"
+        elif self.surveyFourSatisfied.isChecked():
+            self.answer_four = "Satisfied"      
+        elif self.surveyFourNeutral.isChecked():
+            self.answer_four = "Neutral"
+
+    def answerFive(self):
+        if self.surveyFourVeryDis_6.isChecked():
+            self.answer_five = "Extremely Likely"
+        elif self.surveyFourVeryDis_4.isChecked():
+            self.answer_five = "Neutral"
+        elif self.surveyFourVeryDis_3.isChecked():
+            self.answer_five = "Slightly likely" 
+        elif self.surveyFourVeryDis_2.isChecked():
+            self.answer_five = "Not likely at all"
+        elif self.surveyFourVeryDis_5.isChecked():
+            self.answer_five = "Very likely"
+
+    def tallyAnswers(self, user_client_id):
+        self.answerOne()
+        self.answerTwo()
+        self.answerThree()
+        self.answerFour()
+        self.answerFive()
+
+        answer_one = self.answer_one
+        answer_two = self.answer_two
+        answer_three = self.answer_three
+        answer_four = self.answer_four
+        answer_five = self.answer_five
+
+        self.db_manager.insert_feedback_answers(user_client_id, answer_one, answer_two, answer_three, answer_four, answer_five) 
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+
+        language = Config.current_language
+        translation_dict = translations.get(language, translations['English'])
+
         self.roleOutput.setText(_translate("MainWindow", "Member"))
-        self.finishPushButton.setText(_translate("MainWindow", "Finish Shopping"))
-        self.surveyOne.setText(_translate("MainWindow", "How would you rate your overall experience using our Smart Shopping Cart?"))
-        self.surveyTwo.setText(_translate("MainWindow", "How would you rate your overall experience using our Smart Shopping Cart?"))
-        self.surveyFour.setText(_translate("MainWindow", "How satisfied were you with the accuracy of product recognition by the Smart Cart?"))
-        self.surveyThree.setText(_translate("MainWindow", "Did the Smart Cart enhance the efficiency of your shopping experience?"))
-        self.surveyFive.setText(_translate("MainWindow", "How likely are you to recommend the Smart Shopping Cart to a friend or family member?"))
-        self.surveyOneExcellent.setText(_translate("MainWindow", "Excellent"))
-        self.surveyOneVeryPoor.setText(_translate("MainWindow", "Very Poor"))
-        self.surveyOneGood.setText(_translate("MainWindow", "Good"))
-        self.surveyOnePoor.setText(_translate("MainWindow", "Poor"))
-        self.surveyOneNeutral.setText(_translate("MainWindow", "Neutral"))
-        self.surveyTwoExtreme.setText(_translate("MainWindow", "Extremely user-friendly"))
-        self.surveyTwoNotAtAll.setText(_translate("MainWindow", "Not at all user-friendly"))
-        self.surveyTwoVery.setText(_translate("MainWindow", "Very user-friendly"))
-        self.surveyTwoSlightly.setText(_translate("MainWindow", "Slightly user-friendly"))
-        self.surveyTwoModerate.setText(_translate("MainWindow", "Moderately user-friendly"))
-        self.surveyThreeNo.setText(_translate("MainWindow", "No"))
-        self.surveyThreeYes.setText(_translate("MainWindow", "Yes"))
-        self.surveyFourVerySat.setText(_translate("MainWindow", "Very Satisfied"))
-        self.surveyFourDis.setText(_translate("MainWindow", "Dissatisfied"))
-        self.surveyFourVeryDis.setText(_translate("MainWindow", "Very Dissatisfied"))
-        self.surveyFourSatisfied.setText(_translate("MainWindow", "Satisfied"))
-        self.surveyFourNeutral.setText(_translate("MainWindow", "Neutral"))
-        self.surveyFourVeryDis_6.setText(_translate("MainWindow", "Extremely likely"))
-        self.surveyFourVeryDis_4.setText(_translate("MainWindow", "Neutral"))
-        self.surveyFourVeryDis_3.setText(_translate("MainWindow", "Slightly likely"))
-        self.surveyFourVeryDis_2.setText(_translate("MainWindow", "Not likely at all"))
-        self.surveyFourVeryDis_5.setText(_translate("MainWindow", "Very likely"))
+        self.finishPushButton.setText(_translate("MainWindow", translation_dict['Finish_Button']))
+        self.surveyOne.setText(_translate("MainWindow", translation_dict['Question_1']))
+        self.surveyTwo.setText(_translate("MainWindow", translation_dict['Question_2']))
+        self.surveyFour.setText(_translate("MainWindow", translation_dict['Question_3']))
+        self.surveyThree.setText(_translate("MainWindow", translation_dict['Question_4']))
+        self.surveyFive.setText(_translate("MainWindow", translation_dict['Question_5']))
+        self.surveyOneExcellent.setText(_translate("MainWindow", translation_dict['Q1_Answer_1']))
+        self.surveyOneVeryPoor.setText(_translate("MainWindow", translation_dict['Q1_Answer_2']))
+        self.surveyOneGood.setText(_translate("MainWindow", translation_dict['Q1_Answer_3']))
+        self.surveyOnePoor.setText(_translate("MainWindow", translation_dict['Q1_Answer_4']))
+        self.surveyOneNeutral.setText(_translate("MainWindow", translation_dict['Q1_Answer_5']))
+
+        self.surveyTwoExtreme.setText(_translate("MainWindow", translation_dict['Q2_Answer_1']))
+        self.surveyTwoNotAtAll.setText(_translate("MainWindow", translation_dict['Q2_Answer_2']))
+        self.surveyTwoVery.setText(_translate("MainWindow", translation_dict['Q2_Answer_3']))
+        self.surveyTwoSlightly.setText(_translate("MainWindow", translation_dict['Q2_Answer_4']))
+        self.surveyTwoModerate.setText(_translate("MainWindow", translation_dict['Q2_Answer_5']))
+
+        self.surveyThreeNo.setText(_translate("MainWindow", translation_dict['Q3_Answer_1']))
+        self.surveyThreeYes.setText(_translate("MainWindow", translation_dict['Q3_Answer_2']))
+
+        self.surveyFourVerySat.setText(_translate("MainWindow", translation_dict['Q4_Answer_1']))
+        self.surveyFourDis.setText(_translate("MainWindow", translation_dict['Q4_Answer_2']))
+        self.surveyFourVeryDis.setText(_translate("MainWindow", translation_dict['Q4_Answer_3']))
+        self.surveyFourSatisfied.setText(_translate("MainWindow", translation_dict['Q4_Answer_4']))
+        self.surveyFourNeutral.setText(_translate("MainWindow", translation_dict['Q4_Answer_5']))
+
+        self.surveyFourVeryDis_6.setText(_translate("MainWindow", translation_dict['Q5_Answer_1']))
+        self.surveyFourVeryDis_4.setText(_translate("MainWindow", translation_dict['Q5_Answer_2']))
+        self.surveyFourVeryDis_3.setText(_translate("MainWindow", translation_dict['Q5_Answer_3']))
+        self.surveyFourVeryDis_2.setText(_translate("MainWindow", translation_dict['Q5_Answer_4']))
+        self.surveyFourVeryDis_5.setText(_translate("MainWindow", translation_dict['Q5_Answer_5']))
 
 if __name__ == "__main__":
     import sys

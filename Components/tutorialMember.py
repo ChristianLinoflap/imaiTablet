@@ -60,11 +60,11 @@ class Ui_MainWindowTutorialMember(object):
         self.centralwidget.setObjectName("centralwidget")
 
         self.backPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.backPushButton.setGeometry(QtCore.QRect(655, 600, 200, 60))
+        self.backPushButton.setGeometry(QtCore.QRect(655, 570, 200, 100))
         self.backPushButton.setStyleSheet("#backPushButton{\n"
                                             "    border-radius:10px;\n"
                                             "    font-family:Montserrat;\n"
-                                            "    font-size:14px;\n"
+                                            "    font-size:24px;\n"
                                             "    color:#000;\n"
                                             "    border: 2px solid #FFD700;\n"
                                             "    border-radius: 9px;\n"
@@ -75,9 +75,9 @@ class Ui_MainWindowTutorialMember(object):
         self.backPushButton.clicked.connect(MainWindow.close)
 
         self.loginPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.loginPushButton.setGeometry(QtCore.QRect(430, 600, 200, 60))
+        self.loginPushButton.setGeometry(QtCore.QRect(430, 570, 200, 100))
         self.loginPushButton.setStyleSheet("#loginPushButton{\n"
-                                            "    font-size:18px;\n"
+                                            "    font-size:24px;\n"
                                             "    font-family:Montserrat;\n"
                                             "    color:#fff;\n"
                                             "    border-radius: 10px;\n"

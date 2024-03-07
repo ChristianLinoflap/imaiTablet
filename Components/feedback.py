@@ -1,10 +1,8 @@
-# Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
 from config import Config, translations
 import config
 
 class Ui_MainWindowFeedback(object):
-    # Function to Call feedbackQuestions.py
     def FeedbackQuestions (self):
         from feedbackQuestions import Ui_MainWindowFeedbackQuestions
         self.window = QtWidgets.QMainWindow()
@@ -25,20 +23,20 @@ class Ui_MainWindowFeedback(object):
     def setupUiFeedback(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.showFullScreen()
-        MainWindow.setStyleSheet("#centralwidget{\n"
-"    background-color:#00C0FF;\n"
-"}")
-        # Remove Navigation Tools in Main Window
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
+        gradient = QtGui.QLinearGradient(0, 0, self.centralwidget.width(), self.centralwidget.height())
+        gradient.setColorAt(0, QtGui.QColor("#1D7CBA"))
+        gradient.setColorAt(1, QtGui.QColor("#0D3854"))
+        self.centralwidget.setStyleSheet("#centralwidget { background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1D7CBA, stop: 1 #0D3854); }")
         self.centralwidget.setObjectName("centralwidget")
 
         self.navigationFrame = QtWidgets.QFrame(self.centralwidget)
         self.navigationFrame.setGeometry(QtCore.QRect(0, 0, MainWindow.width(), 110))
         self.navigationFrame.setStyleSheet("#navigationFrame{\n"
-"    background-color:#0000AF;\n"
-"}")
+                                        "    background-color:#0000AF;\n"
+                                        "}")
         self.navigationFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.navigationFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.navigationFrame.setObjectName("navigationFrame")
@@ -46,12 +44,11 @@ class Ui_MainWindowFeedback(object):
         self.nameOutput = QtWidgets.QLabel(self.navigationFrame)
         self.nameOutput.setGeometry(QtCore.QRect(20, 20, 920, 55))
         self.nameOutput.setStyleSheet("#nameOutput{\n"
-"    font-weight:bold;\n"
-"    font-size:42px;\n"
-"    color:#fff;\n"
-"}")
+                                "    font-weight:bold;\n"
+                                "    font-size:42px;\n"
+                                "    color:#fff;\n"
+                                "}")
         self.nameOutput.setObjectName("nameOutput")
-        # Translate the welcome message and user's name
         welcome_message = translations[Config.current_language].get('Welcome_User', 'Welcome')
         first_name = config.user_info.get('first_name', '')
         last_name = config.user_info.get('last_name', '')
@@ -60,22 +57,22 @@ class Ui_MainWindowFeedback(object):
         self.roleOutput = QtWidgets.QLabel(self.navigationFrame)
         self.roleOutput.setGeometry(QtCore.QRect(20, 51, 95, 25))
         self.roleOutput.setStyleSheet("#roleOutput{\n"
-"    font-size:24px;\n"
-"    font-family:Montserrat;\n"
-"    color:#fff;\n"
-"}")
+                                "    font-size:24px;\n"
+                                "    font-family:Montserrat;\n"
+                                "    color:#fff;\n"
+                                "}")
         self.roleOutput.setObjectName("roleOutput")
 
         self.finishPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.finishPushButton.setGeometry(QtCore.QRect(700, 515, 275, 100))
         self.finishPushButton.setStyleSheet("#finishPushButton{\n"
-"    font-size:20px;\n"
-"    font-family:Montserrat;\n"
-"    color:#fff;\n"
-"    border-radius: 10px;\n"
-"    border: 2px solid #0000AF;\n"
-"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
-"}")
+                                        "    font-size:20px;\n"
+                                        "    font-family:Montserrat;\n"
+                                        "    color:#fff;\n"
+                                        "    border-radius: 10px;\n"
+                                        "    border: 2px solid #0000AF;\n"
+                                        "    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
+                                        "}")
         self.finishPushButton.setObjectName("finishPushButton")
         self.finishPushButton.clicked.connect(self.IndexPage)
         self.finishPushButton.clicked.connect(MainWindow.close)
@@ -83,14 +80,14 @@ class Ui_MainWindowFeedback(object):
         self.feedBackPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.feedBackPushButton.setGeometry(QtCore.QRect(390, 515, 275, 100))
         self.feedBackPushButton.setStyleSheet("#feedBackPushButton{\n"
-"    border-radius:10px;\n"
-"    font-family:Montserrat;\n"
-"    font-size:20px;\n"
-"    color:#000;\n"
-"    border: 2px solid #FFD700;\n"
-"    border-radius: 9px;\n"
-"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #FFD700, stop:0.2 #FFD700, stop:1 #f6f7fa);\n"
-"}")
+                                        "    border-radius:10px;\n"
+                                        "    font-family:Montserrat;\n"
+                                        "    font-size:20px;\n"
+                                        "    color:#000;\n"
+                                        "    border: 2px solid #FFD700;\n"
+                                        "    border-radius: 9px;\n"
+                                        "    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #FFD700, stop:0.2 #FFD700, stop:1 #f6f7fa);\n"
+                                        "}")
         self.feedBackPushButton.setObjectName("feedBackPushButton")
         # To call the function feedbackQuesitons to open the page and close the main window
         self.feedBackPushButton.clicked.connect(self.FeedbackQuestions)
@@ -99,32 +96,33 @@ class Ui_MainWindowFeedback(object):
         self.qrFrame = QtWidgets.QFrame(self.centralwidget)
         self.qrFrame.setGeometry(QtCore.QRect(280, 190, 760, 300))
         self.qrFrame.setStyleSheet("#qrFrame{\n"
-"    background-color:#FEFCFC;\n"
-"    border-radius:25px;\n"
-"}")
+                                "    background-color:#FEFCFC;\n"
+                                "    border-radius:25px;\n"
+                                "}")
         self.qrFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.qrFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.qrFrame.setObjectName("qrFrame")
 
         self.thankyouLabel = QtWidgets.QLabel(self.qrFrame)
-        self.thankyouLabel.setGeometry(QtCore.QRect(180, 60, 600, 41))
+        self.thankyouLabel.setGeometry(QtCore.QRect(0, 60, 760, 41))
         self.thankyouLabel.setStyleSheet("#thankyouLabel{\n"
-"    font-family:Montserrat;\n"
-"    font-size:36px;\n"
-"    \n"
-"}")
+                                        "    font-family: Montserrat;\n"
+                                        "    font-size: 36px;\n"
+                                        "}")
+        self.thankyouLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.thankyouLabel.setObjectName("thankyouLabel")
 
         self.feedbackParagraph = QtWidgets.QTextEdit(self.qrFrame)
-        self.feedbackParagraph.setGeometry(QtCore.QRect(90, 130, 611, 110))
+        self.feedbackParagraph.setGeometry(QtCore.QRect(0, 130, 760, 140))
         self.feedbackParagraph.setStyleSheet("#feedbackParagraph{\n"
-"    font-size:16px;\n"
-"    font-family:Montserrat;\n"
-"    border:none;\n"
-"    \n"
-"}")
+                                        "    font-size:24px;\n"
+                                        "    font-family:Montserrat;\n"
+                                        "    border: none;\n"
+                                        "    \n"
+                                        "}")
         self.feedbackParagraph.setReadOnly(True)
         self.feedbackParagraph.setObjectName("feedbackParagraph")
+        self.feedbackParagraph.setAlignment(QtCore.Qt.AlignCenter)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)

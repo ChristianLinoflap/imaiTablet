@@ -244,3 +244,19 @@ class DatabaseManager:
         except Exception as e:
             logging.error(f"An unexpected error occurred while fetching all products: {e}")
             return []
+    
+    # FEEDBACK - Save answers 
+    def insert_feedback_answers(self, user_client_id, answer_one, answer_two, answer_three, answer_four, answer_five):
+        query = """
+        INSERT INTO dbo.FeedbackQuestions (UserClientId, QuestionOne, QuestionTwo, QuestionThree, QuestionFour, QuestionFive)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """
+        try:
+            with self.connect() as conn:
+                cursor = conn.cursor()
+                cursor.execute(query, (user_client_id, answer_one, answer_two, answer_three, answer_four, answer_five))
+                conn.commit()
+                cursor.close()
+        except Exception as e:
+            logging.error(f"Error inserting feedback answers into database: {e}")
+            raise

@@ -13,7 +13,7 @@ transaction_info = {
 
 class Config:
     # Default language
-    DEFAULT_LANGUAGE = "日本語"
+    DEFAULT_LANGUAGE = "English"
 
     # Variable to store the current language
     current_language = DEFAULT_LANGUAGE
@@ -119,8 +119,36 @@ p, li { white-space: pre-wrap; }
 <p align="center" style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="font-family:'MS Shell Dlg 2'; font-size:16pt;">recent </span><span style="font-family:'MS Shell Dlg 2'; font-size:16pt; font-weight:600;">IM.AI Cart</span><span style="font-family:'MS Shell Dlg 2'; font-size:16pt;"> journey to help us enhance our services. </span></p>
 <p align="center" style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="font-family:'MS Shell Dlg 2'; font-size:16pt;">Your feedback is invaluable to us. </span></p></body></html>''',
         # Search 
-        'Search_Line_Edit': 'Search Products...'
-
+        'Search_Line_Edit': 'Search Products...',
+        # Feedback Questions
+        'Finish_Button': 'Finish Shopping',
+        'Question_1': 'How would you rate your overall experience using our Smart Shopping Cart?',
+        'Q1_Answer_1': 'Excellent',
+        'Q1_Answer_2': 'Very Poor',
+        'Q1_Answer_3': 'Good',
+        'Q1_Answer_4': 'Poor',
+        'Q1_Answer_5': 'Neutral',
+        'Question_2': 'How user-friendly did you find the Smart Shopping Cart interface',
+        'Q2_Answer_1': 'Extremely user-friendly',
+        'Q2_Answer_2': 'Not at all user-friendly',
+        'Q2_Answer_3': 'Very user-friendly',
+        'Q2_Answer_4': 'Slightly user-friendly',
+        'Q2_Answer_5': 'Moderately user-friendly',
+        'Question_3': 'How satisfied were you with the accuracy of product recognition by the Smart Cart?',
+        'Q3_Answer_1': 'No',
+        'Q3_Answer_2': 'Yes',
+        'Question_4': 'Did the Smart Cart enhance the efficiency of your shopping experience?',
+        'Q4_Answer_1': 'Very Satisfied',
+        'Q4_Answer_2': 'Dissatisfied',
+        'Q4_Answer_3': 'Very Dissatisfied',
+        'Q4_Answer_4': 'Satisfied',
+        'Q4_Answer_5': 'Neutral',
+        'Question_5': 'How likely are you to recommend the Smart Shopping Cart to a friend or family member?',
+        'Q5_Answer_1': 'Extremely likely',
+        'Q5_Answer_2': 'Neutral',
+        'Q5_Answer_3': 'Slightly likely',
+        'Q5_Answer_4': 'Not likely at all',
+        'Q5_Answer_5': 'Very likely',
     },
     '日本語': {
         # Index Page
@@ -210,8 +238,36 @@ p, li { white-space: pre-wrap; }
 <p align="center" style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="font-family:'MS Shell Dlg 2'; font-size:16pt;">最近の </span><span style="font-family:'MS Shell Dlg 2'; font-size:16pt; font-weight:600;">IM.AI Cart</span><span style="font-family:'MS Shell Dlg 2'; font-size:16pt;"> の利用体験についてのご意見をお聞かせいただき、弊社のサービス向上にご協力いただけることを嬉しく思います。 </span></p>
 <p align="center" style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="font-family:'MS Shell Dlg 2'; font-size:16pt;">お客様のフィードバックは、私たちにとって非常に貴重です。 </span></p></body></html>''',
         # Search
-        'Search_Line_Edit': '商品を検索...'
-
+        'Search_Line_Edit': '商品を検索...',
+        # Feedback 
+        'Finish_Button': 'ショッピングを終える',
+        'Question_1': '当社のスマートショッピングカートを使用した総合的な体験について、どのように評価しますか？',
+        'Q1_Answer_1': '素晴らしい',
+        'Q1_Answer_2': '非常に悪い',
+        'Q1_Answer_3': '良い',
+        'Q1_Answer_4': '悪い',
+        'Q1_Answer_5': '中立',
+        'Question_2': 'スマートショッピングカートのインターフェースをどの程度使いやすいと感じましたか？',
+        'Q2_Answer_1': '非常に使いやすい',
+        'Q2_Answer_2': '全く使いやすくない',
+        'Q2_Answer_3': 'とても使いやすい',
+        'Q2_Answer_4': '少し使いやすい',
+        'Q2_Answer_5': 'まあまあ使いやすい',
+        'Question_3': 'スマートカートによる製品認識の精度について、どれくらい満足しましたか？',
+        'Q3_Answer_1': 'いいえ',
+        'Q3_Answer_2': 'はい',
+        'Question_4': 'スマートカートは、お買い物の効率を向上させましたか？',
+        'Q4_Answer_1': '非常に満足',
+        'Q4_Answer_2': '不満',
+        'Q4_Answer_3': '非常に不満',
+        'Q4_Answer_4': '満足',
+        'Q4_Answer_5': '中立',
+        'Question_5': 'スマートショッピングカートを友人や家族にお勧めしますか？',
+        'Q5_Answer_1': '非常にお勧めします',
+        'Q5_Answer_2': '中立',
+        'Q5_Answer_3': '少しお勧めします',
+        'Q5_Answer_4': '全くお勧めしません',
+        'Q5_Answer_5': 'とてもお勧めします',
     },
     # Add more languages as needed
 }
