@@ -541,6 +541,7 @@ class Ui_MainWindowItemView(object):
                 if item and item.text() == barcode:
                     self.productTable.removeRow(row)
                     print(f"Row corresponding to Barcode {barcode} removed from the table.")
+                    self.updateSummaryLabels()
                     break 
         except Exception as e:
             error_message = f"An unexpected error occurred while removing product: {e}"
