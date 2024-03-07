@@ -1,4 +1,3 @@
-# Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
 from config import Config, translations
 from PyQt5.QtWidgets import QMessageBox, QStackedWidget
@@ -41,7 +40,6 @@ class Ui_MainWindowTutorialMember(object):
             step_label.setScaledContents(True)
             self.tutorial_steps.append(step_label)
 
-    # Function to Call ItemView.py
     def ItemView(self):
         from itemView import Ui_MainWindowItemView
         self.window = QtWidgets.QMainWindow()
@@ -49,40 +47,42 @@ class Ui_MainWindowTutorialMember(object):
         self.ui.setupUiItemView(self.window)
         self.window.show() 
 
-    # Function to Set Up tutorialMember.py
     def setupUiTutorialMember(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.showFullScreen()
-        # Remove Navigation Tools in Main Window
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        MainWindow.setStyleSheet("#centralwidget{\n"
-"    background-color:#00C0FF;\n"
-"}")
+    
         self.centralwidget = QtWidgets.QWidget(MainWindow)
+        gradient = QtGui.QLinearGradient(0, 0, self.centralwidget.width(), self.centralwidget.height())
+        gradient.setColorAt(0, QtGui.QColor("#1D7CBA"))
+        gradient.setColorAt(1, QtGui.QColor("#0D3854"))
+        self.centralwidget.setStyleSheet("#centralwidget { background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1D7CBA, stop: 1 #0D3854); }")
         self.centralwidget.setObjectName("centralwidget")
+
         self.backPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.backPushButton.setGeometry(QtCore.QRect(655, 600, 200, 60))
         self.backPushButton.setStyleSheet("#backPushButton{\n"
-"    background-color:none;\n"
-"    border:4px solid #0000AF;\n"
-"    border-radius:24px;\n"
-"    font-family:Montserrat;\n"
-"    font-size:24px;\n"
-"    color:#fff;\n"
-"}")
+                                            "    border-radius:10px;\n"
+                                            "    font-family:Montserrat;\n"
+                                            "    font-size:14px;\n"
+                                            "    color:#000;\n"
+                                            "    border: 2px solid #FFD700;\n"
+                                            "    border-radius: 9px;\n"
+                                            "    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #FFD700, stop:0.2 #FFD700, stop:1 #f6f7fa);\n"
+                                        "}")
         self.backPushButton.setObjectName("backPushButton")
-        # To call the function ItemView to open the page and close the main window
         self.backPushButton.clicked.connect(self.ItemView)
-        # self.backPushButton.clicked.connect(MainWindow.close)
+
         self.loginPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.loginPushButton.setGeometry(QtCore.QRect(430, 600, 200, 60))
         self.loginPushButton.setStyleSheet("#loginPushButton{\n"
-"    background-color:#0000AF;\n"
-"    border-radius:24px;\n"
-"    font-family:Montserrat;\n"
-"    font-size:24px;\n"
-"    color:#fff\n"
-"}")
+                                            "    font-size:18px;\n"
+                                            "    font-family:Montserrat;\n"
+                                            "    color:#fff;\n"
+                                            "    border-radius: 10px;\n"
+                                            "    border: 2px solid #0000AF;\n"
+                                            "    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
+                                        "}")
         self.loginPushButton.setObjectName("loginPushButton")
         self.qrFrame = QtWidgets.QFrame(self.centralwidget)
         self.qrFrame.setGeometry(QtCore.QRect(350, 50, 600, 500))
@@ -94,7 +94,6 @@ class Ui_MainWindowTutorialMember(object):
         self.stackedWidget.setGeometry(QtCore.QRect(0, 0, 600, 500))
 
         self.setupTutorialSteps()
-        
         for step in self.tutorial_steps:
             self.stackedWidget.addWidget(step)
 
@@ -114,11 +113,9 @@ class Ui_MainWindowTutorialMember(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 
-        # Use the stored language from Config
         language = Config.current_language
         translation_dict = translations.get(language, translations['English'])
 
-        # Translate texts using the stored language
         self.backPushButton.setText(_translate("MainWindow", translation_dict['Skip_Button']))
         self.loginPushButton.setText(_translate("MainWindow", translation_dict['Next_Button']))
 

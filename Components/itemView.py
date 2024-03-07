@@ -18,9 +18,7 @@ from databaseManager import DatabaseManager, EnvironmentLoader
 from onScreenKeyboard import OnScreenKeyboard
 import glob
 
-
 class Ui_MainWindowItemView(object):
-    # Initializations
     def __init__(self):
         self.db_manager = DatabaseManager(*EnvironmentLoader.load_env_variables())
         self.conn = self.db_manager.connect()
@@ -39,7 +37,6 @@ class Ui_MainWindowItemView(object):
         self.predicted_class_timer.start(0)
         self.local_videos = self.getLocalVideosFromFolder()
         self.object_classifier = ObjectClassifier()
-        # self.remove_classifier = RemoveClassifier()
         self.weight_sensor = WeightSensor()
         try:
             self.weight_thread = threading.Thread(target=self.weight_sensor.monitor_serial, args=('COM5', 9600, 1))
@@ -120,7 +117,6 @@ class Ui_MainWindowItemView(object):
             self.ui_search.keyboard.close()
             self.search_window_open = False
 
-    # Function to Call shoppingList.py
     def ShoppingList(self):
         self.close_other_windows("shopping_list")
 
@@ -135,7 +131,6 @@ class Ui_MainWindowItemView(object):
             self.window_shopping_list.close()
             self.shopping_list_window_open = False
 
-    # Function to Call help.py
     def HelpOption(self):
         self.close_other_windows("help")
 
@@ -150,7 +145,6 @@ class Ui_MainWindowItemView(object):
             self.window_help.close()
             self.help_window_open = False
 
-    # Close other windows based on the current window
     def close_other_windows(self, current_window):
         if current_window != "search" and self.search_window_open:
             self.window_search.close()
@@ -164,7 +158,6 @@ class Ui_MainWindowItemView(object):
             self.ui_search.keyboard.close()
             self.help_window_open = False
 
-    # Function to Call paymentOption.py
     def PaymentOption(self):
         if hasattr(self, 'cap') and self.cap.isOpened():
             self.cap.release()
@@ -175,17 +168,16 @@ class Ui_MainWindowItemView(object):
         self.ui.setupUiPaymentOption(self.window)
         self.window.show()
 
-    # Function to Set Up itemView.py
     def setupUiItemView(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.showFullScreen()
-        MainWindow.setStyleSheet("#centralwidget{\n"
-                                 "    background-color:#00C0FF;\n"
-                                 "}")
-        # Remove Navigation Tools in Main Window
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
+        gradient = QtGui.QLinearGradient(0, 0, self.centralwidget.width(), self.centralwidget.height())
+        gradient.setColorAt(0, QtGui.QColor("#1D7CBA"))
+        gradient.setColorAt(1, QtGui.QColor("#0D3854"))
+        self.centralwidget.setStyleSheet("#centralwidget { background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #1D7CBA, stop: 1 #0D3854); }")
         self.centralwidget.setObjectName("centralwidget")
 
         self.navigationFrame = QtWidgets.QFrame(self.centralwidget)
@@ -205,7 +197,6 @@ class Ui_MainWindowItemView(object):
                                       "    color:#fff;\n"
                                       "}")
         self.nameOutput.setObjectName("nameOutput")
-        # Translate the welcome message and user's name
         welcome_message = translations[Config.current_language].get('Welcome_User', 'Welcome')
         first_name = config.user_info.get('first_name', '')
         last_name = config.user_info.get('last_name', '')
@@ -230,7 +221,6 @@ class Ui_MainWindowItemView(object):
                                           "    font-size:24px;\n"
                                           "}")
         self.helpPushButton.setObjectName("helpPushButton")
-        # To call the function HelpOption to open the page and close the main window
         self.helpPushButton.clicked.connect(self.HelpOption)
 
         self.shoppingListButton = QtWidgets.QPushButton(self.navigationFrame)
@@ -242,7 +232,6 @@ class Ui_MainWindowItemView(object):
                                               "    font-size:24px;\n"
                                               "}")
         self.shoppingListButton.setObjectName("shoppingListButton")
-        # To call the function PaymentOption to open the page and close the main window
         self.shoppingListButton.clicked.connect(self.ShoppingList)
 
         self.searchProductsButton = QtWidgets.QPushButton(self.navigationFrame)
@@ -254,7 +243,6 @@ class Ui_MainWindowItemView(object):
                                                 "    font-size:24px;\n"
                                                 "}")
         self.searchProductsButton.setObjectName("searchProductsButton")
-        # To call the function PaymentOption to open the page and close the main window
         self.searchProductsButton.clicked.connect(self.SearchProductOption)
 
         self.productTable = QtWidgets.QTableWidget(self.centralwidget)
@@ -265,18 +253,15 @@ class Ui_MainWindowItemView(object):
         self.productTable.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(0, item)
-        self.productTable.setColumnWidth(0, 384)
+        self.productTable.setColumnWidth(0, 376)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(1, item)
         self.productTable.setColumnWidth(1, 110)
         item = QtWidgets.QTableWidgetItem()
         self.productTable.setHorizontalHeaderItem(2, item)
         self.productTable.setColumnWidth(2, 0)
-        # Set the table to read-only
         self.productTable.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
-        # Make column headers not movable
         self.productTable.horizontalHeader().setSectionsMovable(False)
-        # Set column width and row height to be fixed
         self.productTable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         self.productTable.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         self.productTable.verticalHeader().setVisible(False)
@@ -312,14 +297,6 @@ class Ui_MainWindowItemView(object):
                                        "    font-size:32px;\n"
                                        "}")
         self.totalOutput.setObjectName("totalOutput")
-
-        self.paymentName = QtWidgets.QLabel(self.summaryFrame)
-        self.paymentName.setGeometry(QtCore.QRect(10, 70, 200, 25))
-        self.paymentName.setStyleSheet("#paymentName{\n"
-                                       "    font-size:12px;\n"
-                                       "    color:#A0A0A0;\n"
-                                       "}")
-        self.paymentName.setObjectName("paymentName")
 
         self.discountFrame = QtWidgets.QFrame(self.centralwidget)
         self.discountFrame.setGeometry(QtCore.QRect(270, 120, 240, 100))
@@ -363,15 +340,12 @@ class Ui_MainWindowItemView(object):
         self.advertisementFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.advertisementFrame.setObjectName("advertisementFrame")
 
-        # Initialize video player and video widget
         self.video_player = QMediaPlayer()
         self.video_player.setVolume(10)
         self.video_widget = QVideoWidget(self.advertisementFrame)
         self.video_player.setVideoOutput(self.video_widget)
         self.video_widget.setFixedSize(720, 475)
         self.video_player.mediaStatusChanged.connect(self.handleVideoStateChange)
-
-        # Start playing the first video
         self.playNextVideo()
 
         self.checkOutPushButton = QtWidgets.QPushButton(self.centralwidget)
@@ -385,7 +359,6 @@ class Ui_MainWindowItemView(object):
                                               "    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
                                               "}")
         self.checkOutPushButton.setObjectName("checkOutPushButton")
-        # To call the function PaymentOption to open the page and close the main window
         self.checkOutPushButton.clicked.connect(self.PaymentOption)
         self.checkOutPushButton.clicked.connect(self.stopVideosAndCheckout)
         self.checkOutPushButton.clicked.connect(MainWindow.close)
@@ -402,11 +375,9 @@ class Ui_MainWindowItemView(object):
                                                  "    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #FFD700, stop:0.2 #FFD700, stop:1 #f6f7fa);\n"
                                                  "}")
         self.scanBarcodePushButton.setObjectName("scanBarcodePushButton")
-        # Connect the scanBarcodeButton to the scanBarcode function
         self.scanBarcodePushButton.clicked.connect(self.openBarcodeScanner)
         MainWindow.setCentralWidget(self.centralwidget)
 
-        # Call the function to populate the table with scanned products
         self.populateTableWithScannedProducts()
 
         self.retranslateUi(MainWindow)
@@ -417,7 +388,6 @@ class Ui_MainWindowItemView(object):
             local_videos_path = "Assets\\*.avi"
             local_videos = glob.glob(local_videos_path)
             return local_videos
-
         except Exception as e:
             error_message = f"An unexpected error occurred while retrieving local videos: {e}"
             print(error_message)
@@ -434,7 +404,6 @@ class Ui_MainWindowItemView(object):
                 self.local_videos.append(video_url)
             else:
                 print("No videos available.")
-
         except Exception as e:
             error_message = f"An unexpected error occurred during video playback: {e}"
             print(error_message)
@@ -448,7 +417,6 @@ class Ui_MainWindowItemView(object):
                 error_message = f"Error during video playback: {self.video_player.errorString()}"
                 print(error_message)
                 QtWidgets.QMessageBox.critical(None, "Error", error_message)
-
         except Exception as e:
             error_message = f"An unexpected error occurred while handling video state change: {e}"
             print(error_message)
@@ -491,7 +459,6 @@ class Ui_MainWindowItemView(object):
                             if time.time() - last_scan_time > 20:
                                 self.closeBarcodeScanner()
                                 break
-
                     QtWidgets.QApplication.processEvents()
             else:
                 self.scanning_in_progress = False
@@ -502,7 +469,6 @@ class Ui_MainWindowItemView(object):
                                         translations[Config.current_language]['Scanning_Done_Message'])
 
                 self.object_classifier = ObjectClassifier()
-
         except Exception as e:
             error_message = f"An unexpected error occurred while opening/closing barcode scanner: {e}"
             print(error_message)
@@ -519,13 +485,11 @@ class Ui_MainWindowItemView(object):
                                             translations[Config.current_language]['Scanner_Closed_Message'])
                 self.scanning_in_progress = False
                 self.object_classifier = ObjectClassifier()
-
         except Exception as e:
             error_message = f"An unexpected error occurred while closing the scanner: {e}"
             print(error_message)
             QtWidgets.QMessageBox.critical(None, "Error", error_message)
 
-    # Proccess Decoded Barcode
     def processScannedBarcode(self, barcode_data):
         try:
             product_details = self.db_manager.get_product_details_by_barcode(self.cursor, barcode_data)
@@ -544,7 +508,6 @@ class Ui_MainWindowItemView(object):
                 else:
                     print(f"Product with ProductId {product_id} not found in the ShoppingListDetail table.")
 
-                rowPosition = 0
                 self.productTable.insertRow(0)
 
                 item_name = QtWidgets.QTableWidgetItem(product_name)
@@ -570,17 +533,15 @@ class Ui_MainWindowItemView(object):
 
     def removeProduct(self, reference_number, barcode):
         try:
-            # Delete the product from the database
             self.db_manager.deleteTransactionDetail(reference_number, barcode)
             print(f"Product with ReferenceNumber {reference_number} and Barcode {barcode} removed.")
 
-            # Remove the corresponding row from the table
             for row in range(self.productTable.rowCount()):
-                item = self.productTable.item(row, 2)  # Assuming the barcode is stored in the fourth column
+                item = self.productTable.item(row, 2) 
                 if item and item.text() == barcode:
                     self.productTable.removeRow(row)
                     print(f"Row corresponding to Barcode {barcode} removed from the table.")
-                    break  # Exit loop after the first occurrence is removed
+                    break 
         except Exception as e:
             error_message = f"An unexpected error occurred while removing product: {e}"
             print(error_message)
@@ -643,17 +604,14 @@ class Ui_MainWindowItemView(object):
         item.setText(_translate("MainWindow", translation_dict['Barcode_Label']))
         self.totalLabel.setText(_translate("MainWindow", translation_dict['Total_Price_Label']))
         self.totalOutput.setText(_translate("MainWindow", translation_dict['Total_Price_Output']))
-        self.paymentName.setText(_translate("MainWindow", translation_dict['Card_Payment']))
         self.discountLabel.setText(_translate("MainWindow", translation_dict['Discount_Label']))
         self.discountOutput.setText(_translate("MainWindow", translation_dict['Discount_Output']))
         self.discountName.setText(_translate("MainWindow", translation_dict['Discount_Name']))
         self.checkOutPushButton.setText(_translate("MainWindow", translation_dict['Payment_Button']))
         self.scanBarcodePushButton.setText(_translate("MainWindow", translation_dict['Scan_Barcode_Push_Button']))
 
-
 if __name__ == "__main__":
     import sys
-
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindowItemView()
