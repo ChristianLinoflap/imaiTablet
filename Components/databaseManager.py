@@ -73,7 +73,7 @@ class DatabaseManager:
     def insert_transaction(self, user_client_id, reference_number):
         try:
             japan_time = datetime.utcnow() + timedelta(hours=9)
-            query = "INSERT INTO [dbo].[Transaction] (UserClientId, CreatedAt, UpdatedAt, TransactionStatus, ReferenceNumber) VALUES (?, ?, ?, 'Success', ?);"
+            query = "INSERT INTO [dbo].[Transaction] (UserClientId, CreatedAt, UpdatedAt, TransactionStatus, ReferenceNumber) VALUES (?, ?, ?, 'On-Going', ?);"
             with self.connect() as conn:
                 with conn.cursor() as cursor:
                     cursor.execute(query, user_client_id, japan_time, japan_time, reference_number)

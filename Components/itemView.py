@@ -65,7 +65,8 @@ class Ui_MainWindowItemView(object):
                     os.remove("predicted_class.txt")
                     self.resumeScanningMessage()
     def paused(self):
-        time.sleep(1)
+        if not self.weight_sensor.verify:
+            print('I want.')
     def checkItemStatus(self):
         if self.weight_sensor.verify and not self.weight_sensor.same_weight:
             print('Error')
@@ -73,16 +74,8 @@ class Ui_MainWindowItemView(object):
             message_box.setWindowTitle("Shopping Paused!")
             message_box.setText("Remove the added item to continue shopping!.")
             message_box.setStandardButtons(QMessageBox.Ok)
-            message_box.buttonClicked.connect(self.paused)
             message_box.exec_()
-        elif not self.weight_sensor.verify and self.weight_sensor.same_weight:
-            print('Error')
-            message_box = QMessageBox()
-            message_box.setWindowTitle("Shopping Paused!")
-            message_box.setText("Put the item back in the cart to continue shopping.")
-            message_box.setStandardButtons(QMessageBox.Ok)
-            message_box.buttonClicked.connect(self.paused)
-            message_box.exec_()
+            self.weight_sensor.same_weight = False
         else:
             if os.path.exists("predicted_class.txt") and self.weight_sensor.put_item:
                 self.object_classifier.pause_scanning()
@@ -95,33 +88,30 @@ class Ui_MainWindowItemView(object):
                             file.write('')
                         os.remove("predicted_class.txt")
                         self.weight_sensor.put_item = False
+                        self.weight_sensor.verify = False
                         self.resumeScanningMessage()
-            
-            elif os.path.exists("predicted_class.txt") and self.weight_sensor.remove_item:
-                self.object_classifier.pause_scanning()
-                print('removed: classifier paused')
+            elif not self.weight_sensor.verify and self.weight_sensor.same_weight:
+                print('Error')
                 message_box = QMessageBox()
-                message_box.setWindowTitle("Item Removed")
-                message_box.setText("An item has been removed. Please place the item in front of the camera.")
+                message_box.setWindowTitle("Shopping Paused!")
+                message_box.setText("Scan it to remove the item or put it back in the cart to continue.")
                 message_box.setStandardButtons(QMessageBox.Ok)
-                message_box.buttonClicked.connect(self.resumeScanningMessage)
                 message_box.exec_()
-                print('removed: classifier paused - 2')
-                with open("predicted_class.txt", "r") as file:
-                    predicted_class = file.read().strip()
-                if predicted_class:
-                    barcode = predicted_class
-                    print('received', barcode)
-                    reference_number = config.transaction_info.get('reference_number')
-                    self.removeProduct(reference_number, barcode)
-                    with open("predicted_class.txt", "w") as file:
-                        file.write('')
-                    os.remove("predicted_class.txt")
-                    self.weight_sensor.remove_item = False
-                    self.resumeScanningMessage()
-            elif self.weight_sensor.put_item:
-                self.weight_sensor.verify = True
-                self.weight_sensor.put_item = False
+                if os.path.exists("predicted_class.txt") and self.weight_sensor.remove_item:
+                    self.object_classifier.pause_scanning()
+                    print('removed: classifier paused - 2')
+                    with open("predicted_class.txt", "r") as file:
+                        predicted_class = file.read().strip()
+                    if predicted_class:
+                        barcode = predicted_class
+                        print('received', barcode)
+                        reference_number = config.transaction_info.get('reference_number')
+                        self.removeProduct(reference_number, barcode)
+                        with open("predicted_class.txt", "w") as file:
+                            file.write('')
+                        os.remove("predicted_class.txt")
+                        self.weight_sensor.same_weight = False
+                        self.resumeScanningMessage()
 
     def SearchProductOption(self):
         self.close_other_windows("search")

@@ -33,47 +33,51 @@ class WeightSensor:
                 if frame == 10:
                     filtered_weight = initial_weight
                     frame = 0
+                    if abs(self.prev_weight - filtered_weight) <= 20:
+                        pass
+                    else:
+                        if filtered_weight > self.prev_weight:
+                            self.put_item = True
+                            self.remove_item = False
+                            print("added", filtered_weight)
+                            if self.same_weight:
+                                pass
+                            elif self.verify:
+                                pass
+                            else:
+                                self.verify = True
+                                stored_weight = self.prev_weight
+                                print('Stored_weight: ',stored_weight)
+                        elif filtered_weight < self.prev_weight:
+                            self.remove_item = True
+                            self.put_item = False
+                            print("removed", filtered_weight)
+                            if self.verify:
+                                pass
+                            elif self.same_weight:
+                                pass
+                            else:
+                                self.same_weight = True
+                                stored_weight = self.prev_weight
+                                print('Stored_weight: ',stored_weight)
+                    if abs(stored_weight - filtered_weight) <= 20 and self.same_weight:
+                        print('You returned the item!')
+                        self.remove_item = False
+                        self.same_weight = False
+                        self.put_item = False
+                        self.verify = False
+                        stored_weight = filtered_weight
+                    elif abs(stored_weight - filtered_weight) <= 20 and self.verify:
+                        print('The item was removed')
+                        stored_weight = filtered_weight
+                        self.remove_item = False
+                        self.verify = False
+                        self.put_item = False
+                        self.same_weight = False
+                    self.prev_weight = filtered_weight
                 else:    
                     frame += 1
-                if abs(self.prev_weight - filtered_weight) <= 20:
-                    pass
-                else:
-                    if filtered_weight > self.prev_weight:
-                        self.put_item = True
-                        self.remove_item = False
-                        print("added", filtered_weight)
-                        if self.same_weight:
-                            pass
-                        elif self.verify:
-                            pass
-                        else:
-                            stored_weight = self.prev_weight
-                            print('Stored_weight: ',stored_weight)
-                    elif filtered_weight < self.prev_weight:
-                        self.remove_item = True
-                        self.put_item = False
-                        print("removed", filtered_weight)
-                        if self.verify:
-                            pass
-                        elif self.same_weight:
-                            pass
-                        else:
-                            self.same_weight = True
-                            stored_weight = self.prev_weight
-                            print('Stored_weight: ',stored_weight)
-                if abs(stored_weight - filtered_weight) <= 20 and self.same_weight:
-                    print('You returned the item!')
-                    self.remove_item = False
-                    self.same_weight = False
-                    self.put_item = False
-                    self.verify = False
-                elif abs(stored_weight - filtered_weight) <= 20 and self.verify:
-                    print('The item was removed')
-                    self.remove_item = False
-                    self.verify = False
-                    self.put_item = False
-                    self.same_weight = False
-                self.prev_weight = filtered_weight
+                
             except Exception as e:
                 print("Calibrating")
     def is_item_added(self):
