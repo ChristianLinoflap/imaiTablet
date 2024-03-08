@@ -1,74 +1,81 @@
-# Import Python Files
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindowHelp(object):
-    # Function to Set Up help.py
     def setupUiHelp(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1280, 450)
         MainWindow.move(0, 110)
         MainWindow.setStyleSheet("#centralwidget{\n"
-"    background-color:#0000AF;\n"
-"}")
-        # Remove Navigation Tools in Main Window
+                                "    background-color:#0000AF;\n"
+                                "}")
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+
         self.helpViewFrame = QtWidgets.QFrame(self.centralwidget)
         self.helpViewFrame.setGeometry(QtCore.QRect(20, 20, 1240, 400))
         self.helpViewFrame.setStyleSheet("#helpViewFrame{\n"
-"    background-color:#fff;\n"
-"    border-radius:15px;\n"
-"}")
+                                        "    background-color:#fff;\n"
+                                        "    border-radius:15px;\n"
+                                        "}")
         self.helpViewFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.helpViewFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.helpViewFrame.setObjectName("helpViewFrame")
+
         self.helpLabel = QtWidgets.QLabel(self.helpViewFrame)
         self.helpLabel.setGeometry(QtCore.QRect(20, 20, 251, 31))
         self.helpLabel.setStyleSheet("#helpLabel{\n"
-"    font-size:20px;\n"
-"    font-family:Montserrat;\n"
-"}")
+                                "    font-size:20px;\n"
+                                "    font-family:Montserrat;\n"
+                                "}")
         self.helpLabel.setObjectName("helpLabel")
+
         self.questionOne = QtWidgets.QLabel(self.helpViewFrame)
         self.questionOne.setGeometry(QtCore.QRect(25, 70, 1100, 21))
         self.questionOne.setStyleSheet("#questionOne{\n"
-"    font-family:Montserrat;\n"
-"    font-size:16px;\n"
-"}")
+                                "    font-family:Montserrat;\n"
+                                "    font-size:16px;\n"
+                                "}")
         self.questionOne.setObjectName("questionOne")
+
         self.answerOne = QtWidgets.QTextBrowser(self.helpViewFrame)
         self.answerOne.setGeometry(QtCore.QRect(20, 90, 1200, 75))
         self.answerOne.setStyleSheet("#answerOne{\n"
-"    border:none;\n"
-"}")
+                                "    border:none;\n"
+                                "}")
         self.answerOne.setObjectName("answerOne")
+
         self.answerTwo = QtWidgets.QTextBrowser(self.helpViewFrame)
         self.answerTwo.setGeometry(QtCore.QRect(20, 190, 1200, 75))
         self.answerTwo.setStyleSheet("#answerTwo{\n"
-"    border:none;\n"
-"}")
+                                "    border:none;\n"
+                                "}")
         self.answerTwo.setObjectName("answerTwo")
+
         self.questionTwo = QtWidgets.QLabel(self.helpViewFrame)
         self.questionTwo.setGeometry(QtCore.QRect(25, 170, 1200, 21))
         self.questionTwo.setStyleSheet("#questionTwo{\n"
-"    font-family:Montserrat;\n"
-"    font-size:16px;\n"
-"}")
+                                "    font-family:Montserrat;\n"
+                                "    font-size:16px;\n"
+                                "}")
         self.questionTwo.setObjectName("questionTwo")
+
         self.questionThree = QtWidgets.QLabel(self.helpViewFrame)
         self.questionThree.setGeometry(QtCore.QRect(25, 280, 1200, 21))
         self.questionThree.setStyleSheet("#questionThree{\n"
-"    font-family:Montserrat;\n"
-"    font-size:16px;\n"
-"}")
+                                "    font-family:Montserrat;\n"
+                                "    font-size:16px;\n"
+                                "}")
         self.questionThree.setObjectName("questionThree")
+
         self.answerThree = QtWidgets.QTextBrowser(self.helpViewFrame)
         self.answerThree.setGeometry(QtCore.QRect(20, 300, 1200, 75))
         self.answerThree.setStyleSheet("#answerThree{\n"
-"    border:none;\n"
-"}")
+                                "    border:none;\n"
+                                "}")
         self.answerThree.setObjectName("answerThree")
+
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)

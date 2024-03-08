@@ -38,18 +38,18 @@ class Ui_MainWindowFeedbackQuestions(object):
         self.navigationFrame = QtWidgets.QFrame(self.centralwidget)
         self.navigationFrame.setGeometry(QtCore.QRect(0, 0, MainWindow.width(), 100))
         self.navigationFrame.setStyleSheet("#navigationFrame{\n"
-"    background-color:#0000AF;\n"
-"}")
+                                        "    background-color:#0000AF;\n"
+                                        "}")
         self.navigationFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.navigationFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.navigationFrame.setObjectName("navigationFrame")
         self.nameOutput = QtWidgets.QLabel(self.navigationFrame)
         self.nameOutput.setGeometry(QtCore.QRect(20, 20, 920, 55))
         self.nameOutput.setStyleSheet("#nameOutput{\n"
-"    font-weight:bold;\n"
-"    font-size:24px;\n"
-"    color:#fff;\n"
-"}")
+                                    "    font-weight:bold;\n"
+                                    "    font-size:24px;\n"
+                                    "    color:#fff;\n"
+                                    "}")
         self.nameOutput.setObjectName("nameOutput")
         welcome_message = translations[Config.current_language].get('Welcome_User', 'Welcome')
         first_name = config.user_info.get('first_name', '')
@@ -59,21 +59,21 @@ class Ui_MainWindowFeedbackQuestions(object):
         self.roleOutput = QtWidgets.QLabel(self.navigationFrame)
         self.roleOutput.setGeometry(QtCore.QRect(20, 51, 95, 25))
         self.roleOutput.setStyleSheet("#roleOutput{\n"
-"    font-size:24px;\n"
-"    font-family:Montserrat;\n"
-"    color:#fff;\n"
-"}")
+                                    "    font-size:24px;\n"
+                                    "    font-family:Montserrat;\n"
+                                    "    color:#fff;\n"
+                                    "}")
         self.roleOutput.setObjectName("roleOutput")
         self.finishPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.finishPushButton.setGeometry(QtCore.QRect(1030, 600, 231, 100))
         self.finishPushButton.setStyleSheet("#finishPushButton{\n"
-"    font-size:16px;\n"
-"    font-family:Montserrat;\n"
-"    color:#fff;\n"
-"    border-radius: 10px;\n"
-"    border: 2px solid #0000AF;\n"
-"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
-"}")
+                                        "    font-size:16px;\n"
+                                        "    font-family:Montserrat;\n"
+                                        "    color:#fff;\n"
+                                        "    border-radius: 10px;\n"
+                                        "    border: 2px solid #0000AF;\n"
+                                        "    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
+                                        "}")
         self.finishPushButton.setObjectName("finishPushButton")
         self.finishPushButton.clicked.connect(self.IndexPage)
         self.finishPushButton.clicked.connect(lambda: self.tallyAnswers(config.user_info.get('user_client_id')))
@@ -82,46 +82,46 @@ class Ui_MainWindowFeedbackQuestions(object):
         self.surveyFrame = QtWidgets.QFrame(self.centralwidget)
         self.surveyFrame.setGeometry(QtCore.QRect(20, 115, 1240, 471))
         self.surveyFrame.setStyleSheet("#surveyFrame{\n"
-"    background-color:#FEFCFC;\n"
-"    border-radius:15px;\n"
-"}")
+                                    "    background-color:#FEFCFC;\n"
+                                    "    border-radius:15px;\n"
+                                    "}")
         self.surveyFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.surveyFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.surveyFrame.setObjectName("surveyFrame")
         self.surveyOne = QtWidgets.QLabel(self.surveyFrame)
         self.surveyOne.setGeometry(QtCore.QRect(20, 20, 500, 21))
         self.surveyOne.setStyleSheet("#surveyOne{\n"
-"    font-style:Montserrat;\n"
-"    font-size:14px;\n"
-"}")
+                                    "    font-style:Montserrat;\n"
+                                    "    font-size:14px;\n"
+                                    "}")    
         self.surveyOne.setObjectName("surveyOne")
         self.surveyTwo = QtWidgets.QLabel(self.surveyFrame)
         self.surveyTwo.setGeometry(QtCore.QRect(20, 210, 481, 21))
         self.surveyTwo.setStyleSheet("#surveyTwo{\n"
-"    font-style:Montserrat;\n"
-"    font-size:14px;\n"
-"}")
+                                    "    font-style:Montserrat;\n"
+                                    "    font-size:14px;\n"
+                                    "}")
         self.surveyTwo.setObjectName("surveyTwo")
         self.surveyFour = QtWidgets.QLabel(self.surveyFrame)
         self.surveyFour.setGeometry(QtCore.QRect(590, 20, 521, 21))
         self.surveyFour.setStyleSheet("#surveyFour{\n"
-"    font-style:Montserrat;\n"
-"    font-size:14px;\n"
-"}")
+                                    "    font-style:Montserrat;\n"
+                                    "    font-size:14px;\n"
+                                    "}")
         self.surveyFour.setObjectName("surveyFour")
         self.surveyThree = QtWidgets.QLabel(self.surveyFrame)
         self.surveyThree.setGeometry(QtCore.QRect(20, 390, 481, 21))
         self.surveyThree.setStyleSheet("#surveyThree{\n"
-"    font-style:Montserrat;\n"
-"    font-size:14px;\n"
-"}")
+                                    "    font-style:Montserrat;\n"
+                                    "    font-size:14px;\n"
+                                    "}")
         self.surveyThree.setObjectName("surveyThree")
         self.surveyFive = QtWidgets.QLabel(self.surveyFrame)
         self.surveyFive.setGeometry(QtCore.QRect(590, 210, 551, 21))
         self.surveyFive.setStyleSheet("#surveyFive{\n"
-"    font-style:Montserrat;\n"
-"    font-size:14px;\n"
-"}")
+                                    "    font-style:Montserrat;\n"
+                                    "    font-size:14px;\n"
+                                    "}")
         self.surveyFive.setObjectName("surveyFive")
         self.surveyOneFrame = QtWidgets.QFrame(self.surveyFrame)
         self.surveyOneFrame.setGeometry(QtCore.QRect(20, 50, 120, 151))

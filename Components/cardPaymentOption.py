@@ -57,8 +57,8 @@ class Ui_MainWindowCardPaymentOption(object):
         self.navigationFrame = QtWidgets.QFrame(self.centralwidget)
         self.navigationFrame.setGeometry(QtCore.QRect(0, 0, MainWindow.width(), 110))
         self.navigationFrame.setStyleSheet("#navigationFrame{\n"
-"    background-color:#0000AF;\n"
-"}")
+                                        "    background-color:#0000AF;\n"
+                                        "}")
         self.navigationFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.navigationFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.navigationFrame.setObjectName("navigationFrame")
@@ -66,10 +66,10 @@ class Ui_MainWindowCardPaymentOption(object):
         self.nameOutput = QtWidgets.QLabel(self.navigationFrame)
         self.nameOutput.setGeometry(QtCore.QRect(20, 20, 920, 55))
         self.nameOutput.setStyleSheet("#nameOutput{\n"
-"    font-weight:bold;\n"
-"    font-size:28px;\n"
-"    color:#fff;\n"
-"}")
+                                    "    font-weight:bold;\n"
+                                    "    font-size:28px;\n"
+                                    "    color:#fff;\n"
+                                    "}")
         self.nameOutput.setObjectName("nameOutput")
         welcome_message = translations[Config.current_language].get('Welcome_User', 'Welcome')
         first_name = config.user_info.get('first_name', '')
@@ -80,20 +80,20 @@ class Ui_MainWindowCardPaymentOption(object):
         self.roleOutput = QtWidgets.QLabel(self.navigationFrame)
         self.roleOutput.setGeometry(QtCore.QRect(20, 51, 95, 25))
         self.roleOutput.setStyleSheet("#roleOutput{\n"
-"    font-size:24px;\n"
-"    font-family:Montserrat;\n"
-"    color:#fff;\n"
-"}")
+                                    "    font-size:24px;\n"
+                                    "    font-family:Montserrat;\n"
+                                    "    color:#fff;\n"
+                                    "}")
         self.roleOutput.setObjectName("roleOutput")
 
         self.helpPushButton = QtWidgets.QPushButton(self.navigationFrame)
         self.helpPushButton.setGeometry(QtCore.QRect(1145, 25, 150, 50))
         self.helpPushButton.setStyleSheet("#helpPushButton{\n"
-"    background-color:none;\n"
-"    border:none;\n"
-"    color:#fff;\n"
-"    font-size:24px;\n"
-"}")
+                                    "    background-color:none;\n"
+                                    "    border:none;\n"
+                                    "    color:#fff;\n"
+                                    "    font-size:24px;\n"
+                                    "}")
         self.helpPushButton.setObjectName("helpPushButton")
         self.helpPushButton.clicked.connect(self.HelpOption)
 
@@ -125,9 +125,9 @@ class Ui_MainWindowCardPaymentOption(object):
         self.summaryFrame = QtWidgets.QFrame(self.centralwidget)
         self.summaryFrame.setGeometry(QtCore.QRect(20, 120, 240, 100))
         self.summaryFrame.setStyleSheet("#summaryFrame{\n"
-"    background-color:#FEFCFC;\n"
-"    border-radius:15px;\n"
-"}")
+                                    "    background-color:#FEFCFC;\n"
+                                    "    border-radius:15px;\n"
+                                    "}")
         self.summaryFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.summaryFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.summaryFrame.setObjectName("summaryFrame")
@@ -135,32 +135,32 @@ class Ui_MainWindowCardPaymentOption(object):
         self.totalLabel = QtWidgets.QLabel(self.summaryFrame)
         self.totalLabel.setGeometry(QtCore.QRect(10, 5, 200, 35))
         self.totalLabel.setStyleSheet("#totalLabel{\n"
-"    font-size:16px;\n"
-"    color:#A0A0A0;\n"
-"}")
+                                    "    font-size:16px;\n"
+                                    "    color:#A0A0A0;\n"
+                                    "}")
         self.totalLabel.setObjectName("totalLabel")
 
         self.totalOutput = QtWidgets.QLabel(self.summaryFrame)
         self.totalOutput.setGeometry(QtCore.QRect(10, 45, 175, 25))
         self.totalOutput.setStyleSheet("#totalOutput{\n"
-"    font-size:32px;\n"
-"}")
+                                    "    font-size:32px;\n"
+                                    "}")
         self.totalOutput.setObjectName("totalOutput")
 
         self.paymentName = QtWidgets.QLabel(self.summaryFrame)
         self.paymentName.setGeometry(QtCore.QRect(10, 70, 200, 25))
         self.paymentName.setStyleSheet("#paymentName{\n"
-        "    font-size:12px;\n"
-        "    color:#A0A0A0;\n"
-        "}")
+                                    "    font-size:12px;\n"
+                                    "    color:#A0A0A0;\n"
+                                    "}")
         self.paymentName.setObjectName("paymentName")
 
         self.discountFrame = QtWidgets.QFrame(self.centralwidget)
         self.discountFrame.setGeometry(QtCore.QRect(270, 120, 240, 100))
         self.discountFrame.setStyleSheet("#discountFrame{\n"
-        "    background-color:#FEFCFC;\n"
-        "    border-radius:15px;\n"
-        "}")
+                                    "    background-color:#FEFCFC;\n"
+                                    "    border-radius:15px;\n"
+                                    "}")
         self.discountFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.discountFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.discountFrame.setObjectName("discountFrame")
@@ -168,32 +168,32 @@ class Ui_MainWindowCardPaymentOption(object):
         self.discountLabel = QtWidgets.QLabel(self.discountFrame)
         self.discountLabel.setGeometry(QtCore.QRect(10, 5, 200, 35))
         self.discountLabel.setStyleSheet("#discountLabel{\n"
-        "    font-size:16px;\n"
-        "    color:#A0A0A0;\n"
-        "}")
+                                    "    font-size:16px;\n"
+                                    "    color:#A0A0A0;\n"
+                                    "}")
         self.discountLabel.setObjectName("discountLabel")
         
         self.discountOutput = QtWidgets.QLabel(self.discountFrame)
         self.discountOutput.setGeometry(QtCore.QRect(10, 45, 175, 25))
         self.discountOutput.setStyleSheet("#discountOutput{\n"
-        "    font-size:32px;\n"
-        "}")
+                                    "    font-size:32px;\n"
+                                    "}")
         self.discountOutput.setObjectName("discountOutput")
 
         self.discountName = QtWidgets.QLabel(self.discountFrame)
         self.discountName.setGeometry(QtCore.QRect(10, 70, 200, 25))
         self.discountName.setStyleSheet("#discountName{\n"
-        "    font-size:12px;\n"
-        "    color:#A0A0A0;\n"
-        "}")
+                                    "    font-size:12px;\n"
+                                    "    color:#A0A0A0;\n"
+                                    "}")
         self.discountName.setObjectName("discountName")
 
         self.PaymentFrame = QtWidgets.QFrame(self.centralwidget)
         self.PaymentFrame.setGeometry(QtCore.QRect(530, 120, 720, 475))
         self.PaymentFrame.setStyleSheet("#PaymentFrame{\n"
-"    background-color:#FEFCFC;\n"
-"    border-radius:15px;\n"
-"}")
+                                    "    background-color:#FEFCFC;\n"
+                                    "    border-radius:15px;\n"
+                                    "}")
         self.PaymentFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.PaymentFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.PaymentFrame.setObjectName("PaymentFrame")
@@ -211,14 +211,14 @@ class Ui_MainWindowCardPaymentOption(object):
         self.backPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.backPushButton.setGeometry(QtCore.QRect(900, 610, 170, 100))
         self.backPushButton.setStyleSheet("#backPushButton{\n"
-"    border-radius:10px;\n"
-"    font-family:Montserrat;\n"
-"    font-size:20px;\n"
-"    color:#000;\n"
-"    border: 2px solid #FFD700;\n"
-"    border-radius: 9px;\n"
-"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #FFD700, stop:0.2 #FFD700, stop:1 #f6f7fa);\n"
-"}")
+                                    "    border-radius:10px;\n"
+                                    "    font-family:Montserrat;\n"
+                                    "    font-size:20px;\n"
+                                    "    color:#000;\n"
+                                    "    border: 2px solid #FFD700;\n"
+                                    "    border-radius: 9px;\n"
+                                    "    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #FFD700, stop:0.2 #FFD700, stop:1 #f6f7fa);\n"
+                                    "}")
         self.backPushButton.setObjectName("backPushButton")
         self.backPushButton.clicked.connect(self.PaymentOption)
         self.backPushButton.clicked.connect(MainWindow.close)
@@ -226,13 +226,13 @@ class Ui_MainWindowCardPaymentOption(object):
         self.checkOutPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.checkOutPushButton.setGeometry(QtCore.QRect(1085, 610, 170, 100))
         self.checkOutPushButton.setStyleSheet("#checkOutPushButton{\n"
-"    font-size:16px;\n"
-"    font-family:Montserrat;\n"
-"    color:#fff;\n"
-"    border-radius: 10px;\n"
-"    border: 2px solid #0000AF;\n"
-"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
-"}")
+                                    "    font-size:16px;\n"
+                                    "    font-family:Montserrat;\n"
+                                    "    color:#fff;\n"
+                                    "    border-radius: 10px;\n"
+                                    "    border: 2px solid #0000AF;\n"
+                                    "    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
+                                    "}")
         self.checkOutPushButton.setObjectName("checkOutPushButton")
         self.checkOutPushButton.clicked.connect(self.FeedBack)
         self.checkOutPushButton.clicked.connect(MainWindow.close)
@@ -248,7 +248,6 @@ class Ui_MainWindowCardPaymentOption(object):
             local_videos_path = "Assets\\*.avi"
             local_videos = glob.glob(local_videos_path)
             return local_videos
-
         except Exception as e:
             error_message = f"An unexpected error occurred while retrieving local videos: {e}"
             print(error_message)
@@ -265,7 +264,6 @@ class Ui_MainWindowCardPaymentOption(object):
                 self.local_videos.append(video_url)
             else:
                 print("No videos available.")
-
         except Exception as e:
             error_message = f"An unexpected error occurred during video playback: {e}"
             print(error_message)
@@ -279,7 +277,6 @@ class Ui_MainWindowCardPaymentOption(object):
                 error_message = f"Error during video playback: {self.video_player.errorString()}"
                 print(error_message)
                 QtWidgets.QMessageBox.critical(None, "Error", error_message)
-
         except Exception as e:
             error_message = f"An unexpected error occurred while handling video state change: {e}"
             print(error_message)

@@ -19,7 +19,6 @@ class Ui_MainWindowFeedback(object):
         self.ui.setupUi(self.window)
         self.window.show()
 
-    # Function to Set Up feedback.py
     def setupUiFeedback(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.showFullScreen()
@@ -89,7 +88,6 @@ class Ui_MainWindowFeedback(object):
                                         "    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #FFD700, stop:0.2 #FFD700, stop:1 #f6f7fa);\n"
                                         "}")
         self.feedBackPushButton.setObjectName("feedBackPushButton")
-        # To call the function feedbackQuesitons to open the page and close the main window
         self.feedBackPushButton.clicked.connect(self.FeedbackQuestions)
         self.feedBackPushButton.clicked.connect(MainWindow.close)
 
@@ -132,11 +130,9 @@ class Ui_MainWindowFeedback(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 
-        # Use the stored language from Config
         language = Config.current_language
         translation_dict = translations.get(language, translations['English'])
 
-        # Translate texts using the stored language
         self.roleOutput.setText(_translate("MainWindow", translation_dict['Role_Output']))
         self.finishPushButton.setText(_translate("MainWindow", translation_dict['Finish_Push_Button']))
         self.feedBackPushButton.setText(_translate("MainWindow", translation_dict['Feedback_Push_Button']))

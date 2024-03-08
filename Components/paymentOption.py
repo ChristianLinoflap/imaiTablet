@@ -61,18 +61,18 @@ class Ui_MainWindowPaymentOption(object):
         self.navigationFrame = QtWidgets.QFrame(self.centralwidget)
         self.navigationFrame.setGeometry(QtCore.QRect(0, 0, MainWindow.width(), 110))
         self.navigationFrame.setStyleSheet("#navigationFrame{\n"
-"    background-color:#0000AF;\n"
-"}")
+                                        "    background-color:#0000AF;\n"
+                                        "}")
         self.navigationFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.navigationFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.navigationFrame.setObjectName("navigationFrame")
         self.nameOutput = QtWidgets.QLabel(self.navigationFrame)
         self.nameOutput.setGeometry(QtCore.QRect(20, 20, 920, 55))
         self.nameOutput.setStyleSheet("#nameOutput{\n"
-"    font-weight:bold;\n"
-"    font-size:28px;\n"
-"    color:#fff;\n"
-"}")
+                                "    font-weight:bold;\n"
+                                "    font-size:28px;\n"
+                                "    color:#fff;\n"
+                                "}")
         self.nameOutput.setObjectName("nameOutput")
         welcome_message = translations[Config.current_language].get('Welcome_User', 'Welcome')
         first_name = config.user_info.get('first_name', '')
@@ -82,32 +82,32 @@ class Ui_MainWindowPaymentOption(object):
         self.roleOutput = QtWidgets.QLabel(self.navigationFrame)
         self.roleOutput.setGeometry(QtCore.QRect(20, 51, 95, 25))
         self.roleOutput.setStyleSheet("#roleOutput{\n"
-"    font-size:24px;\n"
-"    font-family:Montserrat;\n"
-"    color:#fff;\n"
-"}")
+                                "    font-size:24px;\n"
+                                "    font-family:Montserrat;\n"
+                                "    color:#fff;\n"
+                                "}")
         self.roleOutput.setObjectName("roleOutput")
         self.helpPushButton = QtWidgets.QPushButton(self.navigationFrame)
         self.helpPushButton.setGeometry(QtCore.QRect(1145, 25, 150, 50))
         self.helpPushButton.setStyleSheet("#helpPushButton{\n"
-"    background-color:none;\n"
-"    border:none;\n"
-"    color:#fff;\n"
-"    font-size:24px;\n"
-"}")
+                                        "    background-color:none;\n"
+                                        "    border:none;\n"
+                                        "    color:#fff;\n"
+                                        "    font-size:24px;\n"
+                                        "}")
         self.helpPushButton.setObjectName("helpPushButton")
         self.helpPushButton.clicked.connect(self.HelpOption)
 
         self.checkOutPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.checkOutPushButton.setGeometry(QtCore.QRect(1035, 615, 215, 75))
         self.checkOutPushButton.setStyleSheet("#checkOutPushButton{\n"
-"    font-size:18px;\n"
-"    font-family:Montserrat;\n"
-"    color:#fff;\n"
-"    border-radius: 10px;\n"
-"    border: 2px solid #0000AF;\n"
-"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
-"}")
+                                        "    font-size:18px;\n"
+                                        "    font-family:Montserrat;\n"
+                                        "    color:#fff;\n"
+                                        "    border-radius: 10px;\n"
+                                        "    border: 2px solid #0000AF;\n"
+                                        "    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
+                                        "}")
         self.checkOutPushButton.setObjectName("checkOutPushButton")
         self.checkOutPushButton.clicked.connect(self.ItemView)
         self.checkOutPushButton.clicked.connect(MainWindow.close)
@@ -115,9 +115,9 @@ class Ui_MainWindowPaymentOption(object):
         self.helpViewFrame = QtWidgets.QFrame(self.centralwidget)
         self.helpViewFrame.setGeometry(QtCore.QRect(50, 130, 1200, 475))
         self.helpViewFrame.setStyleSheet("#helpViewFrame{\n"
-"    background-color:#fff;\n"
-"    border-radius:15px;\n"
-"}")
+                                "    background-color:#fff;\n"
+                                "    border-radius:15px;\n"
+                                "}")
         self.helpViewFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.helpViewFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.helpViewFrame.setObjectName("helpViewFrame")
@@ -125,16 +125,16 @@ class Ui_MainWindowPaymentOption(object):
         self.paymentLabel = QtWidgets.QLabel(self.helpViewFrame)
         self.paymentLabel.setGeometry(QtCore.QRect(20, 20, 300, 31))
         self.paymentLabel.setStyleSheet("#paymentLabel{\n"
-"    font-size:24px;\n"
-"    font-family:Montserrat;\n"
-"}")
+                                "    font-size:24px;\n"
+                                "    font-family:Montserrat;\n"
+                                "}")
         self.paymentLabel.setObjectName("paymentLabel")
         self.cardPushButton = QtWidgets.QPushButton(self.helpViewFrame)
         self.cardPushButton.setGeometry(QtCore.QRect(20, 60, 310, 175))
         self.cardPushButton.setStyleSheet("#cardPushButton{\n"
-"    border-radius:15px;\n"
-"    background-color:#D9D9D9;\n"
-"}")
+                                "    border-radius:15px;\n"
+                                "    background-color:#D9D9D9;\n"
+                                "}")
         self.cardPushButton.setText("")
         self.cardPushButton.setObjectName("cardPushButton")
         self.cardPushButton.clicked.connect(self.CardPaymentOption)
@@ -142,9 +142,9 @@ class Ui_MainWindowPaymentOption(object):
         self.eWalletPushButton = QtWidgets.QPushButton(self.helpViewFrame)
         self.eWalletPushButton.setGeometry(QtCore.QRect(435, 60, 310, 175))
         self.eWalletPushButton.setStyleSheet("#eWalletPushButton{\n"
-"    border-radius:15px;\n"
-"    background-color:#D9D9D9;\n"
-"}")
+                                "    border-radius:15px;\n"
+                                "    background-color:#D9D9D9;\n"
+                                "}")
         self.eWalletPushButton.setText("")
         self.eWalletPushButton.setObjectName("eWalletPushButton")
         self.eWalletPushButton.clicked.connect(self.EWalletPaymentOption)
@@ -153,9 +153,9 @@ class Ui_MainWindowPaymentOption(object):
         self.cashPushButton = QtWidgets.QPushButton(self.helpViewFrame)
         self.cashPushButton.setGeometry(QtCore.QRect(865, 60, 310, 175))
         self.cashPushButton.setStyleSheet("#cashPushButton{\n"
-"    border-radius:15px;\n"
-"    background-color:#D9D9D9;\n"
-"}")
+                                "    border-radius:15px;\n"
+                                "    background-color:#D9D9D9;\n"
+                                "}")
         self.cashPushButton.setText("")
         self.cashPushButton.setObjectName("cashPushButton")
         self.cashPushButton.clicked.connect(self.CashPaymentOption)
@@ -164,33 +164,33 @@ class Ui_MainWindowPaymentOption(object):
         self.cardLabel = QtWidgets.QLabel(self.helpViewFrame)
         self.cardLabel.setGeometry(QtCore.QRect(110, 190, 135, 35))
         self.cardLabel.setStyleSheet("#cardLabel{\n"
-"    font-size:24px;\n"
-"    font-family:Montserrat;\n"
-"}")
+                                "    font-size:24px;\n"
+                                "    font-family:Montserrat;\n"
+                                "}")
         self.cardLabel.setObjectName("cardLabel")
 
         self.eWalletLabel = QtWidgets.QLabel(self.helpViewFrame)
         self.eWalletLabel.setGeometry(QtCore.QRect(520, 190, 135, 31))
         self.eWalletLabel.setStyleSheet("#cardLabel{\n"
-"    font-size:24px;\n"
-"    font-family:Montserrat;\n"
-"}")
+                                "    font-size:24px;\n"
+                                "    font-family:Montserrat;\n"
+                                "}")
         self.eWalletLabel.setObjectName("eWalletLabel")
 
         self.cashLabel = QtWidgets.QLabel(self.helpViewFrame)
         self.cashLabel.setGeometry(QtCore.QRect(960, 190, 135, 31))
         self.cashLabel.setStyleSheet("#cardLabel{\n"
-"    font-size:24px;\n"
-"    font-family:Montserrat;\n"
-"}")
+                                "    font-size:24px;\n"
+                                "    font-family:Montserrat;\n"
+                                "}")
         self.cashLabel.setObjectName("cashLabel")
 
         self.voucherLabel = QtWidgets.QLabel(self.helpViewFrame)
         self.voucherLabel.setGeometry(QtCore.QRect(20, 280, 251, 31))
         self.voucherLabel.setStyleSheet("#voucherLabel{\n"
-"    font-size:24px;\n"
-"    font-family:Montserrat;\n"
-"}")
+                                "    font-size:24px;\n"
+                                "    font-family:Montserrat;\n"
+                                "}")
         self.voucherLabel.setObjectName("voucherLabel")
         MainWindow.setCentralWidget(self.centralwidget)
         self.roleOutput.raise_()

@@ -88,9 +88,9 @@ class Ui_MainWindowTutorialMember(object):
         self.qrFrame = QtWidgets.QFrame(self.centralwidget)
         self.qrFrame.setGeometry(QtCore.QRect(350, 50, 600, 500))
         self.qrFrame.setStyleSheet("#qrFrame{\n"
-"    background-color:#FEFCFC;\n"
-"    border-radius:25px;\n"
-"}")
+                                "    background-color:#FEFCFC;\n"
+                                "    border-radius:25px;\n"
+                                "}")
         self.stackedWidget = QStackedWidget(self.qrFrame)
         self.stackedWidget.setGeometry(QtCore.QRect(0, 0, 600, 500))
 

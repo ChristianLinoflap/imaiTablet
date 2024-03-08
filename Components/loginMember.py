@@ -43,60 +43,60 @@ class Ui_MainWindowLogInMember(object):
         self.welcomeLabel = QtWidgets.QLabel(self.centralwidget)
         self.welcomeLabel.setGeometry(QtCore.QRect(345, 50, 600, 70))
         self.welcomeLabel.setStyleSheet("#welcomeLabel{\n"
-"    font-size:48px;\n"
-"    font-family:Montserrat;\n"
-"    color: #fff;\n"
-"    \n"
-"}")
+                                        "    font-size:48px;\n"
+                                        "    font-family:Montserrat;\n"
+                                        "    color: #fff;\n"
+                                        "    \n"
+                                        "}")
         self.welcomeLabel.setObjectName("welcomeLabel")
         self.welcomeLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.secondaryLabel = QtWidgets.QLabel(self.centralwidget)
         self.secondaryLabel.setGeometry(QtCore.QRect(400, 100, 500, 70))
         self.secondaryLabel.setStyleSheet("#secondaryLabel{\n"
-"    font-size:36px;\n"
-"    font-family:Montserrat;\n"
-"    color: #fff;\n"
-"}")
+                                        "    font-size:36px;\n"
+                                        "    font-family:Montserrat;\n"
+                                        "    color: #fff;\n"
+                                        "}")
         self.secondaryLabel.setObjectName("secondaryLabel")
         self.secondaryLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.emailLabel = QtWidgets.QLabel(self.centralwidget)
         self.emailLabel.setGeometry(QtCore.QRect(250, 200, 150, 60))
         self.emailLabel.setStyleSheet("#emailLabel{\n"
-"    font-size:26px;\n"
-"    font-family:Montserrat;\n"
-"    color: #fff;\n"
-"}")
+                                    "    font-size:26px;\n"
+                                    "    font-family:Montserrat;\n"
+                                    "    color: #fff;\n"
+                                    "}")
         self.emailLabel.setObjectName("emailLabel")
 
         self.passwordLabel = QtWidgets.QLabel(self.centralwidget)
         self.passwordLabel.setGeometry(QtCore.QRect(250, 340, 150, 60))
         self.passwordLabel.setStyleSheet("#passwordLabel{\n"
-"    font-size:26px;\n"
-"    font-family:Montserrat;\n"
-"    color: #fff;\n"
-"}")
+                                        "    font-size:26px;\n"
+                                        "    font-family:Montserrat;\n"
+                                        "    color: #fff;\n"
+                                        "}")
         self.passwordLabel.setObjectName("passwordLabel")
 
         self.emailLineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.emailLineEdit.setGeometry(QtCore.QRect(250, 265, 400, 60))
         self.emailLineEdit.setStyleSheet("#emailLineEdit{\n"
-"    border-radius:10px;\n"
-"    font-size:26px;\n"
-"    font-family:Montserrat;\n"
-"    padding:10px;\n"
-"}")
+                                        "    border-radius:10px;\n"
+                                        "    font-size:26px;\n"
+                                        "    font-family:Montserrat;\n"
+                                        "    padding:10px;\n"
+                                        "}")
         self.emailLineEdit.setObjectName("emailLineEdit")
 
         self.passwordLineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.passwordLineEdit.setGeometry(QtCore.QRect(250, 405, 400, 60))
         self.passwordLineEdit.setStyleSheet("#passwordLineEdit{\n"
-"    border-radius:10px;\n"
-"    font-size:26px;\n"
-"    font-family:Montserrat;\n"
-"    padding:10px;\n"
-"}")
+                                            "    border-radius:10px;\n"
+                                            "    font-size:26px;\n"
+                                            "    font-family:Montserrat;\n"
+                                            "    padding:10px;\n"
+                                            "}")
         self.passwordLineEdit.setObjectName("passwordLineEdit")
         self.passwordLineEdit.setEchoMode(QtWidgets.QLineEdit.Password)
 
@@ -112,26 +112,26 @@ class Ui_MainWindowLogInMember(object):
         self.loginPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.loginPushButton.setGeometry(QtCore.QRect(250, 540, 400, 60))
         self.loginPushButton.setStyleSheet("#loginPushButton{\n"
-"    font-size:18px;\n"
-"    font-family:Montserrat;\n"
-"    color:#fff;\n"
-"    border-radius: 10px;\n"
-"    border: 2px solid #0000AF;\n"
-"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
-"}")
+                                            "    font-size:18px;\n"
+                                            "    font-family:Montserrat;\n"
+                                            "    color:#fff;\n"
+                                            "    border-radius: 10px;\n"
+                                            "    border: 2px solid #0000AF;\n"
+                                            "    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #0000AF, stop:0.2 #0000AF, stop:1 #f6f7fa);\n"
+                                            "}")
         self.loginPushButton.setObjectName("loginPushButton")
 
         self.backPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.backPushButton.setGeometry(QtCore.QRect(250, 620, 400, 60))
         self.backPushButton.setStyleSheet("#backPushButton{\n"
-"    border-radius:10px;\n"
-"    font-family:Montserrat;\n"
-"    font-size:18px;\n"
-"    color:#000;\n"
-"    border: 2px solid #FFD700;\n"
-"    border-radius: 9px;\n"
-"    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #FFD700, stop:0.2 #FFD700, stop:1 #f6f7fa);\n"
-"}")
+                                        "    border-radius:10px;\n"
+                                        "    font-family:Montserrat;\n"
+                                        "    font-size:18px;\n"
+                                        "    color:#000;\n"
+                                        "    border: 2px solid #FFD700;\n"
+                                        "    border-radius: 9px;\n"
+                                        "    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0.2 #FFD700, stop:0.2 #FFD700, stop:1 #f6f7fa);\n"
+                                        "}")
         self.backPushButton.setObjectName("backPushButton")
         self.backPushButton.clicked.connect(self.LogInOption)
         self.backPushButton.clicked.connect(MainWindow.close)
@@ -139,10 +139,10 @@ class Ui_MainWindowLogInMember(object):
         self.qrFrame = QtWidgets.QFrame(self.centralwidget)
         self.qrFrame.setGeometry(QtCore.QRect(750, 280, 300, 300))
         self.qrFrame.setStyleSheet("#qrFrame{\n"
-"    background-color:#FEFCFC;\n"
-"    border-radius:25px;\n"
-"    border: 2px solid black;\n"
-"}")
+                                "    background-color:#FEFCFC;\n"
+                                "    border-radius:25px;\n"
+                                "    border: 2px solid black;\n"
+                                "}")
         self.qrFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.qrFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.qrFrame.setObjectName("qrFrame")
@@ -150,10 +150,10 @@ class Ui_MainWindowLogInMember(object):
         self.qrLabel = QtWidgets.QLabel(self.centralwidget)
         self.qrLabel.setGeometry(QtCore.QRect(660, 200, 480, 60))
         self.qrLabel.setStyleSheet("#qrLabel{\n"
-"    font-size:36px;\n"
-"    font-family:Montserrat;\n"
-"    color:#fff;\n"
-"}")
+                                "    font-size:36px;\n"
+                                "    font-family:Montserrat;\n"
+                                "    color:#fff;\n"
+                                "}")
         self.qrLabel.setObjectName("qrLabel")
         self.qrLabel.setAlignment(QtCore.Qt.AlignCenter)
 
@@ -168,18 +168,18 @@ class Ui_MainWindowLogInMember(object):
 
         self.scanLabel = QtWidgets.QLabel(self.scanLabelFrame)
         self.scanLabel.setStyleSheet("#scanLabel{\n"
-"    font-size:26px;\n"
-"    font-family:Montserrat;\n"
-"    color:#fff;\n"
-"}")
+                                    "    font-size:26px;\n"
+                                    "    font-family:Montserrat;\n"
+                                    "    color:#fff;\n"
+                                    "}")
         self.scanLabel.setObjectName("scanLabel")
         self.verticalLayout.addWidget(self.scanLabel)
         self.scanLabel_2 = QtWidgets.QLabel(self.scanLabelFrame)
         self.scanLabel_2.setStyleSheet("#scanLabel_2{\n"
-"    font-size:26px;\n"
-"    font-family:Montserrat;\n"
-"    color:#fff;\n"
-"}")
+                                    "    font-size:26px;\n"
+                                    "    font-family:Montserrat;\n"
+                                    "    color:#fff;\n"
+                                    "}")
         self.scanLabel_2.setObjectName("scanLabel_2")
         self.verticalLayout.addWidget(self.scanLabel_2)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -275,7 +275,6 @@ class Ui_MainWindowLogInMember(object):
                 }
             """)
 
-    # User Authentication Function
     def authenticate_user(self):
         entered_username = self.emailLineEdit.text()
         entered_password = self.passwordLineEdit.text()
@@ -290,15 +289,21 @@ class Ui_MainWindowLogInMember(object):
                 config.user_info['last_name'] = last_name
                 config.user_info['user_client_id'] = user_client_id
 
-                reference_number = self.db_manager.generate_reference_number()  
-                config.transaction_info['reference_number'] = reference_number
-                self.db_manager.insert_transaction(user_client_id, reference_number)
+                reference_number = self.db_manager.generate_reference_number()
+                latest_transaction_status = self.db_manager.get_latest_transaction_status(user_client_id)
 
-                transaction_id = self.db_manager.get_transaction_id(user_client_id, reference_number)
+                if latest_transaction_status == 'Success':
+                    config.transaction_info['reference_number'] = reference_number
+                    self.db_manager.insert_transaction(user_client_id, reference_number)
+                else:
+                    latest_reference_number = self.db_manager.get_latest_reference_number(user_client_id)
+                    config.transaction_info['reference_number'] = latest_reference_number
+
+                transaction_id = self.db_manager.get_transaction_id(user_client_id, config.transaction_info['reference_number'])
                 if transaction_id is not None:
                     config.transaction_info['transaction_id'] = transaction_id
 
-                self.db_manager.update_transaction(user_client_id, reference_number)
+                self.db_manager.update_transaction(user_client_id, config.transaction_info['reference_number'])
 
                 self.MainWindow.close()
                 self.TutorialMember()

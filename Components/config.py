@@ -12,20 +12,14 @@ transaction_info = {
 }
 
 class Config:
-    # Default language
     DEFAULT_LANGUAGE = "English"
-
-    # Variable to store the current language
     current_language = DEFAULT_LANGUAGE
-
-    # Signal emitted when the language changes
     language_changed = QtCore.pyqtSignal(str)
 
     @classmethod
     def set_language(cls, language):
         cls.current_language = language
-    
-    # Variable to store the predicted class
+
     predicted_class = None
 
     @classmethod

@@ -25,27 +25,27 @@ class Ui_MainWindowLogInOption(object):
         self.backgroundFrameRight = QtWidgets.QFrame(self.centralwidget)
         self.backgroundFrameRight.setGeometry(QtCore.QRect(480, 85, 700, 550))  
         self.backgroundFrameRight.setStyleSheet("#backgroundFrameRight{\n"
-"    background-color: #fff; /* Example color */\n"
-"    border-top-right-radius: 25px;\n"
-"    border-bottom-right-radius: 25px;\n"
-"}")
+                                                "    background-color: #fff; /* Example color */\n"
+                                                "    border-top-right-radius: 25px;\n"
+                                                "    border-bottom-right-radius: 25px;\n"
+                                                "}")
         self.backgroundFrameRight.setObjectName("backgroundFrameRight")
 
         self.backgroundFrameLeft = QtWidgets.QFrame(self.centralwidget)
         self.backgroundFrameLeft.setGeometry(QtCore.QRect(85, 85, 395, 550))  
         self.backgroundFrameLeft.setStyleSheet("#backgroundFrameLeft{\n"
-"    background-color: #0000AF;\n"
-"    border-top-left-radius: 25px;\n"
-"    border-bottom-left-radius: 25px;\n"
-"}")
+                                                "    background-color: #0000AF;\n"
+                                                "    border-top-left-radius: 25px;\n"
+                                                "    border-bottom-left-radius: 25px;\n"
+                                                "}")
         self.backgroundFrameLeft.setObjectName("backgroundFrameLeft")
 
         self.bgShape = QtWidgets.QLabel(self.centralwidget)  
         self.bgShape.setGeometry(QtCore.QRect(130, 250, 300, 300))
         self.bgShape.setStyleSheet("#bgShape{\n"
-        "    background-color:#FEFCFC;\n"
-        "    border-radius:150px;\n"
-        "}")
+                                "    background-color:#FEFCFC;\n"
+                                "    border-radius:150px;\n"
+                                "}")
         self.bgShape.setScaledContents(True) 
         self.bgShape.setObjectName("bgShape")
 
@@ -57,29 +57,29 @@ class Ui_MainWindowLogInOption(object):
         self.productLabel = QtWidgets.QLabel(self.centralwidget)
         self.productLabel.setGeometry(QtCore.QRect(135, 165, 300, 60))
         self.productLabel.setStyleSheet("#productLabel{\n"
-"    font-size:48px;\n"
-"    font-weight:bold;\n"
-"    font-family: 'Poppins', sans-serif;\n"
-"    color:#fff;\n"
-"}")
+                                        "    font-size:48px;\n"
+                                        "    font-weight:bold;\n"
+                                        "    font-family: 'Poppins', sans-serif;\n"
+                                        "    color:#fff;\n"
+                                        "}")
         self.productLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.productLabel.setObjectName("productLabel")
 
         self.titleLabel = QtWidgets.QLabel(self.centralwidget)
         self.titleLabel.setGeometry(QtCore.QRect(310, 200, 1050, 65))
         self.titleLabel.setStyleSheet("#titleLabel{\n"
-"    font-family:Montserrat;\n"
-"    font-size:48px;\n"
-"}")
+                                "    font-family:Montserrat;\n"
+                                "    font-size:48px;\n"
+                                "}")
         self.titleLabel.setObjectName("titleLabel")
         self.titleLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.memberPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.memberPushButton.setGeometry(QtCore.QRect(500, 290, 300, 220))
         self.memberPushButton.setStyleSheet("#memberPushButton{\n"
-"    border-radius:25px;\n"
-"    background-color:#0000AF;\n"
-"}")
+                                        "    border-radius:25px;\n"
+                                        "    background-color:#0000AF;\n"
+                                        "}")
         self.memberPushButton.setText("")
         self.memberPushButton.setObjectName("memberPushButton")
         self.memberPushButton.clicked.connect(self.LogInMember)
@@ -88,29 +88,29 @@ class Ui_MainWindowLogInOption(object):
         self.memberLabel = QtWidgets.QLabel(self.centralwidget)
         self.memberLabel.setGeometry(QtCore.QRect(400, 440, 500, 50))
         self.memberLabel.setStyleSheet("#memberLabel{\n"
-"    font-size:20px;\n" 
-"    font-family:Montserrat;\n"
-"    color:#fff;\n"
-"}")
+                                        "    font-size:20px;\n" 
+                                        "    font-family:Montserrat;\n"
+                                        "    color:#fff;\n"
+                                        "}")
         self.memberLabel.setObjectName("memberLabel")
         self.memberLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.nonMemberLabel = QtWidgets.QLabel(self.centralwidget)
         self.nonMemberLabel.setGeometry(QtCore.QRect(765, 440, 500, 50))
         self.nonMemberLabel.setStyleSheet("#nonMemberLabel{\n"
-"    font-size:20px;\n"
-"    font-family:Montserrat;\n"
-"    color:#fff;\n"
-"}")
+                                        "    font-size:20px;\n"
+                                        "    font-family:Montserrat;\n"
+                                        "    color:#fff;\n"
+                                        "}")
         self.nonMemberLabel.setObjectName("nonMemberLabel")
         self.nonMemberLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.nonMemberPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.nonMemberPushButton.setGeometry(QtCore.QRect(860, 290, 300, 220))
         self.nonMemberPushButton.setStyleSheet("#nonMemberPushButton{\n"
-"    border-radius:25px;\n"
-"    background-color:#0000AF;\n"
-"}")
+                                        "    border-radius:25px;\n"
+                                        "    background-color:#0000AF;\n"
+                                        "}")
         self.nonMemberPushButton.setText("")
         self.nonMemberPushButton.setObjectName("nonMemberPushButton")
 
@@ -128,11 +128,9 @@ class Ui_MainWindowLogInOption(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 
-        # Use the stored language from Config
         language = Config.current_language
         translation_dict = translations.get(language, translations['English'])
 
-        # Translate texts using the stored language
         self.titleLabel.setText(_translate("MainWindow", translation_dict['Welcome']))
         self.memberLabel.setText(_translate("MainWindow", translation_dict['Member']))
         self.nonMemberLabel.setText(_translate("MainWindow", translation_dict['Non_Member']))

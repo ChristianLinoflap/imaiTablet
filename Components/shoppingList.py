@@ -16,53 +16,40 @@ class Ui_MainWindowShoppingList(object):
 
         if shopping_list:
             for item in shopping_list:
-                # Extract item details
                 name, quantity, cart_quantity = item["name"], item["quantity"], item["cart_quantity"]
 
-                # Create a QWidget for the item
                 item_widget = QtWidgets.QWidget()
                 layout = QtWidgets.QHBoxLayout(item_widget)
-                # Set layout spacing
                 layout.setSpacing(10)
 
-                # Create a checkbox for the item
                 checkbox = QtWidgets.QCheckBox()
                 checkbox.setChecked(cart_quantity >= quantity)
                 checkbox.setDisabled(True)
                 checkbox.setStyleSheet("QCheckBox { color: #333; }")
                 layout.addWidget(checkbox)
 
-                # Create a QLabel for the item name and quantity
                 label = QtWidgets.QLabel(f"<b>{name}</b> - {quantity}")
                 label.setWordWrap(False)
 
-                # Customize styles based on completion status
                 if cart_quantity >= quantity:
-                    label.setStyleSheet("QLabel { color: #888; font-size: 14px; }")  # Grayed out for completed items
+                    label.setStyleSheet("QLabel { color: #888; font-size: 14px; }")  
                 else:
-                    label.setStyleSheet("QLabel { color: #000; font-size: 14px; }")  # Black for incomplete items
+                    label.setStyleSheet("QLabel { color: #000; font-size: 14px; }") 
 
                 layout.addWidget(label)
 
-                # Set layout properties
                 layout.setContentsMargins(0, 0, 0, 0)
                 layout.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
                 item_widget.setLayout(layout)
-
-                # Set minimum height for the item widget
                 item_widget.setMinimumHeight(40)
 
-                # Create a QListWidgetItem and add it to the listWidget
                 listWidgetItem = QtWidgets.QListWidgetItem()
                 listWidgetItem.setSizeHint(item_widget.sizeHint())
-                
-                # Make items not selectable
                 listWidgetItem.setFlags(listWidgetItem.flags() & ~QtCore.Qt.ItemIsSelectable)
 
                 self.listWidget.addItem(listWidgetItem)
                 self.listWidget.setItemWidget(listWidgetItem, item_widget)
 
-    # Function to Call ItemView.py
     def ItemView(self):
         from itemView import Ui_MainWindowItemView
         self.window = QtWidgets.QMainWindow()
@@ -77,7 +64,6 @@ class Ui_MainWindowShoppingList(object):
         MainWindow.setStyleSheet("#centralwidget{\n"
 "    background-color:#0000AF;\n"
 "}")
-        # Remove Navigation Tools in Main Window
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -99,13 +85,11 @@ class Ui_MainWindowShoppingList(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        # Call the function to populate the shopping list items
         self.populateShoppingList()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-
 
 if __name__ == "__main__":
     import sys

@@ -46,9 +46,9 @@ class Ui_MainWindow(object):
         self.imageFrame = QtWidgets.QLabel(self.centralwidget)
         self.imageFrame.setGeometry(QtCore.QRect(655, 145, 550, 450))
         self.imageFrame.setStyleSheet("#imageFrame{\n"
-        "    background-color: #FEFCFC;\n"
-        "    border-radius: 15px;\n"
-        "}\n")
+                                    "    background-color: #FEFCFC;\n"
+                                    "    border-radius: 15px;\n"
+                                    "}\n")
         self.imageFrame.setObjectName("imageFrame")
         self.imageFrame.setScaledContents(True)
 
@@ -70,18 +70,18 @@ class Ui_MainWindow(object):
         self.welcomeTitle = QtWidgets.QLabel(self.centralwidget)
         self.welcomeTitle.setGeometry(QtCore.QRect(100, 310, 300, 50))
         self.welcomeTitle.setStyleSheet("#welcomeTitle{\n"
-"    font-size: 48px;\n"
-"    font-weight: bold;\n"
-"    color: #fff;\n"
-"}\n")
+                                    "    font-size: 48px;\n"
+                                    "    font-weight: bold;\n"
+                                    "    color: #fff;\n"
+                                    "}\n")
         self.welcomeTitle.setObjectName("welcomeTitle")
 
         self.welcomeMessage = QtWidgets.QLabel(self.centralwidget)
         self.welcomeMessage.setGeometry(QtCore.QRect(100, 360, 400, 50))
         self.welcomeMessage.setStyleSheet("#welcomeMessage{\n"
-"    font-size: 18px;\n"
-"    color: #fff;\n"
-"}\n")
+                                        "    font-size: 18px;\n"
+                                        "    color: #fff;\n"
+                                        "}\n")
         self.welcomeMessage.setObjectName("welcomeMessage")
 
         self.startButton = QtWidgets.QPushButton(self.centralwidget)
