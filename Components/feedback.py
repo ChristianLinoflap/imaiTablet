@@ -1,8 +1,15 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from config import Config, translations
 import config
+from config import Config, translations
+from databaseManager import DatabaseManager, EnvironmentLoader
 
 class Ui_MainWindowFeedback(object):
+    def __init__(self):
+        self.db_manager = DatabaseManager(*EnvironmentLoader.load_env_variables())
+        self.conn = self.db_manager.connect()
+        self.cursor = self.conn.cursor()
+
     def FeedbackQuestions (self):
         from feedbackQuestions import Ui_MainWindowFeedbackQuestions
         self.window = QtWidgets.QMainWindow()
@@ -10,9 +17,14 @@ class Ui_MainWindowFeedback(object):
         self.ui.setupUiFeedbackQuestions(self.window)
         self.window.show()
 
-    def IndexPage (self):
-        # config.user_info.clear()
-        # config.transaction_info.clear()
+    def IndexPage(self):
+        user_client_id = config.user_info.get('user_client_id')
+        reference_number = config.transaction_info.get('reference_number')
+        
+        latest_status = self.db_manager.get_latest_transaction_status(user_client_id)
+        if latest_status == 'On-Going':
+            self.db_manager.update_transaction_status(user_client_id, reference_number)
+        
         from indexPage import Ui_MainWindow
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_MainWindow()
@@ -44,7 +56,7 @@ class Ui_MainWindowFeedback(object):
         self.nameOutput.setGeometry(QtCore.QRect(20, 20, 920, 55))
         self.nameOutput.setStyleSheet("#nameOutput{\n"
                                 "    font-weight:bold;\n"
-                                "    font-size:42px;\n"
+                                "    font-size:24px;\n"
                                 "    color:#fff;\n"
                                 "}")
         self.nameOutput.setObjectName("nameOutput")

@@ -17,6 +17,13 @@ class Ui_MainWindowFeedbackQuestions(object):
     def IndexPage (self):
         # config.user_info.clear()
         # config.transaction_info.clear()
+        user_client_id = config.user_info.get('user_client_id')
+        reference_number = config.transaction_info.get('reference_number')
+        
+        latest_status = self.db_manager.get_latest_transaction_status(user_client_id)
+        if latest_status == 'On-Going':
+            self.db_manager.update_transaction_status(user_client_id, reference_number)
+
         from indexPage import Ui_MainWindow
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_MainWindow()
@@ -64,6 +71,7 @@ class Ui_MainWindowFeedbackQuestions(object):
                                     "    color:#fff;\n"
                                     "}")
         self.roleOutput.setObjectName("roleOutput")
+        
         self.finishPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.finishPushButton.setGeometry(QtCore.QRect(1030, 600, 231, 100))
         self.finishPushButton.setStyleSheet("#finishPushButton{\n"

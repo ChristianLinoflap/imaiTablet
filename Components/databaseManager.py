@@ -97,6 +97,7 @@ class DatabaseManager:
             print(error_message)
             QtWidgets.QMessageBox.critical(None, "Error", error_message)
 
+    # LOGINMEMBER - Get latest transaction status
     def get_latest_transaction_status(self, user_client_id):
         query = "SELECT TOP 1 TransactionStatus FROM [dbo].[Transaction] WHERE UserClientId = ? ORDER BY CreatedAt DESC;"
         with self.connect() as conn:
@@ -108,6 +109,7 @@ class DatabaseManager:
                 else:
                     return None
 
+    # LOGINMEMBER - Get latest reference number 
     def get_latest_reference_number(self, user_client_id):
         query = "SELECT TOP 1 ReferenceNumber FROM [dbo].[Transaction] WHERE UserClientId = ? ORDER BY CreatedAt DESC;"
         with self.connect() as conn:
@@ -281,3 +283,16 @@ class DatabaseManager:
         except Exception as e:
             logging.error(f"Error inserting feedback answers into database: {e}")
             raise
+    
+    # FEEDBACK - Update transaction status to Success
+    def update_transaction_status(self, user_client_id, reference_number):
+        try:
+            query = "UPDATE [dbo].[Transaction] SET TransactionStatus = 'Success' WHERE UserClientId = ? AND ReferenceNumber = ? AND TransactionStatus = 'On-Going';"
+            with self.connect() as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute(query, user_client_id, reference_number)
+                    conn.commit()
+        except Exception as e:
+            error_message = f"An unexpected error occurred during transaction status update: {e}"
+            print(error_message)
+            QtWidgets.QMessageBox.critical(None, "Error", error_message)
