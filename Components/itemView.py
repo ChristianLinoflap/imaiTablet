@@ -586,10 +586,11 @@ class Ui_MainWindowItemView(object):
 
             item_name = QtWidgets.QTableWidgetItem(product_name)
             item_price = QtWidgets.QTableWidgetItem(f"¥ {product_price:.2f}")
+            barcode_item = QtWidgets.QTableWidgetItem(barcode_data)
 
             self.productTable.setItem(rowPosition, 0, item_name)
             self.productTable.setItem(rowPosition, 1, item_price)
-            self.productTable.setItem(rowPosition, 2, barcode_data)
+            self.productTable.setItem(rowPosition, 2, barcode_item)
 
     def updateSummaryLabels(self):
         total_price = sum(float(item.text().split()[1]) for row in range(self.productTable.rowCount()) for item in

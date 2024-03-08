@@ -97,7 +97,28 @@ class DatabaseManager:
             print(error_message)
             QtWidgets.QMessageBox.critical(None, "Error", error_message)
 
+    def get_latest_transaction_status(self, user_client_id):
+        query = "SELECT TOP 1 TransactionStatus FROM [dbo].[Transaction] WHERE UserClientId = ? ORDER BY CreatedAt DESC;"
+        with self.connect() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(query, user_client_id)
+                result = cursor.fetchone()
+                if result:
+                    return result[0]
+                else:
+                    return None
 
+    def get_latest_reference_number(self, user_client_id):
+        query = "SELECT TOP 1 ReferenceNumber FROM [dbo].[Transaction] WHERE UserClientId = ? ORDER BY CreatedAt DESC;"
+        with self.connect() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(query, user_client_id)
+                result = cursor.fetchone()
+                if result:
+                    return result[0]
+                else:
+                    return None
+                
     # ITEMVIEW - Select Query for Product
     def get_product_details_by_barcode(self, cursor, barcode):
         try:
