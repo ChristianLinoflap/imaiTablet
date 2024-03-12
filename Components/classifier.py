@@ -6,32 +6,62 @@ import os
 import threading
 from PyQt5 import QtWidgets
 import requests
+import ctypes
+from weightSensor import WeightSensor
+class ObjectClassifier(ctypes.CDLL):
+    def __init__(self, name=None, mode=ctypes.DEFAULT_MODE, handle=None, use_errno=False, use_last_error=False):
+        super(ObjectClassifier, self).__init__(r"C:\Users\user\Documents\GitHub\imaiTablet\Components\UHFReader86.dll", mode,handle, use_errno, use_last_error)
+        self.OpenComPort.restype = ctypes.c_int
+        self.OpenComPort.argtypes = [ctypes.c_int, ctypes.POINTER(ctypes.c_byte), ctypes.c_byte,
+                                     ctypes.POINTER(ctypes.c_int)]
+        # self.SetBeepNotification.restype = ctypes.c_int
+        self.SetBeepNotification.argtypes = [ctypes.POINTER(ctypes.c_byte), ctypes.c_byte, ctypes.c_int]
+        self.Inventory_G2.argtypes = [
+            ctypes.POINTER(ctypes.c_byte),  # byte[] ConAddr
+            ctypes.c_int,  # int QValue
+            ctypes.c_byte,  # byte Session
+            ctypes.c_byte,  # byte MaskMem
+            ctypes.POINTER(ctypes.c_byte),  # byte[] MaskAdr
+            ctypes.c_int,  # int MaskLen
+            ctypes.POINTER(ctypes.c_byte),  # byte[] MaskData
+            ctypes.c_byte,  # byte MaskFlag
+            ctypes.c_byte,  # byte AdrTID
+            ctypes.c_byte,  # byte LenTID
+            ctypes.c_byte,  # byte TIDFlag
+            ctypes.c_byte,  # byte Target
+            ctypes.c_byte,  # byte InAnt
+            ctypes.c_byte,  # byte Scantime
+            ctypes.c_byte,  # byte Fastflag,
+            ctypes.POINTER(ctypes.c_byte),  # byte[] EPClenandEPC,
+            ctypes.POINTER(ctypes.c_byte),  # byte[] Ant,
+            ctypes.POINTER(ctypes.c_int),  # int[] Totallen,
+            ctypes.POINTER(ctypes.c_int),  # int[] CardNum
+            ctypes.c_int
+        ]
+        self.weight_sensor = WeightSensor()
+        sample_comm = ctypes.c_byte(255)
+        self.sample_handle = ctypes.c_int()
+        frm_handle = ctypes.c_int(self.sample_handle.value)
+        beep = ctypes.c_byte(0)
+        # Simulate the native method call
+        sample_recv = self.OpenComPort(3, ctypes.byref(sample_comm), 3, ctypes.byref(self.sample_handle))
+        self.SetBeepNotification(ctypes.byref(sample_comm), 2, 3)
+        self.SetRfPower(ctypes.byref(sample_comm), 30, 3)
+        if sample_recv == 0:
+            # Successful case
 
-class ObjectClassifier:
-    def __init__(self):
+            print(f"Com port opened successfully. ComAddr: {sample_comm.value}, FrmHandle: {self.sample_handle.value}")
+            # Additional code for when the com port is successfully opened
+        else:
+            # Failure case
+            print(f"Failed to open com port. Recv: {sample_recv}")
         pygame.mixer.init()
         pygame.display.set_caption('')
         self.scan_sound = pygame.mixer.Sound("Assets\\scanned_item.mp3")
-        self.fgbg = cv2.createBackgroundSubtractorMOG2()
-        self.image_directory = "capture"
-        self.frame_count = 0
-        self.cap = cv2.VideoCapture(1)
-        self.create_directory(self.image_directory)
+
         self.stop_event = threading.Event()
         threading.Thread(target=self.run_classifier).start()
 
-    def create_directory(self, directory):
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-
-    def saturate_image(self, frame):
-        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        hsv[:, :, 1] = np.clip(hsv[:, :, 1] * 1.5, 0, 255).astype(np.uint8)
-        saturated_frame = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
-        return saturated_frame
-
-    def is_intersect(self, rect1, rect2):
-        return not (rect1[2] < rect2[0] or rect1[0] > rect2[2] or rect1[3] < rect2[1] or rect1[1] > rect2[3])
 
     def play_sound(self, sound_file):
         pygame.mixer.music.load(sound_file)
@@ -40,63 +70,114 @@ class ObjectClassifier:
         time.sleep(2)
 
     def run_classifier(self):
-        self.predicted_classes = []
-        while not self.stop_event.is_set():
-            ret, frame = self.cap.read()
-            # Adjusting the cropping region
+        # Initialize sample values
+        com_addr = ctypes.c_byte(255)
+        adr_tid = 0
+        len_tid = 6
+        tid_flag = 0
+        target = 0
+        in_ant = 0x80
+        scan_time = 0
+        fast_flag = 1
+        u_in_ant = ctypes.c_byte(0)
+        u_totallen = ctypes.c_int(1)
+        mask_adr = ctypes.c_byte(0)
+        EPClenandEPC = ctypes.c_byte(0)
+        mask_data = ctypes.c_byte(100)
+        mask_flag = 0
+        StrBuff = (ctypes.c_byte * 5000)()
+        card_num = ctypes.c_int(0)
+        frm_handle = ctypes.c_int(self.sample_handle.value)
 
-            top = 150   
-            bottom = 500
-            left = 50   
-            right = 420
+        # Simulate the native method call
+        length = 0
+        gg = 0
+        EPC = []
+        frame = 0
+        prev_epcs = set()
+        new_epcs = 0
+        while True:
+            recv = self.Inventory_G2(
+                ctypes.byref(com_addr),
+                5,
+                0,
+                1,
+                ctypes.byref(mask_adr),
+                0,
+                ctypes.byref(mask_data),
+                mask_flag,
+                adr_tid,
+                len_tid,
+                tid_flag,
+                target,
+                in_ant,
+                scan_time,
+                fast_flag,
+                StrBuff,
+                ctypes.byref(u_in_ant),
+                ctypes.byref(u_totallen),
+                ctypes.byref(card_num),
+                frm_handle
+            )
+            # Handling the result
 
-            # Cropping the frame with the new parameters
-            cropped_frame = frame[top:bottom, left:right]
-            # fgmask = self.fgbg.apply(cropped_frame)
-            # _, fgmask = cv2.threshold(fgmask, 120, 255, cv2.THRESH_BINARY)
-            # contours, _ = cv2.findContours(fgmask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            files = []
-            # cropped_frame_resized = cv2.resize(cropped_frame, (256, 256))
-            saturated_frame = self.saturate_image(cropped_frame)
-            cv2.imwrite(f"capture/frame.png", saturated_frame)
-            url = 'http://192.168.254.102:5000/upload2'
-            image_paths = [os.path.join("capture", filename) for filename in os.listdir("capture")]
-            for image_file in image_paths:
-
-                if os.path.exists(image_file):
-                    with open(image_file, 'rb') as f:
-                        file_data = f.read()
-                        files.append(('files[]', (os.path.basename(image_file), file_data, 'image/png')))
+            if recv in [1, 2, 3, 4]:
+                if card_num.value == 0:
+                    result = None
                 else:
-                    print(f"File not found: {image_file}")
-            start_time = time.perf_counter()
+                    EPC = []
+                    m = 0
+                    for index in range(card_num.value):
+                        epclen = StrBuff[m] & 255
+                        m += 1
+                        EPCstr = ""
+                        epc = bytearray(epclen)
+                        for n in range(epclen):
+                            bbt = StrBuff[m] & 255
+                            m += 1
+                            epc[n] = bbt
+                            hex_value = format(bbt, '02X')
+                            EPCstr += hex_value
+                        rssi = StrBuff[m]
+                        m += 1
+                        EPC.append(EPCstr.upper())
+                    length = len(EPC)
+                    if card_num.value > 0:
+                        # Check if any new RFID values are present
+                        new_epcs = set(EPC) - prev_epcs
+                        gg = new_epcs
+                        prev_epcs.update(new_epcs)
+                     
+                            # print(length)
+                        
+                            # Open the file in 'w' (write) mode to overwrite the file
+                            # with open("predicted_class.txt", "w") as file:
+                            #     # Write each element in EPC with a space in between
+                            #     file.write(' '.join(EPC) + '\n')
+                        EPC = []
+                    # frame = 0
+                    time.sleep(1)
+            else:
+                result = None
+                length = len(EPC)
+                # print(length)
+            if new_epcs:
+                print('This is all', prev_epcs)
+                frame = 0
+            else:
+                pass
+            if frame == 10:
+                with open("predicted_class.txt", "w") as file:
+                    file.write('\n'.join(prev_epcs))
+                print('Finale frame: ',frame)
+                frame = 0
+            frame += 1
+            print('Frame: ',frame)
+            if self.weight_sensor.remove_item:
+                prev_epcs = set()
+                time.sleep(1)
 
-            if not os.path.exists("predicted_class.txt"):
-                if files:
-                    try:
-                        response = requests.post(url, files=files)
-                        if '<' in response.text or 'pass' in response.text:
-                            # print("'< found in response text.")
-                            pass
-                        else:
-                            with open("predicted_class.txt", "w") as file:
-                                file.write(response.text)
-                            self.scan_sound.play()
-                            self.scan_sound.set_volume(1)
-                    except Exception as e:
-                        print(f"Error occurred: {e}")
-                else:
-                    print("No files to upload.")
-                end_time = time.perf_counter()
-                elapsed_time = end_time - start_time
-                print("Elapsed time: ", elapsed_time)
 
-            # cv2.imshow('Original Frame', cropped_frame)
-            # cv2.imshow('Motion Detection', fgmask)
-
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                self.stop_classifier()
-                break
 
     def pause_scanning(self):
         self.stop_event.set()
@@ -110,9 +191,7 @@ class ObjectClassifier:
     def stop_classifier(self):
         try:
             self.stop_event.set()
-            if hasattr(self, 'cap') and self.cap.isOpened():
-                self.cap.release()
-            cv2.destroyAllWindows()
+
         except Exception as e:
             error_message = f"An unexpected error occurred while stopping the classifier: {e}"
             print(error_message)
