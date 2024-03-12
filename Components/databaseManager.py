@@ -133,6 +133,18 @@ class DatabaseManager:
             error_message = f"An unexpected error occurred while fetching product details: {e}"
             print(error_message)
             return None
+    
+    def get_product_details_by_RFID(self, cursor, predicted_class):
+        try:
+            query = """
+                SELECT * FROM Fn_Products_BranchProducts (?)
+            """
+            cursor.execute(query, predicted_class)
+            return cursor.fetchone()
+        except Exception as e:
+            error_message = f"An unexpected error occurred while fetching product details: {e}"
+            print(error_message)
+            return None
  
     # ITEMVIEW - Select Query for Advertisement Videos
     def get_advertisement_video_details_by_id(self, cursor, video_id):

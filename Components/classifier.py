@@ -10,7 +10,7 @@ import ctypes
 from weightSensor import WeightSensor
 class ObjectClassifier(ctypes.CDLL):
     def __init__(self, name=None, mode=ctypes.DEFAULT_MODE, handle=None, use_errno=False, use_last_error=False):
-        super(ObjectClassifier, self).__init__(r"C:\Users\user\Documents\GitHub\imaiTablet\Components\UHFReader86.dll", mode,handle, use_errno, use_last_error)
+        super(ObjectClassifier, self).__init__(r"C:\Users\orqui\OneDrive\Documents\GitHub\imaiTablet\Components\UHFReader86.dll", mode,handle, use_errno, use_last_error)
         self.OpenComPort.restype = ctypes.c_int
         self.OpenComPort.argtypes = [ctypes.c_int, ctypes.POINTER(ctypes.c_byte), ctypes.c_byte,
                                      ctypes.POINTER(ctypes.c_int)]
@@ -162,17 +162,17 @@ class ObjectClassifier(ctypes.CDLL):
                 length = len(EPC)
                 # print(length)
             if new_epcs:
-                print('This is all', prev_epcs)
+                # print('This is all', prev_epcs)
                 frame = 0
             else:
                 pass
             if frame == 10:
                 with open("predicted_class.txt", "w") as file:
                     file.write('\n'.join(prev_epcs))
-                print('Finale frame: ',frame)
+                # print('Finale frame: ',frame)
                 frame = 0
             frame += 1
-            print('Frame: ',frame)
+            # print('Frame: ',frame)
             if self.weight_sensor.remove_item:
                 prev_epcs = set()
                 time.sleep(1)

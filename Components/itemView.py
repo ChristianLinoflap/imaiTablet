@@ -85,7 +85,8 @@ class Ui_MainWindowItemView(object):
                 with open("predicted_class.txt", "r") as file:
                     predicted_class = file.read().strip()
                 if predicted_class:
-                    self.processScannedBarcode(predicted_class)
+                    self.processScannedRFID(predicted_class)
+                    print(predicted_class)
                     with open("predicted_class.txt", "w") as file:
                         file.write('')
                     os.remove("predicted_class.txt")
@@ -456,13 +457,13 @@ class Ui_MainWindowItemView(object):
                                         translations[Config.current_language]['Scan_Barcode_Message'])
 
                 self.scanning_in_progress = True
-                last_scan_time = time.time()  # Initialize last scan time
+                last_scan_time = time.time()  
                 while self.scanning_in_progress:
                     ret, frame = self.cap.read()
                     if ret:
                         barcodes = decode(frame)
                         if barcodes:
-                            last_scan_time = time.time()  # Update last scan time when a barcode is detected
+                            last_scan_time = time.time()
                             for barcode in barcodes:
                                 barcode_data = barcode.data.decode("utf-8")
                                 self.scan_sound.play()
@@ -539,6 +540,48 @@ class Ui_MainWindowItemView(object):
                 print(f"Product with barcode {barcode_data} found in the database.")
             else:
                 print(f"Product with barcode {barcode_data} not found in the database.")
+        except Exception as e:
+            error_message = f"An unexpected error occurred while processing scanned barcode: {e}"
+            print(error_message)
+            QtWidgets.QMessageBox.critical(None, "Error", error_message)
+    
+    def processScannedRFID(self, predicted_class):
+        try:
+            product_details = self.db_manager.get_product_details_by_RFID(self.cursor, predicted_class)
+            if product_details:
+                product_id = product_details[0]
+                product_name = product_details[1]
+                product_price = product_details[-1]
+
+                identifier = f"{config.transaction_info.get('reference_number')} - {self.transaction_counter}"
+                sales_trans = config.transaction_info.get('reference_number')
+
+                existing_product = self.db_manager.checkProductInShoppingList(product_id)
+                if existing_product:
+                    self.db_manager.updateCartQuantity(product_id)
+                    print(f"CartQuantity updated for ProductId {product_id}.")
+                else:
+                    print(f"Product with ProductId {product_id} not found in the ShoppingListDetail table.")
+
+                self.productTable.insertRow(0)
+
+                item_name = QtWidgets.QTableWidgetItem(product_name)
+                item_price = QtWidgets.QTableWidgetItem(f"¥ {product_price:.2f}")
+                item_barcode = QtWidgets.QTableWidgetItem(str(predicted_class))
+                item_transaction = QtWidgets.QTableWidgetItem(str(identifier))
+                transaction_text = item_transaction.text()
+                self.db_manager.saveTransactionDetail(product_name, product_price, predicted_class, sales_trans,
+                                                      transaction_text)
+
+                self.productTable.setItem(0, 0, item_name)
+                self.productTable.setItem(0, 1, item_price)
+                
+                self.productTable.setItem(0, 2, item_barcode)
+
+                self.updateSummaryLabels()
+                print(f"Product with barcode {predicted_class} found in the database.")
+            else:
+                print(f"Product with barcode {predicted_class} not found in the database.")
         except Exception as e:
             error_message = f"An unexpected error occurred while processing scanned barcode: {e}"
             print(error_message)
