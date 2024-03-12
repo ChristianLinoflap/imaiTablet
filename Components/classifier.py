@@ -10,7 +10,7 @@ import ctypes
 from weightSensor import WeightSensor
 class ObjectClassifier(ctypes.CDLL):
     def __init__(self, name=None, mode=ctypes.DEFAULT_MODE, handle=None, use_errno=False, use_last_error=False):
-        super(ObjectClassifier, self).__init__(r"C:\Users\user\Documents\GitHub\imaiTablet\Components\UHFReader86.dll", mode,handle, use_errno, use_last_error)
+        super(ObjectClassifier, self).__init__(r"C:\Users\orqui\OneDrive\Documents\GitHub\imaiTablet\Components\UHFReader86.dll", mode,handle, use_errno, use_last_error)
         self.OpenComPort.restype = ctypes.c_int
         self.OpenComPort.argtypes = [ctypes.c_int, ctypes.POINTER(ctypes.c_byte), ctypes.c_byte,
                                      ctypes.POINTER(ctypes.c_int)]

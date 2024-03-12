@@ -224,6 +224,22 @@ class DatabaseManager:
             conn.rollback()
             raise
 
+    def deleteTransactionDetailRFID(self, reference_number, predicted_class):
+        try:
+            query = "EXEC sp_DeleteTransDetailV2 @ReferenceNumber = ?, @BarcodeNumber = ?"
+            with self.connect() as conn, conn.cursor() as cursor:
+                cursor.execute(query, reference_number, predicted_class)
+                conn.commit()
+                print(f"Transaction detail with ReferenceNumber {reference_number} and Barcode {predicted_class} deleted successfully.")
+        except pyodbc.Error as e:
+            logging.error(f"Error executing the stored procedure to delete transaction detail: {e}")
+            conn.rollback()
+            raise 
+        except Exception as e:
+            logging.error(f"An unexpected error occurred while deleting transaction detail: {e}")
+            conn.rollback()
+            raise
+
     # SHOPPINGLIST - Populate Shopping List
     def populate_shopping_list(self, cursor, user_client_id):
         query = f"SELECT Name, Quantity, CartQuantity FROM dbo.vw_ProductShoppingListDetail WHERE UserClientID = {user_client_id}"
