@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import config 
 from config import Config, translations
 from databaseManager import DatabaseManager, EnvironmentLoader
+from PyQt5.QtWidgets import QMessageBox
 
 class Ui_MainWindowFeedbackQuestions(object):
     def __init__(self):
@@ -13,22 +14,62 @@ class Ui_MainWindowFeedbackQuestions(object):
         self.answer_three = None
         self.answer_four = None
         self.answer_five = None
+        self.window = None
         
-    def IndexPage (self):
-        # config.user_info.clear()
-        # config.transaction_info.clear()
-        user_client_id = config.user_info.get('user_client_id')
-        reference_number = config.transaction_info.get('reference_number')
-        
-        latest_status = self.db_manager.get_latest_transaction_status(user_client_id)
-        if latest_status == 'On-Going':
-            self.db_manager.update_transaction_status(user_client_id, reference_number)
+    # def IndexPage (self):
+    #     # config.user_info.clear()
+    #     # config.transaction_info.clear() 
+    #     if all([self.answer_one is not None,
+    #         self.answer_two is not None,
+    #         self.answer_three is not None,
+    #         self.answer_four is not None,
+    #         self.answer_five is not None]):
+    #         user_client_id = config.user_info.get('user_client_id')
+    #         reference_number = config.transaction_info.get('reference_number')
+    #         config.user_info.get('user_client_id')
 
-        from indexPage import Ui_MainWindow
-        self.window = QtWidgets.QMainWindow()
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self.window)
-        self.window.show()
+    #         self.tallyAnswers(user_client_id)
+    #         latest_status = self.db_manager.get_latest_transaction_status(user_client_id)
+    #         if latest_status == 'On-Going':
+    #             self.db_manager.update_transaction_status(user_client_id, reference_number)
+            
+    #         self.finishPushButton.clicked.connect(MainWindow.close)
+            
+    #         from indexPage import Ui_MainWindow
+    #         self.window = QtWidgets.QMainWindow()
+    #         self.ui = Ui_MainWindow()
+    #         self.ui.setupUi(self.window)
+    #         self.window.show()
+    #     else:
+    #         message_box = QMessageBox()
+    #         message_box.setWindowTitle("Warning!")
+    #         message_box.setText("Please complete all answers before proceeding.")
+    #         message_box.setStandardButtons(QMessageBox.Ok)
+    #         message_box.exec_()
+
+    def IndexPage(self):
+        if all([self.answer_one, self.answer_two, self.answer_three, self.answer_four, self.answer_five]):
+            user_client_id = config.user_info.get('user_client_id')
+            reference_number = config.transaction_info.get('reference_number')
+
+            self.tallyAnswers(user_client_id)
+            latest_status = self.db_manager.get_latest_transaction_status(user_client_id)
+            if latest_status == 'On-Going':
+                self.db_manager.update_transaction_status(user_client_id, reference_number)
+
+            self.finishPushButton.clicked.connect(MainWindow.close)
+
+            from indexPage import Ui_MainWindow
+            self.window = QtWidgets.QMainWindow()
+            self.ui = Ui_MainWindow()
+            self.ui.setupUi(self.window)
+            self.window.show()
+        else:
+            message_box = QMessageBox()
+            message_box.setWindowTitle("Warning!")
+            message_box.setText("Please complete all answers before proceeding.")
+            message_box.setStandardButtons(QMessageBox.Ok)
+            message_box.exec_()
 
     def setupUiFeedbackQuestions(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -71,7 +112,7 @@ class Ui_MainWindowFeedbackQuestions(object):
                                     "    color:#fff;\n"
                                     "}")
         self.roleOutput.setObjectName("roleOutput")
-        
+
         self.finishPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.finishPushButton.setGeometry(QtCore.QRect(1030, 600, 231, 100))
         self.finishPushButton.setStyleSheet("#finishPushButton{\n"
@@ -84,8 +125,7 @@ class Ui_MainWindowFeedbackQuestions(object):
                                         "}")
         self.finishPushButton.setObjectName("finishPushButton")
         self.finishPushButton.clicked.connect(self.IndexPage)
-        self.finishPushButton.clicked.connect(lambda: self.tallyAnswers(config.user_info.get('user_client_id')))
-        self.finishPushButton.clicked.connect(MainWindow.close)
+        # self.finishPushButton.clicked.connect(lambda: self.tallyAnswers(config.user_info.get('user_client_id')))
         
         self.surveyFrame = QtWidgets.QFrame(self.centralwidget)
         self.surveyFrame.setGeometry(QtCore.QRect(20, 115, 1240, 471))
