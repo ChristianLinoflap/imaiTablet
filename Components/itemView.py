@@ -79,20 +79,22 @@ class Ui_MainWindowItemView(object):
         #     message_box.exec_()
         #     self.weight_sensor.same_weight = False
         # else:
-        if os.path.exists("predicted_class.txt") and self.weight_sensor.put_item:
+        if os.path.exists("predicted_class.txt"):
             self.object_classifier.pause_scanning()
             if self.weight_sensor.is_item_added():
                 with open("predicted_class.txt", "r") as file:
-                    predicted_class = file.read().strip()
-                if predicted_class:
-                    self.processScannedRFID(predicted_class)
-                    print(predicted_class)
-                    with open("predicted_class.txt", "w") as file:
-                        file.write('')
-                    os.remove("predicted_class.txt")
-                    self.weight_sensor.put_item = False
-                    self.weight_sensor.verify = False
-                    self.resumeScanningMessage()
+                    predicted_class_lines = file.readlines()
+                for predicted_class in predicted_class_lines:
+                    predicted_class = predicted_class.strip()
+                    if predicted_class:
+                        self.processScannedRFID(predicted_class)
+                        print(predicted_class)
+                with open("predicted_class.txt", "w") as file:
+                    file.write('')
+                os.remove("predicted_class.txt")
+                self.weight_sensor.put_item = False
+                self.weight_sensor.verify = False
+                self.resumeScanningMessage()
         elif not self.weight_sensor.verify and self.weight_sensor.same_weight:
             print('Error')
             message_box = QMessageBox()

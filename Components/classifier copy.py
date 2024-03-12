@@ -167,15 +167,14 @@ class ObjectClassifier(ctypes.CDLL):
             else:
                 pass
             if not prev_epcs:
-                # print("prev_epcs is empty!")
-                frame = 0
+                print("prev_epcs is empty!")
             elif frame == 10:
                 with open("predicted_class.txt", "w") as file:
                     file.write('\n'.join(prev_epcs) + '\n')
-                # print('Finale frame:', frame)
+                print('Finale frame:', frame)
                 frame = 0
             frame += 1
-            # print('Frame: ',frame)
+            print('Frame: ',frame)
             if self.weight_sensor.remove_item:
                 prev_epcs = set()
                 time.sleep(1)
