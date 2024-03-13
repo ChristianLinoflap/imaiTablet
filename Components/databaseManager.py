@@ -44,6 +44,17 @@ class DatabaseManager:
         cursor.execute(query, username, password)
         return cursor.fetchone()
 
+    def get_client_credentials(self, unique_id):
+        try:
+            with self.connect() as conn:
+                cursor = conn.cursor()
+                cursor.execute("SELECT * FROM [dbo].[Fn_GetClientCredentials] (?)", unique_id)
+                result = cursor.fetchall()
+                return result
+        except pyodbc.Error as e:
+            logging.error(f"Error executing SQL function: {e}")
+            raise
+
     # LOGINMEMBER - Generate Reference Number
     def generate_reference_number(self):
         year_month = QtCore.QDateTime.currentDateTime().toString("yyyyMM")
@@ -82,6 +93,8 @@ class DatabaseManager:
             error_message = f"An unexpected error occurred during transaction insertion: {e}"
             print(error_message)
             QtWidgets.QMessageBox.critical(None, "Error", error_message)
+        
+    
 
     # LOGINMEMBER - Update transaction details
     def update_transaction(self, user_client_id, reference_number):

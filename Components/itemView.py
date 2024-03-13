@@ -64,61 +64,51 @@ class Ui_MainWindowItemView(object):
                     self.removeProduct(reference_number, barcode)
                     os.remove("predicted_class.txt")
                     self.resumeScanningMessage()
+
     def paused(self):
         if not self.weight_sensor.verify:
             self.resumeScanningMessage()
+
     def checkItemStatus(self):
-        # if self.weight_sensor.verify and not self.weight_sensor.same_weight:
-        #     self.object_classifier.pause_scanning()
-        #     print('Error')
-        #     message_box = QMessageBox()
-        #     message_box.setWindowTitle("Shopping Paused!")
-        #     message_box.setText("Remove the added item to continue shopping!.")
-        #     message_box.setStandardButtons(QMessageBox.Ok)
-        #     message_box.buttonClicked.connect(self.paused)
-        #     message_box.exec_()
-        #     self.weight_sensor.same_weight = False
-        # else:
-        if os.path.exists("predicted_class.txt"):
-            # self.object_classifier.pause_scanning()
-            # if self.weight_sensor.is_item_added():
-            with open("predicted_class.txt", "r") as file:
-                predicted_class_lines = file.readlines()
-            for predicted_class in predicted_class_lines:
-                predicted_class = predicted_class.strip()
-                if predicted_class:
-                    self.processScannedRFID(predicted_class)
-                    print(predicted_class)
-            with open("predicted_class.txt", "w") as file:
-                file.write('')
-            os.remove("predicted_class.txt")
-            self.weight_sensor.put_item = False
-            self.weight_sensor.verify = False
-            self.resumeScanningMessage()
-        # elif not self.weight_sensor.verify and self.weight_sensor.same_weight:
-        #     print('Error')
-        #     message_box = QMessageBox()
-        #     message_box.setWindowTitle("Shopping Paused!")
-        #     message_box.setText("Scan it to remove the item or put it back in the cart to continue.")
-        #     message_box.setStandardButtons(QMessageBox.Ok)
-        #     message_box.exec_()
-            # if os.path.exists("predicted_class.txt") and self.weight_sensor.remove_item:
-        if os.path.exists("predicteds_class.txt"):
-            # self.object_classifier.pause_scanning()
-            # print('removed: classifier paused - 2')
-            with open("predicteds_class.txt", "r") as file:
-                predicted_class_lines = file.readlines()
-            for predicted_class in predicted_class_lines:
-                predicted_class = predicted_class.strip()
-                if predicted_class:
-                    print('received', predicted_class)
-                    reference_number = config.transaction_info.get('reference_number')
-                    self.removeProductRFID(reference_number, predicted_class)
-                    with open("predicteds_class.txt", "w") as file:
-                        file.write('')
-                    os.remove("predicteds_class.txt")
-                    self.weight_sensor.same_weight = False
-                    self.resumeScanningMessage()
+        if os.path.exists("predicted_class.txt") and self.weight_sensor.put_item:
+            self.object_classifier.pause_scanning()
+            if self.weight_sensor.is_item_added():
+                with open("predicted_class.txt", "r") as file:
+                    predicted_class_lines = file.readlines()
+                for predicted_class in predicted_class_lines:
+                    predicted_class = predicted_class.strip()
+                    if predicted_class:
+                        self.processScannedBarcode(predicted_class)
+                        print(predicted_class)
+                with open("predicted_class.txt", "w") as file:
+                    file.write('')
+                os.remove("predicted_class.txt")
+                self.weight_sensor.put_item = False
+                self.weight_sensor.verify = False
+                self.resumeScanningMessage()
+            
+        elif not self.weight_sensor.verify and self.weight_sensor.same_weight:
+            print('Error')
+            message_box = QMessageBox()
+            message_box.setWindowTitle("Shopping Paused!")
+            message_box.setText("Scan it to remove the item or put it back in the cart to continue.")
+            message_box.setStandardButtons(QMessageBox.Ok)
+            message_box.exec_()
+            if os.path.exists("predicted_class.txt") and self.weight_sensor.remove_item:
+                self.object_classifier.pause_scanning()
+                with open("predicteds_class.txt", "r") as file:
+                    predicted_class_lines = file.readlines()
+                for predicted_class in predicted_class_lines:
+                    predicted_class = predicted_class.strip()
+                    if predicted_class:
+                        print('received', predicted_class)
+                        reference_number = config.transaction_info.get('reference_number')
+                        self.removeProductRFID(reference_number, predicted_class)
+                        with open("predicteds_class.txt", "w") as file:
+                            file.write('')
+                        os.remove("predicteds_class.txt")
+                        self.weight_sensor.same_weight = False
+                        self.resumeScanningMessage()
 
     def SearchProductOption(self):
         self.close_other_windows("search")
@@ -624,7 +614,6 @@ class Ui_MainWindowItemView(object):
             error_message = f"An unexpected error occurred while removing product: {e}"
             print(error_message)
             QtWidgets.QMessageBox.critical(None, "Error", error_message)
-
 
     def populateTableWithScannedProducts(self):
         sales_trans = config.transaction_info.get('reference_number')

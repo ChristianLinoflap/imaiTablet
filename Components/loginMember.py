@@ -4,6 +4,10 @@ from PyQt5.QtWidgets import QMessageBox
 from config import Config, translations
 from databaseManager import DatabaseManager, EnvironmentLoader
 from onScreenKeyboard import OnScreenKeyboard
+from PyQt5.QtCore import QTimer
+import qrcode
+import random
+import string
 
 class Ui_MainWindowLogInMember(object):
     def __init__(self):
@@ -11,6 +15,59 @@ class Ui_MainWindowLogInMember(object):
         self.conn = self.db_manager.connect()
         self.cursor = self.conn.cursor()
         self.keyboard = OnScreenKeyboard()
+        self.check_id_timer = QTimer()
+        self.check_id_timer.timeout.connect(self.check_unique_id)
+        self.check_id_timer.start(1000)
+        self.unique_id = self.generate_unique_ID()
+        self.match_found = False
+
+    def generate_qr_code(self, unique_id):
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(unique_id)
+        qr.make(fit=True)
+
+        img = qr.make_image(fill_color="black", back_color="white")
+        return img
+
+    def generate_reference_number(self):
+        user_client_id = config.user_info['user_client_id']
+        reference_number = self.db_manager.generate_reference_number()
+        latest_transaction_status = self.db_manager.get_latest_transaction_status(user_client_id)
+
+        if latest_transaction_status == 'Success':
+            config.transaction_info['reference_number'] = reference_number
+            self.db_manager.insert_transaction(user_client_id, reference_number)
+        else:
+            latest_reference_number = self.db_manager.get_latest_reference_number(user_client_id)
+            config.transaction_info['reference_number'] = latest_reference_number
+
+        transaction_id = self.db_manager.get_transaction_id(user_client_id, config.transaction_info['reference_number'])
+        if transaction_id is not None:
+            config.transaction_info['transaction_id'] = transaction_id
+
+        self.db_manager.update_transaction(user_client_id, config.transaction_info['reference_number'])
+
+    def check_unique_id(self):
+        if self.match_found:
+            self.check_id_timer.stop()
+            return
+        result = self.db_manager.get_client_credentials(self.unique_id)
+        if result:
+            email, password = result[0] 
+            print("Match found! Logging in with email:", email)
+            self.emailLineEdit.setText(email)
+            self.passwordLineEdit.setText(password)
+            self.authenticate_user()
+            self.generate_reference_number()
+            self.match_found = True
+        else:
+            print("No match found for unique ID:", self.unique_id)
+        self.check_id_timer.start(1000)
 
     def TutorialMember(self):
         self.hide_keyboard_on_mouse_click(None)
@@ -199,6 +256,29 @@ class Ui_MainWindowLogInMember(object):
         self.loginPushButton.clicked.connect(self.authenticate_user)
         self.MainWindow = MainWindow
 
+        qr_img = self.generate_qr_code(self.unique_id)
+        self.display_qr_code(qr_img)
+
+    def generate_unique_ID(self):
+        characters = string.ascii_letters + string.digits + string.punctuation
+        unique_id = ''.join(random.choice(characters) for _ in range(16))
+        return unique_id
+
+    def display_qr_code(self, qr_img):
+        qr_img = qr_img.convert("RGBA")
+        qimage = QtGui.QImage(qr_img.tobytes("raw", "RGBA"), qr_img.size[0], qr_img.size[1], QtGui.QImage.Format_ARGB32)
+        qr_pixmap = QtGui.QPixmap.fromImage(qimage)
+
+        qr_label = QtWidgets.QLabel(self.qrFrame)
+        qr_label.setGeometry(QtCore.QRect(0, 0, self.qrFrame.width(), self.qrFrame.height()))
+        qr_label.setPixmap(qr_pixmap)
+        qr_label.setAlignment(QtCore.Qt.AlignCenter)
+        qr_label.setObjectName("qrLabel")
+
+        qr_label.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+
+        qr_label.show()
+
     def show_keyboard_for_email(self, event):
         self.passwordLineEdit.setStyleSheet("""
             #passwordLineEdit {
@@ -289,22 +369,8 @@ class Ui_MainWindowLogInMember(object):
                 config.user_info['last_name'] = last_name
                 config.user_info['user_client_id'] = user_client_id
 
-                reference_number = self.db_manager.generate_reference_number()
-                latest_transaction_status = self.db_manager.get_latest_transaction_status(user_client_id)
-
-                if latest_transaction_status == 'Success':
-                    config.transaction_info['reference_number'] = reference_number
-                    self.db_manager.insert_transaction(user_client_id, reference_number)
-                else:
-                    latest_reference_number = self.db_manager.get_latest_reference_number(user_client_id)
-                    config.transaction_info['reference_number'] = latest_reference_number
-
-                transaction_id = self.db_manager.get_transaction_id(user_client_id, config.transaction_info['reference_number'])
-                if transaction_id is not None:
-                    config.transaction_info['transaction_id'] = transaction_id
-
-                self.db_manager.update_transaction(user_client_id, config.transaction_info['reference_number'])
-
+                self.generate_reference_number()
+                self.check_id_timer.stop()
                 self.MainWindow.close()
                 self.TutorialMember()
             else:
