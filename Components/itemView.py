@@ -17,6 +17,9 @@ from config import Config, translations
 from databaseManager import DatabaseManager, EnvironmentLoader
 from onScreenKeyboard import OnScreenKeyboard
 import glob
+from PyQt5.QtWidgets import QDialog, QLabel, QVBoxLayout
+from PyQt5.QtCore import Qt
+
 
 class Ui_MainWindowItemView(object):
     def __init__(self):
@@ -27,6 +30,8 @@ class Ui_MainWindowItemView(object):
         self.scanning_thread = None
         self.last_scan_time = 0
         self.transaction_counter = 1
+        self.added_item = self.create_message_box("Remove the added item to continue shopping!")
+        self.scan_remove_warning = self.create_message_box("Scan it to remove the item or put it back in the cart to continue.")
         self.search_window_open = False
         self.shopping_list_window_open = False
         self.help_window_open = False
@@ -39,7 +44,7 @@ class Ui_MainWindowItemView(object):
         self.object_classifier = ObjectClassifier()
         self.weight_sensor = WeightSensor()
         try:
-            self.weight_thread = threading.Thread(target=self.weight_sensor.monitor_serial, args=('COM5', 9600, 1))
+            self.weight_thread = threading.Thread(target=self.weight_sensor.monitor_serial)
         except Exception as e:
             pass
         self.weight_thread.daemon = True
@@ -48,7 +53,31 @@ class Ui_MainWindowItemView(object):
 
     def stop_classifier(self):
         self.object_classifier.stop_classifier()
+    def create_message_box(self, message):
+        message_box = QDialog()
+        message_box.setWindowTitle("Shopping Paused!")
+        message_box.setWindowFlags(
+            Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowStaysOnTopHint)  # Set window flags to remove minimize, maximize, and close buttons
 
+        # Create the QLabel for the message
+        label = QLabel(message, message_box)
+        label.setAlignment(Qt.AlignCenter)
+
+        # Adjust font and size
+        font = label.font()
+        font.setPointSize(12)  # Change the font size
+        label.setFont(font)
+
+        # Set fixed size for the dialog
+        message_box.setFixedSize(400, 100)  # Set the width and height of the dialog
+
+        # Layout
+        layout = QVBoxLayout()
+        layout.addWidget(label)
+        message_box.setLayout(layout)
+        layout.setAlignment(Qt.AlignCenter)
+
+        return message_box
     def resumeScanningMessage(self):
         if not os.path.exists("predicted_class.txt"):
             self.object_classifier.resume_scanning()
@@ -69,14 +98,10 @@ class Ui_MainWindowItemView(object):
             print('I want.')
     def checkItemStatus(self):
         if self.weight_sensor.verify and not self.weight_sensor.same_weight:
-            print('Error')
-            message_box = QMessageBox()
-            message_box.setWindowTitle("Shopping Paused!")
-            message_box.setText("Remove the added item to continue shopping!.")
-            message_box.setStandardButtons(QMessageBox.Ok)
-            message_box.exec_()
+            self.added_item.show()
             self.weight_sensor.same_weight = False
         else:
+            self.added_item.close()
             if os.path.exists("predicted_class.txt") and self.weight_sensor.put_item:
                 self.object_classifier.pause_scanning()
                 if self.weight_sensor.is_item_added():
@@ -89,15 +114,13 @@ class Ui_MainWindowItemView(object):
                         os.remove("predicted_class.txt")
                         self.weight_sensor.put_item = False
                         self.weight_sensor.verify = False
+                        self.object_classifier.prev_epcs = set()
                         self.resumeScanningMessage()
+
             elif not self.weight_sensor.verify and self.weight_sensor.same_weight:
-                print('Error')
-                message_box = QMessageBox()
-                message_box.setWindowTitle("Shopping Paused!")
-                message_box.setText("Scan it to remove the item or put it back in the cart to continue.")
-                message_box.setStandardButtons(QMessageBox.Ok)
-                message_box.exec_()
+                self.scan_remove_warning.show()
                 if os.path.exists("predicted_class.txt") and self.weight_sensor.remove_item:
+                    self.scan_remove_warning.close()
                     self.object_classifier.pause_scanning()
                     print('removed: classifier paused - 2')
                     with open("predicted_class.txt", "r") as file:
@@ -112,6 +135,10 @@ class Ui_MainWindowItemView(object):
                         os.remove("predicted_class.txt")
                         self.weight_sensor.same_weight = False
                         self.resumeScanningMessage()
+                        self.object_classifier.prev_epcs = set()
+                        self.scan_remove_warning.close()
+            elif not self.weight_sensor.same_weight:
+                self.scan_remove_warning.close()
 
     def SearchProductOption(self):
         self.close_other_windows("search")
@@ -548,12 +575,12 @@ class Ui_MainWindowItemView(object):
             print(f"Product with ReferenceNumber {reference_number} and Barcode {barcode} removed.")
 
             for row in range(self.productTable.rowCount()):
-                item = self.productTable.item(row, 2) 
+                item = self.productTable.item(row, 2)
                 if item and item.text() == barcode:
                     self.productTable.removeRow(row)
                     print(f"Row corresponding to Barcode {barcode} removed from the table.")
                     self.updateSummaryLabels()
-                    break 
+                    break
         except Exception as e:
             error_message = f"An unexpected error occurred while removing product: {e}"
             print(error_message)
