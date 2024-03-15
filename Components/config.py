@@ -12,7 +12,7 @@ transaction_info = {
 }
 
 class Config:
-    DEFAULT_LANGUAGE = "English"
+    DEFAULT_LANGUAGE = "日本語"
     current_language = DEFAULT_LANGUAGE
     language_changed = QtCore.pyqtSignal(str)
 
@@ -92,6 +92,9 @@ translations = {
         'Scanning_Done_Message': 'Barcode scanning is complete.',
         'Scanner_Closed_Title': 'Scanner Closed',
         'Scanner_Closed_Message': 'No scans for 30 seconds. Barcode scanner closed.',
+        'Add_Remove_Title':'Shopping Paused!',
+        'Add_Before_Scan_Message': 'Remove the added item to continue shopping!',
+        'Remove_Before_Scan_Message': 'Scan it to remove the item or put it back in the cart to continue.',
         # Payment Option 
         'Payment_Label': 'Choose Payment Method',
         'Card_Label': '<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">Card Payment</span></p></body></html>',
@@ -208,6 +211,9 @@ p, li { white-space: pre-wrap; }
         'Scanning_Done_Message': 'バーコードのスキャンが完了しました。',
         'Scanner_Closed_Title': 'スキャナーが閉じられました',
         'Scanner_Closed_Message': '1分間スキャンがありません。バーコードスキャナーが閉じられました。',
+        'Add_Remove_Title':'買い物が一時停止されました!',
+        'Add_Before_Scan_Message': '追加したアイテムを削除して買い物を続けてください！',
+        'Remove_Before_Scan_Message': 'アイテムを削除するにはスキャンしてください。買物を続けるためにカートに戻してください。',
         # Payment Option
         'Welcome_User': 'いらっしゃいませ',
         'Role_Output': 'メンバー',

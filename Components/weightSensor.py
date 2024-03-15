@@ -15,6 +15,7 @@ class WeightSensor:
         self.remove_item = False
         self.same_weight = False
         self.verify = False
+        self.resume_scanning = False
     def monitor_serial(self):
     # def monitor_serial(self, port, baudrate, timeout):
     #     self.ser = serial.Serial(port, baudrate, timeout=timeout)
@@ -62,6 +63,7 @@ class WeightSensor:
                                 print('Stored_weight: ',stored_weight)
                     if abs(stored_weight - filtered_weight) <= 20 and self.same_weight:
                         print('You returned the item!')
+                        self.resume_scanning = True
                         self.remove_item = False
                         self.same_weight = False
                         self.put_item = False
@@ -69,6 +71,7 @@ class WeightSensor:
                         stored_weight = filtered_weight
                     elif abs(stored_weight - filtered_weight) <= 20 and self.verify:
                         print('The item was removed')
+                        self.resume_scanning = True
                         stored_weight = filtered_weight
                         self.remove_item = False
                         self.verify = False

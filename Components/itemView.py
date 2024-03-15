@@ -3,10 +3,11 @@ import os
 import time
 import serial
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtMultimediaWidgets import QVideoWidget
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QDialog, QLabel, QVBoxLayout, QHBoxLayout, QSizePolicy
+from PyQt5.QtGui import QPixmap, QIcon
 import cv2
 from pyzbar.pyzbar import decode
 import pygame
@@ -17,9 +18,6 @@ from config import Config, translations
 from databaseManager import DatabaseManager, EnvironmentLoader
 from onScreenKeyboard import OnScreenKeyboard
 import glob
-from PyQt5.QtWidgets import QDialog, QLabel, QVBoxLayout
-from PyQt5.QtCore import Qt
-
 
 class Ui_MainWindowItemView(object):
     def __init__(self):
@@ -29,9 +27,11 @@ class Ui_MainWindowItemView(object):
         self.scanning_in_progress = False
         self.scanning_thread = None
         self.last_scan_time = 0
+        self.elapsed_time = 0
         self.transaction_counter = 1
-        self.added_item = self.create_message_box("Remove the added item to continue shopping!")
-        self.scan_remove_warning = self.create_message_box("Scan it to remove the item or put it back in the cart to continue.")
+        self.added_item = self.create_message_box(translations[Config.current_language]['Add_Before_Scan_Message'])
+        self.scan_remove_warning = self.create_message_box(translations[Config.current_language]['Remove_Before_Scan_Message'])
+        self.put_item = self.create_message_box(f"Put the item inside the cart!")
         self.search_window_open = False
         self.shopping_list_window_open = False
         self.help_window_open = False
@@ -53,31 +53,43 @@ class Ui_MainWindowItemView(object):
 
     def stop_classifier(self):
         self.object_classifier.stop_classifier()
+
     def create_message_box(self, message):
         message_box = QDialog()
-        message_box.setWindowTitle("Shopping Paused!")
+        message_box.setWindowTitle(translations[Config.current_language]['Add_Remove_Title'])
         message_box.setWindowFlags(
-            Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowStaysOnTopHint)  # Set window flags to remove minimize, maximize, and close buttons
+            Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowStaysOnTopHint)
 
-        # Create the QLabel for the message
+        main_layout = QHBoxLayout()
+
+        icon_layout = QVBoxLayout()
+        warning_icon = QLabel(message_box)
+        pixmap = QPixmap("Assets\\warning.png")
+        pixmap = pixmap.scaledToHeight(50, Qt.SmoothTransformation)  
+        warning_icon.setPixmap(pixmap)
+        icon_layout.addWidget(warning_icon, alignment=Qt.AlignCenter)
+        warning_icon.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        warning_icon.setMinimumSize(50, 50) 
+
+        main_layout.addLayout(icon_layout, stretch=1)
+
+        text_layout = QVBoxLayout()
         label = QLabel(message, message_box)
-        label.setAlignment(Qt.AlignCenter)
-
-        # Adjust font and size
         font = label.font()
-        font.setPointSize(12)  # Change the font size
+        font.setPointSize(12)
         label.setFont(font)
+        label.setWordWrap(True)
+        label.setAlignment(Qt.AlignCenter)
+        text_layout.addWidget(label, alignment=Qt.AlignCenter)
+        label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
-        # Set fixed size for the dialog
-        message_box.setFixedSize(400, 100)  # Set the width and height of the dialog
+        main_layout.addLayout(text_layout, stretch=9)
 
-        # Layout
-        layout = QVBoxLayout()
-        layout.addWidget(label)
-        message_box.setLayout(layout)
-        layout.setAlignment(Qt.AlignCenter)
+        message_box.setLayout(main_layout)
+        message_box.setFixedSize(550, 150)
 
         return message_box
+    
     def resumeScanningMessage(self):
         if not os.path.exists("predicted_class.txt"):
             self.object_classifier.resume_scanning()
@@ -93,17 +105,38 @@ class Ui_MainWindowItemView(object):
                     self.removeProduct(reference_number, barcode)
                     os.remove("predicted_class.txt")
                     self.resumeScanningMessage()
+
     def paused(self):
         if not self.weight_sensor.verify:
             print('I want.')
+
     def checkItemStatus(self):
         if self.weight_sensor.verify and not self.weight_sensor.same_weight:
             self.added_item.show()
-            self.weight_sensor.same_weight = False
+            if os.path.exists("predicted_class.txt"):
+                os.remove("predicted_class.txt")
+                time.sleep(5)
+
         else:
             self.added_item.close()
-            if os.path.exists("predicted_class.txt") and self.weight_sensor.put_item:
+            # if os.path.exists("predicted_class.txt") and not self.weight_sensor.put_item:
+            if os.path.exists("predicted_class.txt") and not self.weight_sensor.put_item:
+                self.elapsed_time += 1
+                print(self.elapsed_time)
+                self.put_item.show()
+                if self.elapsed_time >= 10:
+                    self.put_item.close()
+                    os.remove("predicted_class.txt")
+                    self.elapsed_time = 0
+                # elif self.weight_sensor.put_item and not self.weight_sensor.same_weight:
+                #     self.put_item.close()
+                time.sleep(1)
+            if not self.weight_sensor.verify and self.weight_sensor.same_weight and self.weight_sensor.put_item:
+                print("ERROR")
+                self.weight_sensor.put_item = False
+            elif os.path.exists("predicted_class.txt") and self.weight_sensor.put_item and not self.weight_sensor.same_weight:
                 self.object_classifier.pause_scanning()
+                self.put_item.close()
                 if self.weight_sensor.is_item_added():
                     with open("predicted_class.txt", "r") as file:
                         predicted_class = file.read().strip()
@@ -116,7 +149,6 @@ class Ui_MainWindowItemView(object):
                         self.weight_sensor.verify = False
                         self.object_classifier.prev_epcs = set()
                         self.resumeScanningMessage()
-
             elif not self.weight_sensor.verify and self.weight_sensor.same_weight:
                 self.scan_remove_warning.show()
                 if os.path.exists("predicted_class.txt") and self.weight_sensor.remove_item:
@@ -134,11 +166,14 @@ class Ui_MainWindowItemView(object):
                             file.write('')
                         os.remove("predicted_class.txt")
                         self.weight_sensor.same_weight = False
+                        self.put_item.close()
                         self.resumeScanningMessage()
                         self.object_classifier.prev_epcs = set()
                         self.scan_remove_warning.close()
+                        
             elif not self.weight_sensor.same_weight:
                 self.scan_remove_warning.close()
+
 
     def SearchProductOption(self):
         self.close_other_windows("search")
@@ -148,11 +183,11 @@ class Ui_MainWindowItemView(object):
             self.window_search = QtWidgets.QMainWindow()
             self.ui_search = Ui_MainWindowSearchProduct()
             self.ui_search.setupUiSearchProduct(self.window_search)
+            self.ui_search.keyboard.close()
             self.window_search.show()
             self.search_window_open = True
         else:
             self.window_search.close()
-            self.ui_search.keyboard.close()
             self.search_window_open = False
 
     def ShoppingList(self):
@@ -163,6 +198,7 @@ class Ui_MainWindowItemView(object):
             self.window_shopping_list = QtWidgets.QMainWindow()
             self.ui_shopping_list = Ui_MainWindowShoppingList()
             self.ui_shopping_list.setupUiShoppingList(self.window_shopping_list)
+            self.ui_search.keyboard.close()
             self.window_shopping_list.show()
             self.shopping_list_window_open = True
         else:
@@ -177,6 +213,7 @@ class Ui_MainWindowItemView(object):
             self.window_help = QtWidgets.QMainWindow()
             self.ui_help = Ui_MainWindowHelp()
             self.ui_help.setupUiHelp(self.window_help)
+            self.ui_search.keyboard.close()
             self.window_help.show()
             self.help_window_open = True
         else:
