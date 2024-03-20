@@ -12,7 +12,7 @@ transaction_info = {
 }
 
 class Config:
-    DEFAULT_LANGUAGE = "日本語"
+    DEFAULT_LANGUAGE = "English"
     current_language = DEFAULT_LANGUAGE
     language_changed = QtCore.pyqtSignal(str)
 
@@ -95,6 +95,8 @@ translations = {
         'Add_Remove_Title':'Shopping Paused!',
         'Add_Before_Scan_Message': 'Remove the added item to continue shopping!',
         'Remove_Before_Scan_Message': 'Scan it to remove the item or put it back in the cart to continue.',
+        'Put_Item_Message': 'Place the scanned item inside the cart',
+        'Put_Item_Error_Message': 'Please rescan the item as it wasn\'t put in after 10 seconds.',
         # Payment Option 
         'Payment_Label': 'Choose Payment Method',
         'Card_Label': '<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">Card Payment</span></p></body></html>',
@@ -214,6 +216,8 @@ p, li { white-space: pre-wrap; }
         'Add_Remove_Title':'買い物が一時停止されました!',
         'Add_Before_Scan_Message': '追加したアイテムを削除して買い物を続けてください！',
         'Remove_Before_Scan_Message': 'アイテムを削除するにはスキャンしてください。買物を続けるためにカートに戻してください。',
+        'Put_Item_Message': 'スキャンされた商品をカートの中に入れてください。',
+        'Put_Item_Error_Message': '10秒後にアイテムが入れられなかったので、もう一度スキャンしてください。',
         # Payment Option
         'Welcome_User': 'いらっしゃいませ',
         'Role_Output': 'メンバー',

@@ -5,10 +5,10 @@ from collections import Counter
 
 class WeightSensor:
     def __init__(self):
-        self.port = 'COM5'
-        self.baudrate = 9600
-        self.timeout = 1
-        self.ser = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
+        # self.port = 'COM5'
+        # self.baudrate = 9600
+        # self.timeout = 1
+        # self.ser = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
         self.prev_weight = 0
         self.last_print_time = time.time()
         self.put_item = False
@@ -16,9 +16,9 @@ class WeightSensor:
         self.same_weight = False
         self.verify = False
         self.resume_scanning = False
-    def monitor_serial(self):
-    # def monitor_serial(self, port, baudrate, timeout):
-    #     self.ser = serial.Serial(port, baudrate, timeout=timeout)
+    # def monitor_serial(self):
+    def monitor_serial(self, port, baudrate, timeout):
+        self.ser = serial.Serial(port, baudrate, timeout=timeout)
         initial_weight = 0
         frame = 0
         filtered_weight = 0

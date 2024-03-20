@@ -31,7 +31,8 @@ class Ui_MainWindowItemView(object):
         self.transaction_counter = 1
         self.added_item = self.create_message_box(translations[Config.current_language]['Add_Before_Scan_Message'])
         self.scan_remove_warning = self.create_message_box(translations[Config.current_language]['Remove_Before_Scan_Message'])
-        self.put_item = self.create_message_box(f"Put the item inside the cart!")
+        self.put_item = self.create_message_box(translations[Config.current_language]['Put_Item_Message'])
+        self.put_item_error_message = self.create_message_box(translations[Config.current_language]['Put_Item_Error_Message'])
         self.search_window_open = False
         self.shopping_list_window_open = False
         self.help_window_open = False
@@ -44,7 +45,7 @@ class Ui_MainWindowItemView(object):
         self.object_classifier = ObjectClassifier()
         self.weight_sensor = WeightSensor()
         try:
-            self.weight_thread = threading.Thread(target=self.weight_sensor.monitor_serial)
+            self.weight_thread = threading.Thread(target=self.weight_sensor.monitor_serial, args=('COM5', 9600, 1))
         except Exception as e:
             pass
         self.weight_thread.daemon = True
@@ -114,9 +115,10 @@ class Ui_MainWindowItemView(object):
         if self.weight_sensor.verify and not self.weight_sensor.same_weight:
             self.added_item.show()
             if os.path.exists("predicted_class.txt"):
-                os.remove("predicted_class.txt")
-                time.sleep(5)
-
+                try:
+                    os.remove("predicted_class.txt")
+                except:
+                    pass
         else:
             self.added_item.close()
             # if os.path.exists("predicted_class.txt") and not self.weight_sensor.put_item:
@@ -126,8 +128,11 @@ class Ui_MainWindowItemView(object):
                 self.put_item.show()
                 if self.elapsed_time >= 10:
                     self.put_item.close()
+                    self.put_item_error_message.show()
+                if self.elapsed_time >= 15:
                     os.remove("predicted_class.txt")
                     self.elapsed_time = 0
+                    self.put_item_error_message.close()
                 # elif self.weight_sensor.put_item and not self.weight_sensor.same_weight:
                 #     self.put_item.close()
                 time.sleep(1)
@@ -148,6 +153,7 @@ class Ui_MainWindowItemView(object):
                         self.weight_sensor.put_item = False
                         self.weight_sensor.verify = False
                         self.object_classifier.prev_epcs = set()
+                        self.elapsed_time = 0
                         self.resumeScanningMessage()
             elif not self.weight_sensor.verify and self.weight_sensor.same_weight:
                 self.scan_remove_warning.show()
@@ -170,6 +176,7 @@ class Ui_MainWindowItemView(object):
                         self.resumeScanningMessage()
                         self.object_classifier.prev_epcs = set()
                         self.scan_remove_warning.close()
+                        self.elapsed_time = 0
                         
             elif not self.weight_sensor.same_weight:
                 self.scan_remove_warning.close()
